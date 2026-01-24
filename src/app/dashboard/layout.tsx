@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
@@ -19,10 +19,12 @@ import {
   X,
   ChevronRight,
   Camera,
+  LogOut,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EnvironmentSwitcher } from '@/components/navigation/EnvironmentSwitcher';
 import { EnvironmentProvider } from '@/contexts/EnvironmentContext';
+import { createClient } from '@/lib/supabase/client';
 
 // Overview + 6-Pillar Navigation Structure
 const navigation = [
@@ -88,7 +90,17 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/login');
+    router.refresh();
+  };
 
   return (
     <EnvironmentProvider>
@@ -198,6 +210,16 @@ export default function DashboardLayout({
               <Button variant="outline" size="sm">
                 <Camera className="h-4 w-4 mr-2" />
                 Create Snapshot
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="text-slate-600 hover:text-slate-900"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                {loggingOut ? 'Signing out...' : 'Sign out'}
               </Button>
             </div>
           </header>
