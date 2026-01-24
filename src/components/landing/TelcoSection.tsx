@@ -1,119 +1,93 @@
 'use client';
 
-// TelEnvIQ - Built for Telco Complexity Section
+// TelEnv IQ - Social Proof Section
 
-import { Building2, Layers, Workflow, ArrowUpRight } from 'lucide-react';
+import { Quote } from 'lucide-react';
 
-const features = [
-  {
-    icon: Building2,
-    title: 'OSS/BSS Integration Landscapes',
-    description: 'Purpose-built for complex telecom systems. Handles billing, provisioning, CRM, network management, and service orchestration platforms.',
-  },
-  {
-    icon: Layers,
-    title: 'Multi-Vendor Stacks',
-    description: 'Works seamlessly with mixed technology stacks. Supports legacy systems, modern microservices, and everything in between.',
-  },
-  {
-    icon: Workflow,
-    title: 'SIT, UAT, NFT, PreProd',
-    description: 'Designed for the full test environment lifecycle. Track topology and data freshness across all environment tiers.',
-  },
-  {
-    icon: ArrowUpRight,
-    title: 'Transformation Programs',
-    description: 'Built for high-change environments. Continuous discovery keeps pace with rapid deployment cycles and modernization efforts.',
-  },
+// Enterprise logo placeholders - using generic shapes for now
+const logos = [
+  { name: 'Enterprise Corp', width: 'w-28' },
+  { name: 'Global Systems', width: 'w-32' },
+  { name: 'Tech Industries', width: 'w-24' },
+  { name: 'Scale Solutions', width: 'w-30' },
+  { name: 'Digital Group', width: 'w-28' },
+  { name: 'Innovation Labs', width: 'w-26' },
 ];
 
 export default function TelcoSection() {
   return (
-    <section id="telco" className="py-20 lg:py-28 bg-white">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Left content */}
-            <div>
-              <h2 className="text-base font-semibold leading-7 text-indigo-600">
-                For Telco
-              </h2>
-              <p className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                Built for Telco Complexity
-              </p>
-              <p className="mt-6 text-lg leading-8 text-slate-600">
-                Telecommunications environments are among the most complex integration
-                landscapes in existence. TelEnvIQ is designed from the ground up to handle
-                this complexity.
-              </p>
+    <section id="resources" className="relative py-24 lg:py-32 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#0B1220]" />
 
-              <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
-                {features.map((feature, index) => (
-                  <div key={index} className="relative">
-                    <div className="flex items-start gap-4">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-indigo-50">
-                        <feature.icon className="h-5 w-5 text-indigo-600" />
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-semibold text-slate-900">
-                          {feature.title}
-                        </h3>
-                        <p className="mt-1 text-sm text-slate-600">
-                          {feature.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+      {/* Gradient accents */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#5B5FEF]/5 rounded-full blur-[128px]" />
+
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-white">
+            Built for Organizations Operating at Scale.
+          </h2>
+          <p className="mt-6 text-lg text-slate-400">
+            Trusted by enterprises managing complex non-production landscapes across multiple teams and environments.
+          </p>
+        </div>
+
+        {/* Logo grid */}
+        <div className="mt-16 lg:mt-20">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
+            {logos.map((logo, index) => (
+              <div
+                key={index}
+                className={`${logo.width} h-12 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center`}
+              >
+                <span className="text-sm text-slate-500 font-medium">{logo.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Testimonial */}
+        <div className="mt-16 lg:mt-24 mx-auto max-w-4xl">
+          <div className="relative rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-8 lg:p-12">
+            {/* Quote icon */}
+            <div className="absolute -top-4 left-8">
+              <div className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#5B5FEF]">
+                <Quote className="w-4 h-4 text-white" />
               </div>
             </div>
 
-            {/* Right visual */}
-            <div className="relative lg:pl-8">
-              <div className="aspect-square max-w-lg mx-auto rounded-2xl bg-gradient-to-br from-indigo-50 to-blue-50 p-8 border border-indigo-100">
-                <div className="h-full w-full relative">
-                  {/* OSS/BSS visualization */}
-                  <svg viewBox="0 0 300 300" className="w-full h-full">
-                    {/* Central hub */}
-                    <circle cx="150" cy="150" r="40" fill="#6366F1" opacity="0.1" />
-                    <circle cx="150" cy="150" r="30" fill="#6366F1" opacity="0.2" />
-                    <circle cx="150" cy="150" r="20" fill="#6366F1" />
-                    <text x="150" y="155" textAnchor="middle" className="text-[8px] font-bold fill-white">
-                      TelEnvIQ
-                    </text>
+            <blockquote className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light">
+              TelEnv IQ gave us complete visibility across our non-production landscape for the first time. We finally understand what is deployed where, who owns what, and how changes in one environment affect others.
+            </blockquote>
 
-                    {/* Surrounding systems */}
-                    {[
-                      { x: 75, y: 75, label: 'Billing' },
-                      { x: 225, y: 75, label: 'CRM' },
-                      { x: 75, y: 225, label: 'Network' },
-                      { x: 225, y: 225, label: 'Provisioning' },
-                      { x: 50, y: 150, label: 'OSS' },
-                      { x: 250, y: 150, label: 'BSS' },
-                      { x: 150, y: 50, label: 'Portal' },
-                      { x: 150, y: 250, label: 'Analytics' },
-                    ].map((system, i) => (
-                      <g key={i}>
-                        <line
-                          x1="150"
-                          y1="150"
-                          x2={system.x}
-                          y2={system.y}
-                          stroke="#6366F1"
-                          strokeWidth="1"
-                          strokeDasharray="4,4"
-                          opacity="0.3"
-                        />
-                        <circle cx={system.x} cy={system.y} r="24" fill="white" stroke="#6366F1" strokeWidth="1.5" />
-                        <text x={system.x} y={system.y + 4} textAnchor="middle" className="text-[8px] font-medium fill-slate-700">
-                          {system.label}
-                        </text>
-                      </g>
-                    ))}
-                  </svg>
-                </div>
+            <div className="mt-8 flex items-center gap-4">
+              {/* Avatar placeholder */}
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#5B5FEF] to-[#7C3AED] flex items-center justify-center">
+                <span className="text-white font-semibold text-sm">JD</span>
+              </div>
+              <div>
+                <p className="text-white font-medium">Director of Platform Engineering</p>
+                <p className="text-sm text-slate-500">Enterprise Technology Organization</p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="mt-16 lg:mt-24">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { value: '50+', label: 'Environments managed' },
+              { value: '500+', label: 'Systems tracked' },
+              { value: '99.9%', label: 'Data freshness' },
+              { value: '<5min', label: 'To detect drift' },
+            ].map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-3xl lg:text-4xl font-semibold text-white">{stat.value}</div>
+                <div className="mt-2 text-sm text-slate-500">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

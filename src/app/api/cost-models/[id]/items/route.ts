@@ -13,7 +13,7 @@ const CreateCostItemSchema = z.object({
   unit: z.enum(['PER_ENV', 'PER_HOST', 'PER_COMPONENT', 'PER_GB', 'PER_USER', 'OTHER']),
   defaultQuantity: z.number().min(0).default(1),
   allocationMethod: z.enum(['DIRECT', 'SHARED_PRORATED']).default('DIRECT'),
-  tagsJson: z.record(z.unknown()).optional(),
+  tagsJson: z.record(z.string(), z.unknown()).optional(),
   notes: z.string().optional(),
 });
 
@@ -71,7 +71,7 @@ const UpdateCostItemSchema = z.object({
   unit: z.enum(['PER_ENV', 'PER_HOST', 'PER_COMPONENT', 'PER_GB', 'PER_USER', 'OTHER']).optional(),
   defaultQuantity: z.number().min(0).optional(),
   allocationMethod: z.enum(['DIRECT', 'SHARED_PRORATED']).optional(),
-  tagsJson: z.record(z.unknown()).optional(),
+  tagsJson: z.record(z.string(), z.unknown()).optional(),
   notes: z.string().optional(),
 });
 
@@ -98,10 +98,6 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
-
-const DeleteCostItemSchema = z.object({
-  itemId: z.string().uuid(),
-});
 
 export async function DELETE(request: NextRequest) {
   try {

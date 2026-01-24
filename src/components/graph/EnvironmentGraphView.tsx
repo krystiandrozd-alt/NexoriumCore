@@ -17,7 +17,6 @@ import {
   type NodeTypes,
   type EdgeTypes,
   type OnNodesChange,
-  type OnEdgesChange,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -73,7 +72,7 @@ export default function EnvironmentGraphView({
   savedNodes,
   savedEdges,
   analysis,
-  environmentId,
+  environmentId: _environmentId,
   showInfra = true,
   onNodesChange: onNodesChangeCallback,
   onPositionChange,

@@ -13,7 +13,7 @@ const ComputeCostSchema = z.object({
   hostingTypeFilter: z.enum(['CLOUD', 'ON_PREM', 'HYBRID', 'THIRD_PARTY', 'EDGE']).optional(),
   periodStart: z.string().datetime().optional(),
   periodEnd: z.string().datetime().optional(),
-  quantityOverrides: z.record(z.number()).optional(),
+  quantityOverrides: z.record(z.string(), z.number()).optional(),
   saveAllocation: z.boolean().default(false),
 });
 

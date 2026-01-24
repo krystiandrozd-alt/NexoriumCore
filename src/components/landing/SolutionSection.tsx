@@ -1,129 +1,95 @@
 'use client';
 
-// TelEnvIQ - Solution Section
+// TelEnv IQ - Premium Value Proposition (Three Pillars)
 
-import { Scan, Network, RefreshCw } from 'lucide-react';
+import { Layers, Shield, AlertTriangle } from 'lucide-react';
 
 const pillars = [
   {
-    icon: Scan,
-    title: 'Auto-Discovery',
-    description: 'Continuously discover and map services, runtimes, endpoints, and integrations from Kubernetes, GitOps, and manual imports.',
-    color: 'indigo',
-    features: [
-      'Kubernetes namespace scanning',
-      'GitOps manifest parsing',
-      'Environment variable detection',
-      'Service mesh integration',
-    ],
+    icon: Layers,
+    title: 'Cross-Layer Visibility',
+    description:
+      'See infrastructure, network, APIs, software versions, and associated data in one structured model. From VMs to containers, from databases to message queues — every layer, every connection.',
+    gradient: 'from-[#5B5FEF] to-[#7C3AED]',
+    iconBg: 'bg-[#5B5FEF]/10',
+    iconColor: 'text-[#5B5FEF]',
   },
   {
-    icon: Network,
-    title: 'Evidence-Driven Topology',
-    description: 'Generate dynamic, confidence-scored environment graphs that reflect the true state of your test environments.',
-    color: 'blue',
-    features: [
-      'Confidence-based edge scoring',
-      'Staleness detection',
-      'Dependency visualization',
-      'Owner attribution',
-    ],
+    icon: Shield,
+    title: 'Embedded Governance',
+    description:
+      'Ownership, policy alignment, approvals, and exception tracking directly within the environment landscape. Governance that lives where the work happens, not in separate documentation.',
+    gradient: 'from-emerald-500 to-teal-500',
+    iconBg: 'bg-emerald-500/10',
+    iconColor: 'text-emerald-500',
   },
   {
-    icon: RefreshCw,
-    title: 'Test Data Lifecycle Intelligence',
-    description: 'Track refresh dates, masking policies, lineage, and staleness across all environments and databases.',
-    color: 'emerald',
-    features: [
-      'Refresh tracking',
-      'Masking policy versions',
-      'Downstream consumer mapping',
-      'Staleness alerts',
-    ],
+    icon: AlertTriangle,
+    title: 'Proactive Risk Detection',
+    description:
+      'Identify coupling, drift, collisions, and dependency impact before disruption occurs. Know what will break before you make changes, not after.',
+    gradient: 'from-amber-500 to-orange-500',
+    iconBg: 'bg-amber-500/10',
+    iconColor: 'text-amber-500',
   },
 ];
 
-const colorClasses = {
-  indigo: {
-    bg: 'bg-indigo-50',
-    icon: 'bg-indigo-100 text-indigo-600',
-    border: 'border-indigo-200',
-    check: 'text-indigo-500',
-  },
-  blue: {
-    bg: 'bg-blue-50',
-    icon: 'bg-blue-100 text-blue-600',
-    border: 'border-blue-200',
-    check: 'text-blue-500',
-  },
-  emerald: {
-    bg: 'bg-emerald-50',
-    icon: 'bg-emerald-100 text-emerald-600',
-    border: 'border-emerald-200',
-    check: 'text-emerald-500',
-  },
-};
-
 export default function SolutionSection() {
   return (
-    <section id="solution" className="py-20 lg:py-28 bg-white">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-base font-semibold leading-7 text-indigo-600">
-            The Solution
+    <section id="governance" className="relative py-24 lg:py-32 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#F5F7FA]" />
+
+      {/* Subtle pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.4]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, #0B1220 1px, transparent 1px)`,
+          backgroundSize: '32px 32px',
+        }}
+      />
+
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-[#0B1220]">
+            A Unified Visibility & Governance Layer.
           </h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            TelEnvIQ: Living Environment Intelligence
-          </p>
-          <p className="mt-6 text-lg leading-8 text-slate-600">
-            A platform that treats topology auto-discovery and test data lifecycle tracking
-            as first-class capabilities, purpose-built for complex integration landscapes.
+          <p className="mt-6 text-lg text-slate-600 leading-relaxed">
+            One platform to see everything, govern everything, and anticipate everything across your non-production landscape.
           </p>
         </div>
 
-        <div className="mx-auto mt-16 max-w-6xl">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-            {pillars.map((pillar, index) => {
-              const colors = colorClasses[pillar.color as keyof typeof colorClasses];
-
-              return (
-                <div
-                  key={index}
-                  className={`relative rounded-2xl border ${colors.border} ${colors.bg} p-8 transition-all hover:shadow-lg`}
-                >
-                  <div className={`inline-flex rounded-xl p-3 ${colors.icon}`}>
-                    <pillar.icon className="h-6 w-6" />
+        {/* Pillars */}
+        <div className="mt-16 lg:mt-20">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {pillars.map((pillar, index) => (
+              <div
+                key={index}
+                className="group relative"
+              >
+                {/* Glass card */}
+                <div className="relative h-full rounded-2xl bg-white border border-slate-200/80 p-8 lg:p-10 shadow-sm hover:shadow-xl hover:border-slate-300/80 transition-all duration-300">
+                  {/* Icon */}
+                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${pillar.iconBg}`}>
+                    <pillar.icon className={`h-7 w-7 ${pillar.iconColor}`} />
                   </div>
 
-                  <h3 className="mt-6 text-xl font-semibold text-slate-900">
+                  {/* Content */}
+                  <h3 className="mt-6 text-xl font-semibold text-[#0B1220]">
                     {pillar.title}
                   </h3>
 
-                  <p className="mt-4 text-sm text-slate-600 leading-relaxed">
+                  <p className="mt-4 text-base text-slate-600 leading-relaxed">
                     {pillar.description}
                   </p>
 
-                  <ul className="mt-6 space-y-3">
-                    {pillar.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-3">
-                        <svg
-                          className={`h-5 w-5 flex-shrink-0 ${colors.check}`}
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span className="text-sm text-slate-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {/* Decorative gradient line */}
+                  <div className="absolute bottom-0 left-8 right-8 h-1 rounded-full overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className={`h-full w-full bg-gradient-to-r ${pillar.gradient}`} />
+                  </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </div>

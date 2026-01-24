@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import { Playfair_Display } from 'next/font/google';
 import './globals.css';
 
 const geistSans = localFont({
@@ -14,24 +15,30 @@ const geistMono = localFont({
   weight: '100 900',
 });
 
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'TelEnvIQ - Test Environment Intelligence Platform',
+  title: 'TelEnv IQ - Non-Production Environment Visibility & Governance',
   description:
-    'Auto-discover, map, and monitor your test environments and their test data lifecycle. Purpose-built for telco OSS/BSS integration landscapes.',
+    'End-to-end visibility and governance for non-production environments. From infrastructure to data, with governance embedded directly into the landscape.',
   keywords: [
-    'test environment',
-    'telco',
-    'OSS/BSS',
-    'topology',
-    'test data',
-    'auto-discovery',
-    'integration testing',
+    'environment visibility',
+    'non-production',
+    'governance',
+    'test environments',
+    'infrastructure',
+    'DevOps',
+    'platform engineering',
   ],
-  authors: [{ name: 'TelEnvIQ' }],
+  authors: [{ name: 'TelEnv IQ' }],
   openGraph: {
-    title: 'TelEnvIQ - Test Environment Intelligence Platform',
+    title: 'TelEnv IQ - Non-Production Environment Visibility & Governance',
     description:
-      'See your telco test environments clearly. Auto-discover, map, and monitor topology and test data lifecycle.',
+      'End-to-end visibility across development, test, and staging systems with governance embedded directly into the environment landscape.',
     type: 'website',
   },
 };
@@ -44,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} font-sans antialiased`}
       >
         {children}
       </body>

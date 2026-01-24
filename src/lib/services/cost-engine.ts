@@ -3,12 +3,8 @@
 
 import prisma from '@/lib/db';
 import type { Prisma } from '@prisma/client';
+import type { EnvironmentType } from '@prisma/client';
 import type {
-  CostModel,
-  CostItem,
-  EnvironmentCostOverride,
-  EnvironmentCostAllocation,
-  CostSimulation,
   CostPeriod,
   CostItemType,
   CostUnit,
@@ -118,7 +114,7 @@ export async function createCostItem(data: {
       unit: data.unit,
       defaultQuantity: data.defaultQuantity ?? 1,
       allocationMethod: data.allocationMethod || 'DIRECT',
-      tagsJson: data.tagsJson,
+      tagsJson: data.tagsJson as Prisma.InputJsonValue | undefined,
       notes: data.notes,
     },
   });
@@ -137,9 +133,13 @@ export async function updateCostItem(
     notes: string;
   }>
 ) {
+  const { tagsJson, ...rest } = data;
   return prisma.costItem.update({
     where: { id },
-    data,
+    data: {
+      ...rest,
+      ...(tagsJson !== undefined && { tagsJson: tagsJson as Prisma.InputJsonValue }),
+    },
   });
 }
 
@@ -267,7 +267,7 @@ export async function computeEnvironmentCosts(
   }
 
   if (options.stageFilter) {
-    whereClause.type = options.stageFilter as any;
+    whereClause.type = options.stageFilter as EnvironmentType;
   }
 
   // Get environments with related data for costing
@@ -511,12 +511,12 @@ export async function saveEnvironmentCostAllocation(
       periodStart,
       periodEnd,
       totalCost: summary.totalCost,
-      breakdownJson: summary.breakdown,
+      breakdownJson: summary.breakdown as unknown as Prisma.InputJsonValue,
       currency: summary.currency,
     },
     update: {
       totalCost: summary.totalCost,
-      breakdownJson: summary.breakdown,
+      breakdownJson: summary.breakdown as unknown as Prisma.InputJsonValue,
       currency: summary.currency,
       computedAt: new Date(),
     },
@@ -630,8 +630,8 @@ export async function saveSimulation(data: {
       description: data.description,
       baseCostModelId: data.baseCostModelId,
       currency: data.currency,
-      paramsJson: data.params,
-      resultJson: data.result,
+      paramsJson: data.params as unknown as Prisma.InputJsonValue,
+      resultJson: data.result as unknown as Prisma.InputJsonValue,
       createdBy: data.createdBy,
     },
   });

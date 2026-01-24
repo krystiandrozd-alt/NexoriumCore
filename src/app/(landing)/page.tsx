@@ -1,4 +1,4 @@
-// TelEnvIQ - Landing Page
+// TelEnv IQ - Premium Landing Page
 
 import {
   Header,
@@ -14,7 +14,7 @@ import {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#0B1220]">
       <Header />
       <main>
         <Hero />

@@ -5,7 +5,6 @@
 
 import { memo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   ToggleGroup,
   ToggleGroupItem,
@@ -16,7 +15,6 @@ import {
   Network,
   Maximize2,
   StickyNote,
-  Save,
   Loader2,
   Check,
   RefreshCw,

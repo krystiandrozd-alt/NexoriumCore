@@ -46,6 +46,7 @@ export interface BuildEnvironmentOptions {
   description?: string;
   entryComponentInstanceId?: string | null;
   exitComponentInstanceId?: string | null;
+  stageId?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -58,6 +59,7 @@ export function buildEnvironment(options: BuildEnvironmentOptions = {}): Environ
     description: options.description ?? null,
     entryComponentInstanceId: options.entryComponentInstanceId ?? null,
     exitComponentInstanceId: options.exitComponentInstanceId ?? null,
+    stageId: options.stageId ?? null,
     createdAt: options.createdAt ?? BASE_CREATED,
     updatedAt: options.updatedAt ?? BASE_UPDATED,
   };

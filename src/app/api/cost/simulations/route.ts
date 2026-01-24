@@ -66,20 +66,21 @@ export async function POST(request: NextRequest) {
 
     // Optionally save the simulation
     if (shouldSave && 'name' in params) {
+      const saveParams = params as z.infer<typeof SaveSimulationSchema>;
       const savedSimulation = await saveSimulation({
-        name: params.name,
-        description: params.description,
-        baseCostModelId: params.baseCostModelId,
+        name: saveParams.name,
+        description: saveParams.description,
+        baseCostModelId: saveParams.baseCostModelId,
         currency: result.currency,
         params: {
-          baseCostModelId: params.baseCostModelId,
-          addEnvCount: params.addEnvCount,
-          envFamily: params.envFamily,
-          envStage: params.envStage,
-          scalingFactor: params.scalingFactor,
+          baseCostModelId: saveParams.baseCostModelId,
+          addEnvCount: saveParams.addEnvCount,
+          envFamily: saveParams.envFamily,
+          envStage: saveParams.envStage,
+          scalingFactor: saveParams.scalingFactor,
         },
         result,
-        createdBy: params.createdBy,
+        createdBy: saveParams.createdBy,
       });
 
       return NextResponse.json({

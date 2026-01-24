@@ -525,11 +525,513 @@ body {
   @apply text-slate-600 hover:bg-slate-50;
 }
 
+/* ============================================
+   PREMIUM CANVAS THEME (FLAGSHIP)
+   Deep navy + violet mesh + glass panels
+   ============================================ */
+
+/* Premium Canvas Variables */
+:root {
+  --canvas-bg: #0f172a;
+  --canvas-bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  --canvas-mesh: radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                 radial-gradient(ellipse at 70% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 50%);
+
+  /* Glass panel */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --glass-blur: blur(12px);
+
+  /* Premium text */
+  --premium-text: #f8fafc;
+  --premium-text-muted: #94a3b8;
+  --premium-text-dim: #64748b;
+
+  /* Accent colors */
+  --accent-violet: #8b5cf6;
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+  --accent-amber: #f59e0b;
+
+  /* Drift indicators */
+  --drift-added: #10b981;
+  --drift-removed: #f43f5e;
+  --drift-changed: #f59e0b;
+}
+
+/* Premium canvas background */
+.premium-canvas-bg {
+  background: var(--canvas-bg);
+  background-image: var(--canvas-mesh);
+  position: relative;
+}
+
+.premium-canvas-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--canvas-bg-gradient);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Glass panel effect */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Glass panel hover */
+.glass-panel-interactive {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.2s ease;
+}
+
+.glass-panel-interactive:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Premium toolbar */
+.premium-toolbar {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Premium inspector panel */
+.premium-inspector {
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Premium button styles */
+.btn-premium {
+  @apply px-3 py-1.5 rounded-lg text-sm font-medium transition-all;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--premium-text-muted);
+  border: 1px solid transparent;
+}
+
+.btn-premium:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--premium-text);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-premium.active {
+  background: rgba(139, 92, 246, 0.2);
+  color: #c4b5fd;
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* Premium input */
+.input-premium {
+  @apply rounded-lg text-sm;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--premium-text);
+}
+
+.input-premium::placeholder {
+  color: var(--premium-text-dim);
+}
+
+.input-premium:focus {
+  outline: none;
+  border-color: var(--accent-violet);
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}
+
+/* Premium badge */
+.badge-premium {
+  @apply px-2 py-0.5 rounded-full text-xs font-medium;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--premium-text-muted);
+}
+
+/* Drift badges */
+.badge-drift-added {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-drift-removed {
+  background: rgba(244, 63, 94, 0.2);
+  color: #fda4af;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.badge-drift-changed {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Layer overlays */
+.layer-overlay-bss {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.layer-overlay-oss {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.layer-overlay-infra {
+  background: rgba(100, 116, 139, 0.08);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.layer-overlay-external {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Node highlight states */
+.node-highlight-search {
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.5), 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+.node-highlight-selected {
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.6), 0 0 16px rgba(139, 92, 246, 0.3);
+}
+
+/* Premium scrollbar for dark theme */
+.premium-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.premium-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+}
+
+.premium-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.premium-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* React Flow premium theme overrides */
+.react-flow.premium-theme .react-flow__background {
+  background: transparent !important;
+}
+
+.react-flow.premium-theme .react-flow__controls {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.react-flow.premium-theme .react-flow__controls-button {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.06);
+  color: var(--premium-text-muted);
+  fill: var(--premium-text-muted);
+}
+
+.react-flow.premium-theme .react-flow__controls-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--premium-text);
+  fill: var(--premium-text);
+}
+
+.react-flow.premium-theme .react-flow__minimap {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.react-flow.premium-theme .react-flow__minimap-mask {
+  fill: rgba(139, 92, 246, 0.1);
+}
+
+/* Keyboard shortcut hints */
+.kbd-hint {
+  @apply inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[10px] font-mono;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--premium-text-dim);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Save status indicator */
+.save-status {
+  @apply flex items-center gap-1.5 text-xs;
+}
+
+.save-status.saving {
+  color: var(--accent-amber);
+}
+
+.save-status.saved {
+  color: var(--accent-emerald);
+}
+
+.save-status.error {
+  color: var(--accent-rose);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .premium-canvas-bg::before,
+  .glass-panel,
+  .glass-panel-interactive,
+  .btn-premium,
+  .node-highlight-search,
+  .node-highlight-selected {
+    transition: none;
+    animation: none;
+  }
+}
+
 /* Dark mode support (future-ready) */
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark mode variables can be added here */
   }
+}
+
+/* ============================================
+   FLOW MAP ANIMATIONS
+   Portfolio Change Intelligence View
+   ============================================ */
+
+/* Particle flow animation along edges */
+@keyframes pulse-flow {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.02);
+  }
+}
+
+/* Flowing particle animation */
+.flow-particle {
+  filter: drop-shadow(0 0 3px currentColor);
+}
+
+/* Edge glow pulse */
+@keyframes edge-glow {
+  0%, 100% {
+    opacity: 0.4;
+    filter: blur(4px);
+  }
+  50% {
+    opacity: 0.6;
+    filter: blur(6px);
+  }
+}
+
+.edge-glow {
+  animation: edge-glow 2s ease-in-out infinite;
+}
+
+/* Node collision pulse */
+@keyframes collision-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(239, 68, 68, 0.1);
+    transform: scale(1.02);
+  }
+}
+
+.collision-pulse {
+  animation: collision-pulse 2s ease-in-out infinite;
+}
+
+/* Convergence spin indicator */
+@keyframes convergence-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.convergence-ring {
+  animation: convergence-spin 10s linear infinite;
+}
+
+/* Risk indicator pulse */
+@keyframes risk-pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.risk-pulse {
+  animation: risk-pulse 1.5s ease-in-out infinite;
+}
+
+/* Emergent link shimmer */
+@keyframes emergent-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.emergent-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(6, 182, 212, 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: emergent-shimmer 3s ease-in-out infinite;
+}
+
+/* Node hover lift */
+@keyframes node-hover {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-2px);
+  }
+}
+
+.node-hover:hover {
+  animation: node-hover 0.2s ease-out forwards;
+}
+
+/* Intelligence panel slide */
+@keyframes panel-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.panel-slide-in {
+  animation: panel-slide-in 0.3s ease-out forwards;
+}
+
+/* Filter panel slide */
+@keyframes filter-slide-in {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.filter-slide-in {
+  animation: filter-slide-in 0.3s ease-out forwards;
+}
+
+/* Collision badge bounce */
+@keyframes badge-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.badge-bounce {
+  animation: badge-bounce 0.5s ease-in-out;
+}
+
+/* Portfolio risk score pulse */
+@keyframes score-pulse {
+  0%, 100% {
+    text-shadow: 0 0 10px currentColor;
+  }
+  50% {
+    text-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+  }
+}
+
+.score-pulse {
+  animation: score-pulse 3s ease-in-out infinite;
+}
+
+/* What-If mode indicator */
+@keyframes whatif-glow {
+  0%, 100% {
+    border-color: rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    border-color: rgba(139, 92, 246, 0.6);
+    box-shadow: 0 0 15px 5px rgba(139, 92, 246, 0.2);
+  }
+}
+
+.whatif-mode {
+  animation: whatif-glow 2s ease-in-out infinite;
+}
+
+/* Connection handle pulse */
+@keyframes handle-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.react-flow__handle:hover {
+  animation: handle-pulse 1s ease-in-out infinite;
+}
+
+/* Flow Map specific React Flow overrides */
+.react-flow.premium-theme .react-flow__edge-path {
+  transition: stroke 0.3s, stroke-width 0.2s;
+}
+
+.react-flow.premium-theme .react-flow__edge.selected .react-flow__edge-path {
+  stroke-width: 3px;
+}
+
+.react-flow.premium-theme .react-flow__node.selected {
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.6), 0 0 16px rgba(139, 92, 246, 0.3);
 }
 
 /* Print styles for topology exports */
@@ -549,5 +1051,147 @@ body {
   .swimlane-partner {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
+}
+
+/* ============================================
+   OVERVIEW DASHBOARD ANIMATIONS
+   Premium dashboard experience
+   ============================================ */
+
+/* Fade in and up animation for staggered grid items */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+/* Subtle pulse for critical alerts */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Slow ping for critical alert rings */
+@keyframes ping-slow {
+  75%, 100% {
+    transform: scale(1.05);
+    opacity: 0;
+  }
+}
+
+.animate-ping-slow {
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* KPI counter animation (applied via JS, just ensures smooth rendering) */
+.kpi-counter {
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s ease;
+}
+
+/* Health gauge stroke animation */
+@keyframes gauge-fill {
+  from {
+    stroke-dashoffset: var(--gauge-circumference, 282.74);
+  }
+}
+
+.gauge-animate {
+  animation: gauge-fill 1s ease-out forwards;
+}
+
+/* Card hover lift effect */
+.card-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Skeleton shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Overview section headers */
+.overview-section-header {
+  @apply text-sm font-semibold text-white mb-4;
+  letter-spacing: 0.025em;
+}
+
+/* Overview glass panel variant */
+.overview-panel {
+  @apply rounded-xl backdrop-blur-sm border p-4;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.overview-panel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Timeline connector line */
+.timeline-line {
+  @apply absolute left-3.5 top-0 bottom-0 w-px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+}
+
+/* Reduced motion support for overview */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-pulse-subtle,
+  .animate-ping-slow,
+  .gauge-animate,
+  .card-lift,
+  .skeleton-shimmer {
+    animation: none;
+    transition: none;
+  }
+
+  .animate-fade-in-up {
+    opacity: 1;
+    transform: none;
   }
 }

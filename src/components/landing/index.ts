@@ -1,8 +1,8 @@
-// TelEnvIQ - Landing Page Components Index
+// TelEnv IQ - Premium Landing Page Components
 
 export { default as Header } from './Header';
 export { default as Hero } from './Hero';
-export { default as NetworkVisualization } from './NetworkVisualization';
+export { default as ProductMockup } from './ProductMockup';
 export { default as ProblemSection } from './ProblemSection';
 export { default as SolutionSection } from './SolutionSection';
 export { default as HowItWorksSection } from './HowItWorksSection';

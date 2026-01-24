@@ -18,3 +18,9 @@ export * from './governance';
 
 // Security services
 export * from './security';
+
+// 6-Pillar Services
+export * from './flow-map';
+export * from './impact';
+export * from './insight';
+export * from './organisation';

@@ -33,6 +33,7 @@ export const DEV_ENVIRONMENT: Environment = {
   updatedAt: UPDATED_AT,
   entryComponentInstanceId: null,
   exitComponentInstanceId: null,
+  stageId: null,
 };
 
 export const SIT_ENVIRONMENT: Environment = {
@@ -44,6 +45,7 @@ export const SIT_ENVIRONMENT: Environment = {
   updatedAt: UPDATED_AT,
   entryComponentInstanceId: null,
   exitComponentInstanceId: null,
+  stageId: null,
 };
 
 export const UAT_ENVIRONMENT: Environment = {
@@ -55,6 +57,7 @@ export const UAT_ENVIRONMENT: Environment = {
   updatedAt: UPDATED_AT,
   entryComponentInstanceId: null,
   exitComponentInstanceId: null,
+  stageId: null,
 };
 
 export const NFT_ENVIRONMENT: Environment = {
@@ -66,6 +69,7 @@ export const NFT_ENVIRONMENT: Environment = {
   updatedAt: UPDATED_AT,
   entryComponentInstanceId: null,
   exitComponentInstanceId: null,
+  stageId: null,
 };
 
 export const PREPROD_ENVIRONMENT: Environment = {
@@ -77,6 +81,7 @@ export const PREPROD_ENVIRONMENT: Environment = {
   updatedAt: UPDATED_AT,
   entryComponentInstanceId: null,
   exitComponentInstanceId: null,
+  stageId: null,
 };
 
 export const PROD_RO_ENVIRONMENT: Environment = {
@@ -88,6 +93,7 @@ export const PROD_RO_ENVIRONMENT: Environment = {
   updatedAt: UPDATED_AT,
   entryComponentInstanceId: null,
   exitComponentInstanceId: null,
+  stageId: null,
 };
 
 // ============================================

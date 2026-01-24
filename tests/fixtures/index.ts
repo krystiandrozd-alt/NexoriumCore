@@ -10,6 +10,7 @@ export * from './network-contexts';
 export * from './endpoints';
 export * from './deployed-versions';
 export * from './graph-data';
+export * from './large-graph-data';
 
 // Re-export fixture builders
 export * from './builders';

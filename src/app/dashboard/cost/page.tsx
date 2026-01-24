@@ -10,8 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
 import {
   DollarSign,
-  TrendingUp,
-  TrendingDown,
   Building2,
   Server,
   Cloud,
