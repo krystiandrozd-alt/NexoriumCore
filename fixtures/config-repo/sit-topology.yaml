@@ -1,0 +1,139 @@
+# TelEnvIQ Config Repo Manifest
+# Environment topology definition for SIT
+
+environment:
+  name: SIT-BSS-Core
+  type: SIT
+  description: BSS Core Systems Integration Test Environment
+
+components:
+  - name: cisco-nso
+    component: Cisco NSO
+    host: bss-app-01.sit.telco.local
+    version: "6.1.1"
+    buildRef: "build-20240115-abc123"
+    endpoints:
+      - port: 8080
+        scheme: http
+        path: /api
+      - port: 443
+        scheme: https
+        path: /restconf
+    connections:
+      - to: ericsson-enm
+        protocol: REST
+        detail: NETCONF
+        port: 443
+
+  - name: amdocs-crm
+    component: Amdocs CRM
+    host: bss-app-01.sit.telco.local
+    version: "22.1"
+    buildRef: "release-22.1.5"
+    endpoints:
+      - port: 8443
+        scheme: https
+        path: /api/v1
+    connections:
+      - to: netcracker-som
+        protocol: REST
+        detail: TMF622
+        port: 443
+      - to: oracle-db
+        protocol: JDBC
+        port: 1521
+      - to: kafka
+        protocol: MQ
+        detail: order-events
+        port: 9092
+
+  - name: netcracker-som
+    component: Netcracker SOM
+    host: bss-app-02.sit.telco.local
+    version: "11.2.0"
+    buildRef: "som-11.2.0-patch3"
+    endpoints:
+      - port: 443
+        scheme: https
+        path: /som/api
+    connections:
+      - to: tmf-order-api
+        protocol: REST
+        detail: TMF641
+        port: 8080
+      - to: postgres-db
+        protocol: JDBC
+        port: 5432
+
+  - name: tmf-order-api
+    component: TMF Order API
+    host: bss-app-01.sit.telco.local
+    version: "4.0.0"
+    buildRef: "tmf-api-4.0.0-rel"
+    endpoints:
+      - port: 8080
+        scheme: http
+        path: /tmf-api/productOrderingManagement/v4
+
+  - name: oracle-db
+    component: Oracle Database
+    host: bss-db-01.sit.telco.local
+    version: "19.19"
+    endpoints:
+      - port: 1521
+        scheme: jdbc
+
+  - name: postgres-db
+    component: PostgreSQL
+    host: oss-db-01.sit.telco.local
+    version: "15.1"
+    endpoints:
+      - port: 5432
+        scheme: jdbc
+
+  - name: kafka
+    component: Apache Kafka
+    host: mq-broker-01.sit.telco.local
+    version: "3.4.0"
+    endpoints:
+      - port: 9092
+        scheme: tcp
+      - port: 9093
+        scheme: tcp
+
+  - name: ericsson-enm
+    component: Ericsson ENM
+    host: oss-app-01.sit.telco.local
+    version: "23.1"
+    endpoints:
+      - port: 443
+        scheme: https
+
+  - name: kong-gateway
+    component: Kong API Gateway
+    host: api-gw-01.sit.telco.local
+    version: "3.2.0"
+    buildRef: "kong-3.2.0-custom"
+    endpoints:
+      - port: 8000
+        scheme: http
+      - port: 8443
+        scheme: https
+    connections:
+      - to: amdocs-crm
+        protocol: REST
+        port: 8443
+      - to: netcracker-som
+        protocol: REST
+        port: 443
+      - to: redis
+        protocol: TCP
+        port: 6379
+
+  - name: redis
+    component: Redis
+    host: bss-app-01.sit.telco.local
+    version: "7.2.0"
+    endpoints:
+      - port: 6379
+        scheme: tcp

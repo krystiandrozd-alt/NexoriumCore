@@ -1,0 +1,105 @@
+{
+  "accountId": "123456789012",
+  "region": "ap-southeast-2",
+  "vpcs": [
+    {
+      "vpcId": "vpc-0abc123def456789a",
+      "cidrBlock": "10.10.0.0/16",
+      "tags": {
+        "Name": "bss-sit-vpc",
+        "Environment": "SIT",
+        "Domain": "BSS"
+      }
+    },
+    {
+      "vpcId": "vpc-0def456789abc1234",
+      "cidrBlock": "10.20.0.0/16",
+      "tags": {
+        "Name": "oss-sit-vpc",
+        "Environment": "SIT",
+        "Domain": "OSS"
+      }
+    }
+  ],
+  "subnets": [
+    {
+      "subnetId": "subnet-0abc123",
+      "vpcId": "vpc-0abc123def456789a",
+      "cidrBlock": "10.10.1.0/24",
+      "availabilityZone": "ap-southeast-2a",
+      "tags": { "Name": "bss-sit-app-subnet-a" }
+    },
+    {
+      "subnetId": "subnet-0abc124",
+      "vpcId": "vpc-0abc123def456789a",
+      "cidrBlock": "10.10.2.0/24",
+      "availabilityZone": "ap-southeast-2b",
+      "tags": { "Name": "bss-sit-db-subnet-b" }
+    }
+  ],
+  "instances": [
+    {
+      "instanceId": "i-0abc123def456789a",
+      "instanceType": "m5.xlarge",
+      "privateIpAddress": "10.10.1.10",
+      "publicIpAddress": null,
+      "vpcId": "vpc-0abc123def456789a",
+      "subnetId": "subnet-0abc123",
+      "state": "running",
+      "platform": "Linux/UNIX",
+      "tags": {
+        "Name": "bss-app-01",
+        "Application": "Cisco NSO",
+        "Environment": "SIT"
+      }
+    },
+    {
+      "instanceId": "i-0def456789abc1234",
+      "instanceType": "m5.xlarge",
+      "privateIpAddress": "10.10.1.11",
+      "publicIpAddress": null,
+      "vpcId": "vpc-0abc123def456789a",
+      "subnetId": "subnet-0abc123",
+      "state": "running",
+      "platform": "Linux/UNIX",
+      "tags": {
+        "Name": "bss-app-02",
+        "Application": "Netcracker SOM",
+        "Environment": "SIT"
+      }
+    },
+    {
+      "instanceId": "i-0ghi789abc123def4",
+      "instanceType": "r5.2xlarge",
+      "privateIpAddress": "10.10.2.10",
+      "publicIpAddress": null,
+      "vpcId": "vpc-0abc123def456789a",
+      "subnetId": "subnet-0abc124",
+      "state": "running",
+      "platform": "Linux/UNIX",
+      "tags": {
+        "Name": "bss-db-01",
+        "Application": "Oracle Database",
+        "Environment": "SIT"
+      }
+    }
+  ],
+  "loadBalancers": [
+    {
+      "loadBalancerArn": "arn:aws:elasticloadbalancing:ap-southeast-2:123456789012:loadbalancer/app/bss-sit-alb/50dc6c495c0c9188",
+      "dnsName": "bss-sit-alb-1234567890.ap-southeast-2.elb.amazonaws.com",
+      "type": "application",
+      "vpcId": "vpc-0abc123def456789a",
+      "state": "active",
+      "tags": { "Name": "bss-sit-alb" }
+    }
+  ],
+  "vpcEndpoints": [
+    {
+      "vpcEndpointId": "vpce-0abc123def456789a",
+      "vpcId": "vpc-0abc123def456789a",
+      "serviceName": "com.amazonaws.ap-southeast-2.s3",
+      "state": "available"
+    }
+  ]
+}

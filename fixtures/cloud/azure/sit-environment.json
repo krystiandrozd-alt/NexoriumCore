@@ -1,0 +1,83 @@
+{
+  "subscriptionId": "12345678-1234-1234-1234-123456789012",
+  "location": "australiaeast",
+  "resourceGroups": [
+    {
+      "name": "rg-bss-sit-001",
+      "location": "australiaeast",
+      "tags": {
+        "Environment": "SIT",
+        "Domain": "BSS"
+      }
+    }
+  ],
+  "virtualNetworks": [
+    {
+      "id": "/subscriptions/12345678.../virtualNetworks/vnet-bss-sit",
+      "name": "vnet-bss-sit",
+      "resourceGroup": "rg-bss-sit-001",
+      "addressSpace": ["10.50.0.0/16"],
+      "subnets": [
+        {
+          "name": "snet-app",
+          "addressPrefix": "10.50.1.0/24"
+        },
+        {
+          "name": "snet-db",
+          "addressPrefix": "10.50.2.0/24"
+        }
+      ],
+      "tags": { "Environment": "SIT" }
+    }
+  ],
+  "virtualMachines": [
+    {
+      "id": "/subscriptions/12345678.../virtualMachines/vm-bss-api-01",
+      "name": "vm-bss-api-01",
+      "resourceGroup": "rg-bss-sit-001",
+      "location": "australiaeast",
+      "vmSize": "Standard_D4s_v3",
+      "privateIpAddress": "10.50.1.10",
+      "osType": "Linux",
+      "tags": {
+        "Application": "Kong API Gateway",
+        "Environment": "SIT"
+      }
+    },
+    {
+      "id": "/subscriptions/12345678.../virtualMachines/vm-bss-crm-01",
+      "name": "vm-bss-crm-01",
+      "resourceGroup": "rg-bss-sit-001",
+      "location": "australiaeast",
+      "vmSize": "Standard_D8s_v3",
+      "privateIpAddress": "10.50.1.20",
+      "osType": "Linux",
+      "tags": {
+        "Application": "Amdocs CRM",
+        "Environment": "SIT"
+      }
+    }
+  ],
+  "loadBalancers": [
+    {
+      "id": "/subscriptions/12345678.../loadBalancers/lb-bss-sit",
+      "name": "lb-bss-sit",
+      "resourceGroup": "rg-bss-sit-001",
+      "frontendIpConfigurations": [
+        {
+          "name": "frontend-config",
+          "privateIpAddress": "10.50.100.10"
+        }
+      ],
+      "tags": { "Environment": "SIT" }
+    }
+  ],
+  "privateEndpoints": [
+    {
+      "id": "/subscriptions/12345678.../privateEndpoints/pe-storage-001",
+      "name": "pe-storage-001",
+      "resourceGroup": "rg-bss-sit-001",
+      "privateLinkServiceId": "Microsoft.Storage/storageAccounts"
+    }
+  ]
+}

@@ -4,24 +4,550 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
+  --foreground: #0f172a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Telco-inspired theme */
+  --telco-primary: #4f46e5;
+  --telco-secondary: #6366f1;
+  --telco-accent: #0ea5e9;
+  --telco-success: #10b981;
+  --telco-warning: #f59e0b;
+  --telco-error: #ef4444;
+
+  /* Zone colors */
+  --zone-production: #fef3c7;
+  --zone-production-border: #fcd34d;
+  --zone-non-prod: #dbeafe;
+  --zone-non-prod-border: #93c5fd;
+  --zone-dmz: #fce7f3;
+  --zone-dmz-border: #f9a8d4;
+  --zone-partner: #e0e7ff;
+  --zone-partner-border: #a5b4fc;
+  --zone-internet: #fee2e2;
+  --zone-internet-border: #fca5a5;
+  --zone-secure-core: #d1fae5;
+  --zone-secure-core-border: #6ee7b7;
+  --zone-lab: #f3e8ff;
+  --zone-lab-border: #c4b5fd;
+
+  /* Telco layer colors */
+  --layer-channels: #dcfce7;
+  --layer-channels-border: #86efac;
+  --layer-bss: #dbeafe;
+  --layer-bss-border: #93c5fd;
+  --layer-oss: #fef3c7;
+  --layer-oss-border: #fcd34d;
+  --layer-network: #e0e7ff;
+  --layer-network-border: #a5b4fc;
+  --layer-shared: #f1f5f9;
+  --layer-shared-border: #cbd5e1;
+  --layer-external: #ecfdf5;
+  --layer-external-border: #6ee7b7;
+
+  /* Runtime layer colors */
+  --runtime-vm: #fef3c7;
+  --runtime-vm-border: #fcd34d;
+  --runtime-container: #dbeafe;
+  --runtime-container-border: #93c5fd;
+  --runtime-cnf: #e0e7ff;
+  --runtime-cnf-border: #a5b4fc;
+  --runtime-vnf: #fce7f3;
+  --runtime-vnf-border: #f9a8d4;
+  --runtime-bare-metal: #f1f5f9;
+  --runtime-bare-metal-border: #cbd5e1;
+
+  /* Hosting domain colors */
+  --hosting-cloud: #dbeafe;
+  --hosting-cloud-border: #93c5fd;
+  --hosting-on-prem: #f1f5f9;
+  --hosting-on-prem-border: #cbd5e1;
+  --hosting-hybrid: #fef3c7;
+  --hosting-hybrid-border: #fcd34d;
+  --hosting-third-party: #e0e7ff;
+  --hosting-third-party-border: #a5b4fc;
+  --hosting-edge: #ecfdf5;
+  --hosting-edge-border: #6ee7b7;
+
+  /* Compliance/Classification colors */
+  --classification-pii: #fecaca;
+  --classification-pii-border: #f87171;
+  --classification-pci: #fed7aa;
+  --classification-pci-border: #fb923c;
+  --classification-confidential: #fef08a;
+  --classification-confidential-border: #facc15;
+  --classification-non-sensitive: #bbf7d0;
+  --classification-non-sensitive-border: #4ade80;
+
+  /* Enterprise shadows */
+  --shadow-enterprise-sm: 0 1px 2px 0 rgb(79 70 229 / 0.05);
+  --shadow-enterprise: 0 4px 6px -1px rgb(79 70 229 / 0.1), 0 2px 4px -2px rgb(79 70 229 / 0.1);
+  --shadow-enterprise-lg: 0 10px 15px -3px rgb(79 70 229 / 0.1), 0 4px 6px -4px rgb(79 70 229 / 0.1);
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-slate-200;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* React Flow customizations */
+.react-flow__node {
+  cursor: pointer;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+
+.react-flow__controls {
+  @apply bg-white border border-slate-200 rounded-lg shadow-sm;
+}
+
+.react-flow__controls-button {
+  @apply border-b border-slate-200 hover:bg-slate-50;
+}
+
+.react-flow__controls-button:last-child {
+  @apply border-b-0;
+}
+
+.react-flow__minimap {
+  @apply bg-white border border-slate-200 rounded-lg;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full hover:bg-slate-400;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-200 hover:shadow-md hover:border-indigo-200;
+}
+
+/* Gradient text */
+.gradient-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500;
+}
+
+/* Focus ring styles */
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2;
+}
+
+/* ============================================
+   TELCO ENTERPRISE THEME EXTENSIONS
+   ============================================ */
+
+/* Soft indigo gradients */
+.gradient-telco {
+  @apply bg-gradient-to-br from-indigo-500 to-blue-600;
+}
+
+.gradient-telco-soft {
+  @apply bg-gradient-to-br from-indigo-50 via-blue-50 to-sky-50;
+}
+
+.gradient-telco-header {
+  @apply bg-gradient-to-r from-indigo-600 via-blue-600 to-sky-500;
+}
+
+.gradient-sidebar {
+  @apply bg-gradient-to-b from-slate-50 to-white;
+}
+
+/* Enterprise panel shadows */
+.shadow-enterprise-sm {
+  box-shadow: var(--shadow-enterprise-sm);
+}
+
+.shadow-enterprise {
+  box-shadow: var(--shadow-enterprise);
+}
+
+.shadow-enterprise-lg {
+  box-shadow: var(--shadow-enterprise-lg);
+}
+
+/* Enterprise card styles */
+.card-enterprise {
+  @apply bg-white border border-slate-200 rounded-xl;
+  box-shadow: var(--shadow-enterprise);
+}
+
+.card-enterprise:hover {
+  @apply border-indigo-200;
+  box-shadow: var(--shadow-enterprise-lg);
+}
+
+/* Node-grid SVG pattern for graph backgrounds */
+.bg-node-grid {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234f46e5' fill-opacity='0.03'%3E%3Cpath d='M0 20h40v1H0zM20 0v40h1V0z'/%3E%3C/g%3E%3Ccircle cx='20' cy='20' r='1' fill='%234f46e5' fill-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Dot pattern for swimlane backgrounds */
+.bg-dot-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='%23cbd5e1' fill-opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* Cross-hatch pattern for restricted zones */
+.bg-restricted-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 8 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L8 8M8 0L0 8' stroke='%23ef4444' stroke-opacity='0.1' stroke-width='0.5'/%3E%3C/svg%3E");
+}
+
+/* Zone swimlane backgrounds */
+.swimlane-production {
+  background-color: var(--zone-production);
+  border-color: var(--zone-production-border);
+}
+
+.swimlane-non-prod {
+  background-color: var(--zone-non-prod);
+  border-color: var(--zone-non-prod-border);
+}
+
+.swimlane-dmz {
+  background-color: var(--zone-dmz);
+  border-color: var(--zone-dmz-border);
+}
+
+.swimlane-partner {
+  background-color: var(--zone-partner);
+  border-color: var(--zone-partner-border);
+}
+
+.swimlane-internet {
+  background-color: var(--zone-internet);
+  border-color: var(--zone-internet-border);
+}
+
+.swimlane-secure-core {
+  background-color: var(--zone-secure-core);
+  border-color: var(--zone-secure-core-border);
+}
+
+.swimlane-lab {
+  background-color: var(--zone-lab);
+  border-color: var(--zone-lab-border);
+}
+
+/* Telco layer swimlane backgrounds */
+.swimlane-bss {
+  background-color: var(--layer-bss);
+  border-color: var(--layer-bss-border);
+}
+
+.swimlane-oss {
+  background-color: var(--layer-oss);
+  border-color: var(--layer-oss-border);
+}
+
+.swimlane-network {
+  background-color: var(--layer-network);
+  border-color: var(--layer-network-border);
+}
+
+.swimlane-shared {
+  background-color: var(--layer-shared);
+  border-color: var(--layer-shared-border);
+}
+
+.swimlane-external {
+  background-color: var(--layer-external);
+  border-color: var(--layer-external-border);
+}
+
+/* Runtime layer swimlane backgrounds */
+.swimlane-vm {
+  background-color: var(--runtime-vm);
+  border-color: var(--runtime-vm-border);
+}
+
+.swimlane-container {
+  background-color: var(--runtime-container);
+  border-color: var(--runtime-container-border);
+}
+
+.swimlane-cnf {
+  background-color: var(--runtime-cnf);
+  border-color: var(--runtime-cnf-border);
+}
+
+.swimlane-vnf {
+  background-color: var(--runtime-vnf);
+  border-color: var(--runtime-vnf-border);
+}
+
+.swimlane-bare-metal {
+  background-color: var(--runtime-bare-metal);
+  border-color: var(--runtime-bare-metal-border);
+}
+
+/* Hosting domain swimlane backgrounds */
+.swimlane-cloud {
+  background-color: var(--hosting-cloud);
+  border-color: var(--hosting-cloud-border);
+}
+
+.swimlane-on-prem {
+  background-color: var(--hosting-on-prem);
+  border-color: var(--hosting-on-prem-border);
+}
+
+.swimlane-hybrid {
+  background-color: var(--hosting-hybrid);
+  border-color: var(--hosting-hybrid-border);
+}
+
+.swimlane-third-party {
+  background-color: var(--hosting-third-party);
+  border-color: var(--hosting-third-party-border);
+}
+
+.swimlane-edge {
+  background-color: var(--hosting-edge);
+  border-color: var(--hosting-edge-border);
+}
+
+/* Classification badges */
+.badge-pii {
+  background-color: var(--classification-pii);
+  border-color: var(--classification-pii-border);
+  @apply text-red-700;
+}
+
+.badge-pci {
+  background-color: var(--classification-pci);
+  border-color: var(--classification-pci-border);
+  @apply text-orange-700;
+}
+
+.badge-confidential {
+  background-color: var(--classification-confidential);
+  border-color: var(--classification-confidential-border);
+  @apply text-yellow-700;
+}
+
+.badge-non-sensitive {
+  background-color: var(--classification-non-sensitive);
+  border-color: var(--classification-non-sensitive-border);
+  @apply text-green-700;
+}
+
+/* Policy violation animations */
+@keyframes violation-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+}
+
+.violation-pulse {
+  animation: violation-pulse 2s ease-in-out infinite;
+}
+
+@keyframes violation-ring {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.violation-ring {
+  animation: violation-ring 1.5s ease-in-out infinite;
+}
+
+/* Gateway bridge visualization */
+.gateway-bridge {
+  @apply border-2 border-dashed border-purple-400 rounded-lg;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.05) 0%, rgba(168, 85, 247, 0.1) 100%);
+}
+
+.gateway-bridge-line {
+  stroke-dasharray: 8, 4;
+  animation: dash-flow 1s linear infinite;
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+/* Compliance gauge */
+.compliance-gauge {
+  @apply relative w-24 h-24;
+}
+
+.compliance-gauge-bg {
+  @apply stroke-slate-200;
+}
+
+.compliance-gauge-fill {
+  @apply transition-all duration-500 ease-out;
+  stroke-linecap: round;
+}
+
+.compliance-gauge-fill.critical {
+  @apply stroke-red-500;
+}
+
+.compliance-gauge-fill.warning {
+  @apply stroke-yellow-500;
+}
+
+.compliance-gauge-fill.good {
+  @apply stroke-green-500;
+}
+
+/* Activity timeline */
+.activity-timeline {
+  @apply relative;
+}
+
+.activity-timeline::before {
+  content: '';
+  @apply absolute left-5 top-0 bottom-0 w-px bg-slate-200;
+}
+
+.activity-item {
+  @apply relative flex gap-4 pl-12;
+}
+
+.activity-item::before {
+  content: '';
+  @apply absolute left-3.5 top-3 w-3 h-3 rounded-full bg-white border-2 border-slate-300;
+}
+
+.activity-item.critical::before {
+  @apply border-red-500 bg-red-50;
+}
+
+.activity-item.warning::before {
+  @apply border-yellow-500 bg-yellow-50;
+}
+
+.activity-item.success::before {
+  @apply border-green-500 bg-green-50;
+}
+
+/* Connector status indicators */
+.connector-status {
+  @apply relative flex items-center gap-2;
+}
+
+.connector-status-dot {
+  @apply w-2 h-2 rounded-full;
+}
+
+.connector-status-dot.connected {
+  @apply bg-green-500;
+}
+
+.connector-status-dot.disconnected {
+  @apply bg-red-500;
+}
+
+.connector-status-dot.testing {
+  @apply bg-yellow-500 animate-pulse;
+}
+
+.connector-status-dot.unknown {
+  @apply bg-slate-400;
+}
+
+/* Data freshness indicators */
+.freshness-indicator {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+}
+
+.freshness-indicator.fresh {
+  @apply bg-green-100 text-green-700;
+}
+
+.freshness-indicator.stale {
+  @apply bg-yellow-100 text-yellow-700;
+}
+
+.freshness-indicator.critical {
+  @apply bg-red-100 text-red-700;
+}
+
+/* Enrichment markers */
+.enrichment-marker {
+  @apply absolute -top-1 -right-1 w-4 h-4 rounded-full bg-indigo-500 flex items-center justify-center;
+}
+
+.enrichment-marker-icon {
+  @apply w-2.5 h-2.5 text-white;
+}
+
+/* View mode toggle */
+.view-mode-toggle {
+  @apply inline-flex rounded-lg border border-slate-200 bg-white p-1;
+}
+
+.view-mode-toggle-item {
+  @apply px-3 py-1.5 rounded-md text-sm font-medium transition-colors;
+}
+
+.view-mode-toggle-item[data-state="on"] {
+  @apply bg-indigo-100 text-indigo-700;
+}
+
+.view-mode-toggle-item[data-state="off"] {
+  @apply text-slate-600 hover:bg-slate-50;
+}
+
+/* Dark mode support (future-ready) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark mode variables can be added here */
+  }
+}
+
+/* Print styles for topology exports */
+@media print {
+  .react-flow__controls,
+  .react-flow__minimap {
+    display: none !important;
+  }
+
+  .react-flow__pane {
+    background: white !important;
+  }
+
+  .swimlane-production,
+  .swimlane-non-prod,
+  .swimlane-dmz,
+  .swimlane-partner {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 }

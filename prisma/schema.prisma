@@ -1,0 +1,1147 @@
+// TelEnvIQ - Prisma Schema
+// Telco Test Environment Auto-Discovery and Test Data Intelligence Platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// NEW ENUMS - Enterprise Features
+// ============================================
+
+enum NetworkZoneType {
+  PROD
+  NON_PROD
+  DMZ
+  PARTNER
+  INTERNET
+  SECURE_CORE
+  LAB
+}
+
+enum ConnectivityPolicy {
+  RESTRICTED
+  ALLOWED_VIA_GATEWAY
+  NO_DIRECT_ACCESS
+}
+
+enum BridgeMechanism {
+  API_GATEWAY
+  PROXY
+  BASTION
+  FILE_TRANSFER
+  ESB
+  DIRECT
+}
+
+enum VirtualizationType {
+  VM
+  CONTAINER
+  CNF
+  VNF
+  BARE_METAL
+}
+
+enum DataClassification {
+  PII
+  PCI
+  CONFIDENTIAL
+  NON_SENSITIVE
+}
+
+enum MaskingMethod {
+  TOKENIZATION
+  STATIC_MASK
+  DYNAMIC_MASK
+  SYNTHETIC
+  NONE
+}
+
+enum ComplianceFlag {
+  GDPR
+  PCI_DSS
+  HIPAA
+  SOX
+  INTERNAL_POLICY
+  CCPA
+}
+
+enum ActivityActionType {
+  CONNECTOR_RUN
+  SNAPSHOT_CREATED
+  MANUAL_EDIT
+  ENRICHMENT_ADDED
+  ENRICHMENT_REVERTED
+  POLICY_VIOLATION_DETECTED
+  POLICY_VIOLATION_RESOLVED
+  APPROVAL_GRANTED
+  APPROVAL_REVOKED
+  DATA_REFRESH
+  OWNERSHIP_CHANGED
+}
+
+enum TelcoLayer {
+  BSS
+  OSS
+  NETWORK
+  SHARED
+  EXTERNAL
+}
+
+enum TelcoSubsystem {
+  CRM
+  CPQ
+  BILLING
+  ORDER_MANAGEMENT
+  REVENUE_ASSURANCE
+  DUNNING
+  COLLECTIONS
+  PRODUCT_CATALOG
+  MEDIATION
+  RATING
+  PROVISIONING
+  ACTIVATION
+  INVENTORY
+  FAULT_MANAGEMENT
+  PERFORMANCE_MANAGEMENT
+  SERVICE_ASSURANCE
+  NETWORK_MONITORING
+  AAA
+  HSS
+  PCRF
+  SMSC
+  MMSC
+  IMS
+  VAS
+  CHANNEL
+  API_GATEWAY
+  INTEGRATION
+  DATA_WAREHOUSE
+  ANALYTICS
+  OTHER
+}
+
+enum HostingType {
+  CLOUD
+  ON_PREM
+  HYBRID
+  THIRD_PARTY
+  EDGE
+}
+
+// ============================================
+// ARCHITECTURE INTELLIGENCE ENUMS
+// ============================================
+
+enum ArchitectureLayer {
+  BSS
+  OSS
+  INFRA
+  EXTERNAL
+  UNKNOWN
+}
+
+enum CapabilityType {
+  CPQ
+  CRM
+  BILLING
+  SOM
+  INVENTORY
+  ORCHESTRATOR
+  DB
+  MQ
+  API_GW
+  IDENTITY
+  ITSM
+  OTHER
+  UNKNOWN
+}
+
+enum ConnectionOrigin {
+  INGESTED
+  MANUAL
+}
+
+enum ConnectionConfidence {
+  HIGH
+  MED
+  LOW
+}
+
+enum CloudProvider {
+  AWS
+  AZURE
+  GCP
+  ORACLE_CLOUD
+  IBM_CLOUD
+  ALIBABA_CLOUD
+  PRIVATE_CLOUD
+  NONE
+}
+
+enum EnrichmentStatus {
+  ACTIVE
+  REVERTED
+  SUPERSEDED
+}
+
+enum ViolationSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ViolationStatus {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+  SUPPRESSED
+}
+
+// ============================================
+// ENVIRONMENT DOMAIN
+// ============================================
+
+model Environment {
+  id          String   @id @default(uuid())
+  name        String
+  type        EnvironmentType
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Architecture intelligence - entry/exit overrides
+  entryComponentInstanceId String?
+  exitComponentInstanceId  String?
+
+  // Legacy relations (keeping for backward compatibility)
+  nodes        Node[]
+  edges        Edge[]
+  snapshots    EnvironmentSnapshot[]
+  ownership    EnvironmentOwnership?
+  activityLogs EnvironmentActivityLog[]
+
+  // New 5-layer model relations
+  networkContexts     NetworkContext[]
+  hosts               Host[]
+  componentInstances  ComponentInstance[]
+  connections         Connection[]
+  connectorRuns       ConnectorRun[]
+  diagram             EnvironmentDiagram?
+
+  // Self-relations for entry/exit component instances
+  entryComponentInstance ComponentInstance? @relation("EnvironmentEntry", fields: [entryComponentInstanceId], references: [id])
+  exitComponentInstance  ComponentInstance? @relation("EnvironmentExit", fields: [exitComponentInstanceId], references: [id])
+
+  // Cost & Budget relations
+  costOverride      EnvironmentCostOverride?
+  costAllocations   EnvironmentCostAllocation[]
+
+  @@map("environments")
+}
+
+enum EnvironmentType {
+  DEV
+  SIT
+  UAT
+  NFT
+  PREPROD
+  PROD_RO  // Read-only production view
+}
+
+// ============================================
+// TOPOLOGY DOMAIN
+// ============================================
+
+model Node {
+  id            String   @id @default(uuid())
+  environmentId String
+  type          NodeType
+  name          String
+  owner         String?
+  criticality   Criticality @default(MEDIUM)
+  lastSeenAt    DateTime @default(now())
+  metadata      Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Telco Classification (new)
+  telcoLayer     TelcoLayer?
+  telcoSubsystem TelcoSubsystem?
+
+  // Network Zone Assignment (new)
+  networkZoneId String?
+
+  environment      Environment       @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  networkZone      NetworkZone?      @relation(fields: [networkZoneId], references: [id])
+  databaseMetadata DatabaseMetadata?
+  outgoingEdges    Edge[]            @relation("SourceNode")
+  incomingEdges    Edge[]            @relation("TargetNode")
+  runtimeLayer     RuntimeLayer?
+  hostingDomains   NodeHostingDomain[]
+  enrichments      EnrichmentEdit[]
+
+  @@map("nodes")
+}
+
+enum NodeType {
+  APPLICATION
+  SERVICE
+  DATABASE
+  GATEWAY
+  EXTERNAL
+  RUNTIME
+  MESSAGE_QUEUE
+  LOAD_BALANCER
+}
+
+enum Criticality {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model Edge {
+  id              String   @id @default(uuid())
+  environmentId   String
+  sourceNodeId    String
+  targetNodeId    String
+  protocol        Protocol
+  port            Int?
+  pathOrTopic     String?
+  confidenceScore Float    @default(1.0)
+  lastObservedAt  DateTime @default(now())
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  environment Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  sourceNode  Node        @relation("SourceNode", fields: [sourceNodeId], references: [id], onDelete: Cascade)
+  targetNode  Node        @relation("TargetNode", fields: [targetNodeId], references: [id], onDelete: Cascade)
+
+  @@map("edges")
+}
+
+enum Protocol {
+  REST
+  GRPC
+  MQ
+  JDBC
+  SFTP
+  EVENT
+  WEBSOCKET
+  SOAP
+  GRAPHQL
+}
+
+// ============================================
+// DATABASE & TEST DATA DOMAIN
+// ============================================
+
+model DatabaseMetadata {
+  id      String  @id @default(uuid())
+  nodeId  String  @unique
+  engine  String
+  version String?
+  sizeGB  Float?
+  host    String?
+  port    Int?
+
+  node        Node          @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  testDataSet TestDataSet?
+
+  @@map("database_metadata")
+}
+
+model TestDataSet {
+  id                   String        @id @default(uuid())
+  databaseId           String        @unique
+  sourceType           SourceType
+  lastRefreshDate      DateTime?
+  refreshMethod        RefreshMethod @default(MANUAL)
+  maskingPolicyVersion String?
+  changeReference      String?
+  owner                String?
+  downstreamConsumers  String[]
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  // Data Governance Fields (new)
+  dataClassification DataClassification?
+  maskingMethod      MaskingMethod?
+  complianceFlags    ComplianceFlag[]
+  derivedFromProdClone Boolean @default(false)
+  approvedBy         String?
+  approvalDate       DateTime?
+
+  database         DatabaseMetadata  @relation(fields: [databaseId], references: [id], onDelete: Cascade)
+  refreshHistory   RefreshRecord[]
+  complianceAudits ComplianceAudit[]
+
+  @@map("test_data_sets")
+}
+
+enum SourceType {
+  PROD_CLONE
+  MASKED
+  SYNTHETIC
+  STATIC
+}
+
+enum RefreshMethod {
+  MANUAL
+  PIPELINE
+  SCRIPT
+  AUTOMATED
+}
+
+model RefreshRecord {
+  id              String   @id @default(uuid())
+  testDataSetId   String
+  refreshDate     DateTime
+  refreshedBy     String?
+  method          RefreshMethod
+  notes           String?
+  changeReference String?
+  createdAt       DateTime @default(now())
+
+  testDataSet TestDataSet @relation(fields: [testDataSetId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_records")
+}
+
+// ============================================
+// EVIDENCE & DISCOVERY DOMAIN
+// ============================================
+
+model Evidence {
+  id         String     @id @default(uuid())
+  entityType EntityType
+  entityId   String
+  source     String
+  timestamp  DateTime   @default(now())
+  confidence Float      @default(1.0)
+  payload    Json
+
+  @@index([entityType, entityId])
+  @@map("evidence")
+}
+
+enum EntityType {
+  NODE
+  EDGE
+  DATABASE
+  TESTDATA
+}
+
+// ============================================
+// SNAPSHOT & DRIFT DETECTION
+// ============================================
+
+model EnvironmentSnapshot {
+  id            String   @id @default(uuid())
+  environmentId String
+  snapshotHash  String
+  snapshotData  Json
+  createdAt     DateTime @default(now())
+
+  environment Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+
+  @@map("environment_snapshots")
+}
+
+// ============================================
+// NETWORK ZONE DOMAIN
+// ============================================
+
+model NetworkZone {
+  id          String          @id @default(uuid())
+  name        String          @unique
+  type        NetworkZoneType
+  description String?
+  vlanRange   String?
+  cidrBlocks  String[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  nodes                 Node[]
+  outgoingConnections   NetworkZoneConnection[] @relation("SourceZone")
+  incomingConnections   NetworkZoneConnection[] @relation("TargetZone")
+
+  @@map("network_zones")
+}
+
+model NetworkZoneConnection {
+  id               String             @id @default(uuid())
+  sourceZoneId     String
+  targetZoneId     String
+  policy           ConnectivityPolicy
+  bridgeMechanism  BridgeMechanism?
+  bridgeNodeName   String?
+  notes            String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  sourceZone NetworkZone @relation("SourceZone", fields: [sourceZoneId], references: [id], onDelete: Cascade)
+  targetZone NetworkZone @relation("TargetZone", fields: [targetZoneId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceZoneId, targetZoneId])
+  @@map("network_zone_connections")
+}
+
+// ============================================
+// RUNTIME LAYER DOMAIN
+// ============================================
+
+model RuntimeLayer {
+  id                 String             @id @default(uuid())
+  nodeId             String             @unique
+  virtualizationType VirtualizationType
+  runtimeName        String?
+  runtimeVersion     String?
+  orchestrator       String?
+  clusterName        String?
+  namespace          String?
+  resourceLimits     Json?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  node Node @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+
+  @@map("runtime_layers")
+}
+
+// ============================================
+// HOSTING DOMAIN
+// ============================================
+
+model HostingDomain {
+  id            String        @id @default(uuid())
+  name          String        @unique
+  hostingType   HostingType
+  cloudProvider CloudProvider?
+  region        String?
+  accountId     String?
+  dataCenter    String?
+  description   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  nodes NodeHostingDomain[]
+
+  @@map("hosting_domains")
+}
+
+model NodeHostingDomain {
+  id              String   @id @default(uuid())
+  nodeId          String
+  hostingDomainId String
+  isPrimary       Boolean  @default(true)
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  node          Node          @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  hostingDomain HostingDomain @relation(fields: [hostingDomainId], references: [id], onDelete: Cascade)
+
+  @@unique([nodeId, hostingDomainId])
+  @@map("node_hosting_domains")
+}
+
+// ============================================
+// ENVIRONMENT OWNERSHIP DOMAIN
+// ============================================
+
+model EnvironmentOwnership {
+  id                String   @id @default(uuid())
+  environmentId     String   @unique
+  projectName       String
+  projectCode       String?
+  ownerTeam         String
+  ownerEmail        String?
+  technicalLead     String?
+  technicalLeadEmail String?
+  businessUnit      String?
+  costCenter        String?
+  expiryDate        DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  environment Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+
+  @@map("environment_ownerships")
+}
+
+// ============================================
+// ACTIVITY LOG DOMAIN (Immutable Audit Trail)
+// ============================================
+
+model EnvironmentActivityLog {
+  id            String           @id @default(uuid())
+  environmentId String
+  action        ActivityActionType
+  actorId       String?
+  actorName     String?
+  targetType    String?
+  targetId      String?
+  targetName    String?
+  details       Json?
+  checksum      String
+  previousLogId String?
+  createdAt     DateTime         @default(now())
+
+  environment Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+
+  @@index([environmentId, createdAt])
+  @@map("environment_activity_logs")
+}
+
+// ============================================
+// ENRICHMENT DOMAIN (Versioned Manual Edits)
+// ============================================
+
+model EnrichmentEdit {
+  id             String           @id @default(uuid())
+  nodeId         String
+  fieldName      String
+  previousValue  Json?
+  newValue       Json
+  reason         String?
+  editedBy       String
+  status         EnrichmentStatus @default(ACTIVE)
+  supersededById String?
+  createdAt      DateTime         @default(now())
+
+  node Node @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+
+  @@index([nodeId, fieldName])
+  @@map("enrichment_edits")
+}
+
+// ============================================
+// COMPLIANCE & GOVERNANCE DOMAIN
+// ============================================
+
+model ComplianceAudit {
+  id            String         @id @default(uuid())
+  testDataSetId String
+  complianceFlag ComplianceFlag
+  status        String
+  auditorId     String?
+  auditorName   String?
+  findings      String?
+  evidence      Json?
+  auditDate     DateTime       @default(now())
+  nextAuditDate DateTime?
+  createdAt     DateTime       @default(now())
+
+  testDataSet TestDataSet @relation(fields: [testDataSetId], references: [id], onDelete: Cascade)
+
+  @@map("compliance_audits")
+}
+
+model PolicyViolation {
+  id              String            @id @default(uuid())
+  environmentId   String?
+  nodeId          String?
+  edgeId          String?
+  testDataSetId   String?
+  policyName      String
+  policyRule      String
+  severity        ViolationSeverity
+  status          ViolationStatus   @default(OPEN)
+  description     String
+  remediationHint String?
+  detectedAt      DateTime          @default(now())
+  resolvedAt      DateTime?
+  resolvedBy      String?
+  resolutionNotes String?
+  metadata        Json?
+
+  @@index([status, severity])
+  @@map("policy_violations")
+}
+
+// ============================================
+// CONNECTOR CREDENTIALS DOMAIN
+// ============================================
+
+model ConnectorCredential {
+  id               String   @id @default(uuid())
+  name             String   @unique
+  connectorType    String
+  encryptedConfig  String
+  encryptionIv     String
+  lastTestedAt     DateTime?
+  lastTestSuccess  Boolean?
+  lastRotatedAt    DateTime?
+  rotationReminder DateTime?
+  createdBy        String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("connector_credentials")
+}
+
+// ============================================
+// MVP 5-LAYER MODEL - CANONICAL DATA MODEL
+// ============================================
+
+// L1 - Network Context (hosting/network layer)
+model NetworkContext {
+  id                  String        @id @default(uuid())
+  environmentId       String
+  hostingType         HostingType
+  cloudProvider       CloudProvider?
+  region              String?
+  vpcVnet             String?
+  subnetCidr          String?
+  zoneLabel           String?
+  hasLoadBalancer     Boolean       @default(false)
+  loadBalancerRef     String?
+  hasPrivateEndpoint  Boolean       @default(false)
+  privateEndpointRef  String?
+  notes               String?
+
+  // Provenance fields
+  sourceSystem        String?
+  sourceRecordId      String?
+  ingestedAt          DateTime?
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  environment         Environment   @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  hosts               Host[]
+
+  @@map("network_contexts")
+}
+
+// L2 - Host (server level)
+model Host {
+  id                  String        @id @default(uuid())
+  environmentId       String
+  networkContextId    String?
+  hostname            String
+  ip                  String?
+  natIp               String?
+  os                  String?
+  notes               String?
+
+  // Provenance fields
+  sourceSystem        String?
+  sourceRecordId      String?
+  ingestedAt          DateTime?
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  environment         Environment   @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  networkContext      NetworkContext? @relation(fields: [networkContextId], references: [id])
+  componentInstances  ComponentInstance[]
+
+  @@unique([environmentId, hostname])
+  @@map("hosts")
+}
+
+// Component Definition (reusable component catalog)
+model Component {
+  id                  String        @id @default(uuid())
+  name                String        @unique
+  category            ComponentCategory?
+  vendor              String?
+  description         String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  // Architecture intelligence
+  layer               ArchitectureLayer @default(UNKNOWN)
+  capabilityType      CapabilityType    @default(UNKNOWN)
+
+  instances           ComponentInstance[]
+
+  @@map("components")
+}
+
+enum ComponentCategory {
+  BSS
+  OSS
+  INFRA
+  DATABASE
+  MESSAGING
+  INTEGRATION
+  SECURITY
+  MONITORING
+  OTHER
+}
+
+// L3 - Component Instance on Host
+model ComponentInstance {
+  id                  String        @id @default(uuid())
+  environmentId       String
+  hostId              String?
+  componentId         String
+  displayName         String?
+  notes               String?
+
+  // Provenance fields
+  sourceSystem        String?
+  sourceRecordId      String?
+  ingestedAt          DateTime?
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  environment         Environment   @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  host                Host?         @relation(fields: [hostId], references: [id])
+  component           Component     @relation(fields: [componentId], references: [id])
+  endpoints           Endpoint[]
+  deployedVersions    DeployedVersion[]
+  outgoingConnections Connection[]  @relation("SourceComponent")
+  incomingConnections Connection[]  @relation("TargetComponent")
+
+  // Inverse relations for environment entry/exit
+  entryForEnvironments Environment[] @relation("EnvironmentEntry")
+  exitForEnvironments  Environment[] @relation("EnvironmentExit")
+
+  @@map("component_instances")
+}
+
+// L3 - Endpoint (exposed ports/urls)
+model Endpoint {
+  id                    String        @id @default(uuid())
+  componentInstanceId   String
+  kind                  EndpointKind
+  value                 String
+  port                  Int?
+  scheme                EndpointScheme?
+  basePath              String?
+  notes                 String?
+
+  // Provenance fields
+  sourceSystem          String?
+  sourceRecordId        String?
+  ingestedAt            DateTime?
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  componentInstance     ComponentInstance @relation(fields: [componentInstanceId], references: [id], onDelete: Cascade)
+
+  @@map("endpoints")
+}
+
+enum EndpointKind {
+  HOSTNAME
+  IP
+  NAT
+  VIP
+  URL
+}
+
+enum EndpointScheme {
+  TCP
+  HTTP
+  HTTPS
+  GRPC
+  JDBC
+  AMQP
+}
+
+// L4 - Deployed Version
+model DeployedVersion {
+  id                    String        @id @default(uuid())
+  componentInstanceId   String
+  projectVersion        String        // REQUIRED - e.g., "11.1.2", "build-1451", git SHA
+  vendorVersion         String?       // Optional - vendor/runtime version
+  buildRef              String?       // Optional - git SHA / pipeline build id
+  capturedAt            DateTime      @default(now())
+
+  // Provenance fields
+  sourceSystem          String?
+  sourceRecordId        String?
+  ingestedAt            DateTime?
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  componentInstance     ComponentInstance @relation(fields: [componentInstanceId], references: [id], onDelete: Cascade)
+
+  @@map("deployed_versions")
+}
+
+// L5 - Connections between components
+model Connection {
+  id                      String          @id @default(uuid())
+  environmentId           String
+  fromComponentInstanceId String
+  toComponentInstanceId   String
+  protocolType            ConnectionProtocol
+  protocolDetail          String?         // e.g., "TMF622", "/orders/v1"
+  port                    Int?
+  notes                   String?
+
+  // Provenance fields
+  sourceSystem            String?
+  sourceRecordId          String?
+  ingestedAt              DateTime?
+
+  // Architecture intelligence - origin and confidence
+  origin                  ConnectionOrigin     @default(INGESTED)
+  confidence              ConnectionConfidence @default(HIGH)
+
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
+
+  environment             Environment     @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  fromComponentInstance   ComponentInstance @relation("SourceComponent", fields: [fromComponentInstanceId], references: [id], onDelete: Cascade)
+  toComponentInstance     ComponentInstance @relation("TargetComponent", fields: [toComponentInstanceId], references: [id], onDelete: Cascade)
+
+  @@map("connections")
+}
+
+enum ConnectionProtocol {
+  REST
+  SOAP
+  TCP
+  SFTP
+  GRPC
+  MQ
+  JDBC
+  OTHER
+}
+
+// ============================================
+// CONNECTOR RUNS & INGESTION TRACKING
+// ============================================
+
+model ConnectorRun {
+  id                String          @id @default(uuid())
+  environmentId     String?
+  connectorType     String
+  status            ConnectorRunStatus @default(RUNNING)
+  startedAt         DateTime        @default(now())
+  finishedAt        DateTime?
+  summaryJson       Json?           // Counts, warnings, errors
+  errorMessage      String?
+
+  environment       Environment?    @relation(fields: [environmentId], references: [id], onDelete: SetNull)
+
+  @@index([environmentId, startedAt])
+  @@map("connector_runs")
+}
+
+enum ConnectorRunStatus {
+  RUNNING
+  SUCCESS
+  PARTIAL_SUCCESS
+  FAILED
+}
+
+// ============================================
+// AUDIT EVENTS (Generic Audit Trail)
+// ============================================
+
+model AuditEvent {
+  id                String          @id @default(uuid())
+  entityType        String          // e.g., "Host", "ComponentInstance", "Connection"
+  entityId          String
+  field             String?
+  oldValue          String?
+  newValue          String?
+  action            AuditAction
+  editedBy          String?
+  editedAt          DateTime        @default(now())
+  reason            String?
+
+  @@index([entityType, entityId])
+  @@map("audit_events")
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  MANUAL_OVERRIDE
+  CONFLICT_DETECTED
+}
+
+// ============================================
+// ENVIRONMENT DIAGRAMS (Layout Persistence)
+// ============================================
+
+model EnvironmentDiagram {
+  id                String          @id @default(uuid())
+  environmentId     String          @unique
+  nodesJson         Json            // React Flow nodes with positions
+  edgesJson         Json            // React Flow edges
+  updatedAt         DateTime        @updatedAt
+  updatedBy         String?
+
+  environment       Environment     @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+
+  @@map("environment_diagrams")
+}
+
+// ============================================
+// INGESTION CONFLICTS
+// ============================================
+
+model IngestionConflict {
+  id                String          @id @default(uuid())
+  entityType        String
+  entityId          String
+  field             String
+  existingValue     String?
+  incomingValue     String
+  wasManuallyEdited Boolean         @default(false)
+  resolved          Boolean         @default(false)
+  resolvedAt        DateTime?
+  resolvedBy        String?
+  resolution        ConflictResolution?
+  connectorRunId    String?
+  createdAt         DateTime        @default(now())
+
+  @@index([resolved, entityType])
+  @@map("ingestion_conflicts")
+}
+
+enum ConflictResolution {
+  KEEP_EXISTING
+  ACCEPT_INCOMING
+  MANUAL_MERGE
+}
+
+// ============================================
+// COST & BUDGET DOMAIN (MVP)
+// ============================================
+
+enum CostPeriod {
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum CostItemType {
+  HOST
+  COMPONENT_LICENSE
+  SHARED_PLATFORM
+  OTHER
+}
+
+enum CostUnit {
+  PER_ENV
+  PER_HOST
+  PER_COMPONENT
+  PER_GB
+  PER_USER
+  OTHER
+}
+
+enum AllocationMethod {
+  DIRECT
+  SHARED_PRORATED
+}
+
+// Cost Model - Template for environment cost structures
+model CostModel {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  description String?
+  currency    String      @default("USD")  // ISO 4217 currency code
+  period      CostPeriod  @default(MONTHLY)
+  notes       String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  costItems            CostItem[]
+  environmentAllocations EnvironmentCostAllocation[]
+  simulations          CostSimulation[]
+
+  @@map("cost_models")
+}
+
+// Cost Item - Line item template within a cost model
+model CostItem {
+  id               String           @id @default(uuid())
+  costModelId      String
+  itemType         CostItemType
+  name             String           // e.g., "AWS m5.xlarge", "Oracle DB license"
+  unitCost         Decimal          @db.Decimal(12, 2)
+  unit             CostUnit
+  defaultQuantity  Decimal          @default(1) @db.Decimal(10, 2)
+  allocationMethod AllocationMethod @default(DIRECT)
+  tagsJson         Json?            // Optional tags for filtering/grouping
+  notes            String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  costModel CostModel @relation(fields: [costModelId], references: [id], onDelete: Cascade)
+
+  @@map("cost_items")
+}
+
+// Environment Cost Override - Per-environment fixed cost overrides
+model EnvironmentCostOverride {
+  id               String   @id @default(uuid())
+  environmentId    String   @unique
+  currency         String   @default("USD")
+  fixedMonthlyCost Decimal? @db.Decimal(12, 2)
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Audit trail fields
+  editedBy         String?
+  editedAt         DateTime?
+
+  environment Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+
+  @@map("environment_cost_overrides")
+}
+
+// Environment Cost Allocation - Computed/saved allocations per environment per period
+model EnvironmentCostAllocation {
+  id             String   @id @default(uuid())
+  environmentId  String
+  costModelId    String
+  periodStart    DateTime @db.Date
+  periodEnd      DateTime @db.Date
+  totalCost      Decimal  @db.Decimal(12, 2)
+  breakdownJson  Json     // Detailed line items with qty * cost + allocation notes
+  currency       String   @default("USD")
+  computedAt     DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  environment Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  costModel   CostModel   @relation(fields: [costModelId], references: [id], onDelete: Cascade)
+
+  @@unique([environmentId, costModelId, periodStart, periodEnd])
+  @@map("environment_cost_allocations")
+}
+
+// Cost Simulation - Saved "what-if" scenarios
+model CostSimulation {
+  id               String   @id @default(uuid())
+  name             String
+  description      String?
+  baseCostModelId  String
+  currency         String   @default("USD")
+  paramsJson       Json     // e.g., { addEnvCount: 2, envFamily: "CPQ", scalingFactor: 1.5 }
+  resultJson       Json     // Computed results: current total, projected total, delta, breakdown
+  createdBy        String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  baseCostModel CostModel @relation(fields: [baseCostModelId], references: [id], onDelete: Cascade)
+
+  @@map("cost_simulations")
+}

@@ -1,0 +1,66 @@
+{
+  "projectId": "telco-sit-project-123",
+  "region": "australia-southeast1",
+  "networks": [
+    {
+      "name": "vpc-analytics-sit",
+      "selfLink": "projects/telco-sit-project-123/global/networks/vpc-analytics-sit",
+      "autoCreateSubnetworks": false,
+      "subnetworks": [
+        "projects/telco-sit-project-123/regions/australia-southeast1/subnetworks/subnet-analytics-01"
+      ]
+    }
+  ],
+  "subnetworks": [
+    {
+      "name": "subnet-analytics-01",
+      "network": "vpc-analytics-sit",
+      "ipCidrRange": "10.60.1.0/24",
+      "region": "australia-southeast1"
+    }
+  ],
+  "instances": [
+    {
+      "name": "analytics-vm-01",
+      "zone": "australia-southeast1-a",
+      "machineType": "n2-standard-4",
+      "networkInterfaces": [
+        {
+          "network": "vpc-analytics-sit",
+          "subnetwork": "subnet-analytics-01",
+          "networkIP": "10.60.1.10"
+        }
+      ],
+      "status": "RUNNING",
+      "labels": {
+        "application": "data-warehouse",
+        "environment": "sit"
+      }
+    },
+    {
+      "name": "analytics-vm-02",
+      "zone": "australia-southeast1-b",
+      "machineType": "n2-standard-8",
+      "networkInterfaces": [
+        {
+          "network": "vpc-analytics-sit",
+          "subnetwork": "subnet-analytics-01",
+          "networkIP": "10.60.1.20"
+        }
+      ],
+      "status": "RUNNING",
+      "labels": {
+        "application": "bigquery-connector",
+        "environment": "sit"
+      }
+    }
+  ],
+  "forwardingRules": [
+    {
+      "name": "fr-analytics-lb",
+      "IPAddress": "10.60.100.10",
+      "loadBalancingScheme": "INTERNAL",
+      "network": "vpc-analytics-sit"
+    }
+  ]
+}
