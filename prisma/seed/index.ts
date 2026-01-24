@@ -3,13 +3,37 @@
 // Run with: npx prisma db seed
 
 import { PrismaClient } from '@prisma/client';
+import { seedCostData } from './cost-data';
+import { seedGovernanceData } from './governance-data';
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Seeding TelEnvIQ database with realistic telco topology...\n');
 
-  // Clear existing data
+  // Clear existing data (in dependency order)
+  // Governance alignment tables
+  await prisma.couplingLink.deleteMany({});
+  await prisma.exceptionItem.deleteMany({});
+  await prisma.approvalItem.deleteMany({});
+  await prisma.complianceResult.deleteMany({});
+  await prisma.policyControl.deleteMany({});
+  // Organisation tables
+  await prisma.rACIMapping.deleteMany({});
+  await prisma.orphanedAsset.deleteMany({});
+  await prisma.person.deleteMany({});
+  await prisma.ruleEvaluation.deleteMany({});
+  await prisma.alignmentComparison.deleteMany({});
+  await prisma.governanceRule.deleteMany({});
+  await prisma.releaseItem.deleteMany({});
+  await prisma.release.deleteMany({});
+  await prisma.blueprint.deleteMany({});
+  await prisma.integrationRule.deleteMany({});
+  await prisma.connector.deleteMany({});
+  await prisma.platformSetting.deleteMany({});
+  await prisma.environmentLink.deleteMany({});
+  await prisma.flowTemplateStage.deleteMany({});
+  await prisma.flowTemplate.deleteMany({});
   await prisma.refreshRecord.deleteMany({});
   await prisma.testDataSet.deleteMany({});
   await prisma.databaseMetadata.deleteMany({});
@@ -18,6 +42,310 @@ async function main() {
   await prisma.edge.deleteMany({});
   await prisma.node.deleteMany({});
   await prisma.environment.deleteMany({});
+  await prisma.stage.deleteMany({});
+
+  // ============================================
+  // STAGES - Pipeline stages
+  // ============================================
+  const stages = await Promise.all([
+    prisma.stage.create({
+      data: {
+        id: 'stage-dev',
+        key: 'DEV',
+        name: 'Development',
+        description: 'Development and feature branches',
+        sortOrder: 1,
+        color: '#6366f1', // indigo
+      },
+    }),
+    prisma.stage.create({
+      data: {
+        id: 'stage-sit',
+        key: 'SIT',
+        name: 'System Integration Test',
+        description: 'Full system integration testing',
+        sortOrder: 2,
+        color: '#8b5cf6', // violet
+      },
+    }),
+    prisma.stage.create({
+      data: {
+        id: 'stage-uat',
+        key: 'UAT',
+        name: 'User Acceptance Test',
+        description: 'Business validation with production-like data',
+        sortOrder: 3,
+        color: '#06b6d4', // cyan
+      },
+    }),
+    prisma.stage.create({
+      data: {
+        id: 'stage-nft',
+        key: 'NFT',
+        name: 'Non-Functional Test',
+        description: 'Performance, load, and stress testing',
+        sortOrder: 4,
+        color: '#f59e0b', // amber
+      },
+    }),
+    prisma.stage.create({
+      data: {
+        id: 'stage-preprod',
+        key: 'PREPROD',
+        name: 'Pre-Production',
+        description: 'Final validation before production',
+        sortOrder: 5,
+        color: '#10b981', // emerald
+      },
+    }),
+    prisma.stage.create({
+      data: {
+        id: 'stage-prod-ro',
+        key: 'PROD_RO',
+        name: 'Production (Read-Only)',
+        description: 'Read-only production reference',
+        sortOrder: 6,
+        color: '#ef4444', // red
+      },
+    }),
+  ]);
+  console.log(`✓ Created ${stages.length} stages`);
+
+  // ============================================
+  // FLOW TEMPLATES - Allowed transition patterns
+  // ============================================
+  const standardFlowTemplate = await prisma.flowTemplate.create({
+    data: {
+      id: 'flow-standard',
+      name: 'Standard Release Flow',
+      description: 'DEV → SIT → UAT → PREPROD → PROD',
+      status: 'ACTIVE',
+      isDefault: true,
+    },
+  });
+
+  const nftFlowTemplate = await prisma.flowTemplate.create({
+    data: {
+      id: 'flow-with-nft',
+      name: 'Release Flow with NFT',
+      description: 'DEV → SIT → UAT → NFT → PREPROD → PROD',
+      status: 'ACTIVE',
+      isDefault: false,
+    },
+  });
+
+  // Add stages to flow templates
+  await Promise.all([
+    // Standard flow: DEV → SIT → UAT → PREPROD → PROD_RO
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: standardFlowTemplate.id, stageId: 'stage-dev', sortOrder: 1, isRequired: true } }),
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: standardFlowTemplate.id, stageId: 'stage-sit', sortOrder: 2, isRequired: true } }),
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: standardFlowTemplate.id, stageId: 'stage-uat', sortOrder: 3, isRequired: true } }),
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: standardFlowTemplate.id, stageId: 'stage-preprod', sortOrder: 4, isRequired: true } }),
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: standardFlowTemplate.id, stageId: 'stage-prod-ro', sortOrder: 5, isRequired: true } }),
+    // NFT flow: DEV → SIT → UAT → NFT → PREPROD → PROD_RO
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: nftFlowTemplate.id, stageId: 'stage-dev', sortOrder: 1, isRequired: true } }),
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: nftFlowTemplate.id, stageId: 'stage-sit', sortOrder: 2, isRequired: true } }),
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: nftFlowTemplate.id, stageId: 'stage-uat', sortOrder: 3, isRequired: true } }),
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: nftFlowTemplate.id, stageId: 'stage-nft', sortOrder: 4, isRequired: false } }),
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: nftFlowTemplate.id, stageId: 'stage-preprod', sortOrder: 5, isRequired: true } }),
+    prisma.flowTemplateStage.create({ data: { flowTemplateId: nftFlowTemplate.id, stageId: 'stage-prod-ro', sortOrder: 6, isRequired: true } }),
+  ]);
+  console.log(`✓ Created 2 flow templates with stages`);
+
+  // ============================================
+  // PEOPLE - People registry
+  // ============================================
+  const people = await Promise.all([
+    prisma.person.create({
+      data: {
+        id: 'person-john-smith',
+        email: 'john.smith@telco.com',
+        displayName: 'John Smith',
+        department: 'Engineering',
+        team: 'Platform Engineering',
+        role: 'Tech Lead',
+        status: 'ACTIVE',
+      },
+    }),
+    prisma.person.create({
+      data: {
+        id: 'person-jane-doe',
+        email: 'jane.doe@telco.com',
+        displayName: 'Jane Doe',
+        department: 'Engineering',
+        team: 'Order Fulfillment',
+        role: 'Senior Developer',
+        status: 'ACTIVE',
+      },
+    }),
+    prisma.person.create({
+      data: {
+        id: 'person-mike-wilson',
+        email: 'mike.wilson@telco.com',
+        displayName: 'Mike Wilson',
+        department: 'Operations',
+        team: 'DBA Team',
+        role: 'Database Administrator',
+        status: 'ACTIVE',
+      },
+    }),
+    prisma.person.create({
+      data: {
+        id: 'person-sarah-chen',
+        email: 'sarah.chen@telco.com',
+        displayName: 'Sarah Chen',
+        department: 'Engineering',
+        team: 'Network Automation',
+        role: 'Principal Engineer',
+        status: 'ACTIVE',
+      },
+    }),
+    prisma.person.create({
+      data: {
+        id: 'person-tom-brown',
+        email: 'tom.brown@telco.com',
+        displayName: 'Tom Brown',
+        department: 'Quality Assurance',
+        team: 'Test Team',
+        role: 'QA Lead',
+        status: 'ACTIVE',
+      },
+    }),
+  ]);
+  console.log(`✓ Created ${people.length} people`);
+
+  // ============================================
+  // GOVERNANCE RULES
+  // ============================================
+  await Promise.all([
+    prisma.governanceRule.create({
+      data: {
+        id: 'rule-version-pattern',
+        name: 'Version Format Compliance',
+        description: 'All deployments must have semantic version format',
+        ruleType: 'VERSION_CHECK',
+        severity: 'ERROR',
+        isActive: true,
+        configJson: { pattern: '^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9]+)?$' },
+        targetStages: ['UAT', 'NFT', 'PREPROD', 'PROD_RO'],
+      },
+    }),
+    prisma.governanceRule.create({
+      data: {
+        id: 'rule-api-gateway-required',
+        name: 'API Gateway Required',
+        description: 'All environments must have an API Gateway component',
+        ruleType: 'COMPONENT_PRESENCE',
+        severity: 'BLOCKER',
+        isActive: true,
+        configJson: { componentName: 'API_GW' },
+        targetStages: ['SIT', 'UAT', 'NFT', 'PREPROD', 'PROD_RO'],
+      },
+    }),
+    prisma.governanceRule.create({
+      data: {
+        id: 'rule-db-connection',
+        name: 'Database Connection Required',
+        description: 'Application components must connect to database',
+        ruleType: 'CONNECTION_REQUIRED',
+        severity: 'WARNING',
+        isActive: true,
+        configJson: { connectionRequired: { from: 'APPLICATION', to: 'DATABASE' } },
+        targetStages: ['SIT', 'UAT', 'PREPROD'],
+      },
+    }),
+  ]);
+  console.log(`✓ Created 3 governance rules`);
+
+  // ============================================
+  // CONNECTORS
+  // ============================================
+  await Promise.all([
+    prisma.connector.create({
+      data: {
+        id: 'connector-k8s-sit',
+        name: 'Kubernetes SIT Cluster',
+        connectorType: 'KUBERNETES',
+        description: 'Auto-discovery from SIT Kubernetes cluster',
+        status: 'ACTIVE',
+        configJson: { namespace: 'telco-sit', labelSelector: 'app.kubernetes.io/managed-by=telenviq' },
+        scheduleJson: { enabled: true, intervalMinutes: 60 },
+        lastRunAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+        lastRunStatus: 'SUCCESS',
+      },
+    }),
+    prisma.connector.create({
+      data: {
+        id: 'connector-cmdb',
+        name: 'ServiceNow CMDB',
+        connectorType: 'CMDB',
+        description: 'Import from ServiceNow Configuration Management Database',
+        status: 'ACTIVE',
+        configJson: { instanceUrl: 'https://telco.service-now.com', tableName: 'cmdb_ci_server' },
+        scheduleJson: { enabled: true, cronExpression: '0 2 * * *' },
+        lastRunAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 24 hours ago
+        lastRunStatus: 'SUCCESS',
+      },
+    }),
+    prisma.connector.create({
+      data: {
+        id: 'connector-manual',
+        name: 'Manual Import',
+        connectorType: 'MANUAL',
+        description: 'Manual YAML/JSON imports',
+        status: 'ACTIVE',
+      },
+    }),
+  ]);
+  console.log(`✓ Created 3 connectors`);
+
+  // ============================================
+  // PLATFORM SETTINGS
+  // ============================================
+  await Promise.all([
+    prisma.platformSetting.create({
+      data: {
+        key: 'staleness.threshold.days',
+        value: '30',
+        valueType: 'number',
+        scope: 'GLOBAL',
+        description: 'Number of days before data is considered stale',
+      },
+    }),
+    prisma.platformSetting.create({
+      data: {
+        key: 'snapshot.auto.create',
+        value: 'true',
+        valueType: 'boolean',
+        scope: 'GLOBAL',
+        description: 'Automatically create snapshots after connector runs',
+      },
+    }),
+    prisma.platformSetting.create({
+      data: {
+        key: 'governance.enforce.promotion',
+        value: 'true',
+        valueType: 'boolean',
+        scope: 'GLOBAL',
+        description: 'Enforce governance rules before promotion',
+      },
+    }),
+  ]);
+  console.log(`✓ Created 3 platform settings`);
+
+  // ============================================
+  // DEV Environment - Development
+  // ============================================
+  const devEnv = await prisma.environment.create({
+    data: {
+      id: 'dev-env-001',
+      name: 'DEV Environment',
+      type: 'DEV',
+      description: 'Development environment for feature development',
+      stageId: 'stage-dev',
+    },
+  });
+  console.log(`✓ Created environment: ${devEnv.name}`);
 
   // ============================================
   // SIT Environment - Full Telco OSS/BSS Stack
@@ -28,6 +356,7 @@ async function main() {
       name: 'SIT Environment',
       type: 'SIT',
       description: 'System Integration Test - Full OSS/BSS stack with CRM, CPQ, Order Fulfillment, Network Orchestration',
+      stageId: 'stage-sit',
     },
   });
   console.log(`✓ Created environment: ${sitEnv.name}`);
@@ -41,6 +370,7 @@ async function main() {
       name: 'UAT Environment',
       type: 'UAT',
       description: 'User Acceptance Test - Business validation with production-like data',
+      stageId: 'stage-uat',
     },
   });
   console.log(`✓ Created environment: ${uatEnv.name}`);
@@ -54,9 +384,133 @@ async function main() {
       name: 'NFT Environment',
       type: 'NFT',
       description: 'Non-Functional Test - Performance, load, and stress testing',
+      stageId: 'stage-nft',
     },
   });
   console.log(`✓ Created environment: ${nftEnv.name}`);
+
+  // ============================================
+  // PREPROD Environment - Pre-Production
+  // ============================================
+  const preprodEnv = await prisma.environment.create({
+    data: {
+      id: 'preprod-env-001',
+      name: 'PREPROD Environment',
+      type: 'PREPROD',
+      description: 'Pre-Production - Final validation before production',
+      stageId: 'stage-preprod',
+    },
+  });
+  console.log(`✓ Created environment: ${preprodEnv.name}`);
+
+  // ============================================
+  // ENVIRONMENT LINKS - Promotion paths
+  // ============================================
+  await Promise.all([
+    prisma.environmentLink.create({
+      data: {
+        upstreamEnvironmentId: devEnv.id,
+        downstreamEnvironmentId: sitEnv.id,
+        linkType: 'PROMOTION',
+        isActive: true,
+        notes: 'Standard DEV to SIT promotion',
+      },
+    }),
+    prisma.environmentLink.create({
+      data: {
+        upstreamEnvironmentId: sitEnv.id,
+        downstreamEnvironmentId: uatEnv.id,
+        linkType: 'PROMOTION',
+        isActive: true,
+        notes: 'Standard SIT to UAT promotion',
+      },
+    }),
+    prisma.environmentLink.create({
+      data: {
+        upstreamEnvironmentId: uatEnv.id,
+        downstreamEnvironmentId: nftEnv.id,
+        linkType: 'PROMOTION',
+        isActive: true,
+        notes: 'UAT to NFT for performance testing',
+      },
+    }),
+    prisma.environmentLink.create({
+      data: {
+        upstreamEnvironmentId: uatEnv.id,
+        downstreamEnvironmentId: preprodEnv.id,
+        linkType: 'PROMOTION',
+        isActive: true,
+        notes: 'Standard UAT to PREPROD promotion',
+      },
+    }),
+    prisma.environmentLink.create({
+      data: {
+        upstreamEnvironmentId: nftEnv.id,
+        downstreamEnvironmentId: preprodEnv.id,
+        linkType: 'PROMOTION',
+        isActive: true,
+        notes: 'NFT to PREPROD after performance validation',
+      },
+    }),
+  ]);
+  console.log(`✓ Created 5 environment links`);
+
+  // ============================================
+  // RACI MAPPINGS
+  // ============================================
+  await Promise.all([
+    prisma.rACIMapping.create({
+      data: {
+        personId: 'person-john-smith',
+        entityType: 'ENVIRONMENT',
+        entityId: sitEnv.id,
+        raciRole: 'ACCOUNTABLE',
+        assignedBy: 'system',
+        assignedAt: new Date(),
+      },
+    }),
+    prisma.rACIMapping.create({
+      data: {
+        personId: 'person-jane-doe',
+        entityType: 'ENVIRONMENT',
+        entityId: sitEnv.id,
+        raciRole: 'RESPONSIBLE',
+        assignedBy: 'system',
+        assignedAt: new Date(),
+      },
+    }),
+    prisma.rACIMapping.create({
+      data: {
+        personId: 'person-mike-wilson',
+        entityType: 'ENVIRONMENT',
+        entityId: sitEnv.id,
+        raciRole: 'CONSULTED',
+        assignedBy: 'system',
+        assignedAt: new Date(),
+      },
+    }),
+    prisma.rACIMapping.create({
+      data: {
+        personId: 'person-tom-brown',
+        entityType: 'ENVIRONMENT',
+        entityId: uatEnv.id,
+        raciRole: 'ACCOUNTABLE',
+        assignedBy: 'system',
+        assignedAt: new Date(),
+      },
+    }),
+    prisma.rACIMapping.create({
+      data: {
+        personId: 'person-sarah-chen',
+        entityType: 'ENVIRONMENT',
+        entityId: nftEnv.id,
+        raciRole: 'ACCOUNTABLE',
+        assignedBy: 'system',
+        assignedAt: new Date(),
+      },
+    }),
+  ]);
+  console.log(`✓ Created 5 RACI mappings`);
 
   // ============================================
   // SIT NODES - Realistic Telco Topology
@@ -842,11 +1296,26 @@ async function main() {
   }
   console.log(`✓ Created ${nftEdges.length} edges for NFT`);
 
-  console.log('\n✅ Seed completed successfully!');
+  console.log('\n✅ Environment seed completed!');
   console.log('\n📊 Summary:');
+  console.log(`   Stages: 6`);
+  console.log(`   Flow Templates: 2`);
+  console.log(`   People: 5`);
+  console.log(`   Governance Rules: 3`);
+  console.log(`   Connectors: 3`);
+  console.log(`   Environment Links: 5`);
+  console.log(`   RACI Mappings: 5`);
+  console.log(`   DEV: minimal`);
   console.log(`   SIT: ${sitNodes.length} nodes, ${sitEdges.length} edges, ${databases.length} databases`);
   console.log(`   UAT: ${uatNodes.length} nodes, ${uatEdges.length} edges`);
   console.log(`   NFT: ${nftNodes.length} nodes, ${nftEdges.length} edges`);
+  console.log(`   PREPROD: minimal`);
+
+  // Seed cost data
+  await seedCostData();
+
+  // Seed governance alignment data
+  await seedGovernanceData(prisma);
 }
 
 main()

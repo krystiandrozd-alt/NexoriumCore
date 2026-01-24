@@ -220,6 +220,9 @@ model Environment {
   entryComponentInstanceId String?
   exitComponentInstanceId  String?
 
+  // Stage/Flow relations (6-pillar model)
+  stageId     String?
+
   // Legacy relations (keeping for backward compatibility)
   nodes        Node[]
   edges        Edge[]
@@ -242,6 +245,20 @@ model Environment {
   // Cost & Budget relations
   costOverride      EnvironmentCostOverride?
   costAllocations   EnvironmentCostAllocation[]
+
+  // Stage relation
+  stage             Stage?              @relation(fields: [stageId], references: [id])
+
+  // Flow link relations
+  upstreamLinks     EnvironmentLink[]   @relation("DownstreamEnvironment")
+  downstreamLinks   EnvironmentLink[]   @relation("UpstreamEnvironment")
+
+  // Governance relations
+  blueprintAlignments AlignmentComparison[] @relation("EnvironmentAlignments")
+  ruleEvaluations     RuleEvaluation[]
+
+  // Organisation relations
+  raciMappings        RACIMapping[]
 
   @@map("environments")
 }
@@ -452,7 +469,9 @@ model EnvironmentSnapshot {
   snapshotData  Json
   createdAt     DateTime @default(now())
 
-  environment Environment @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  environment          Environment           @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  ruleEvaluations      RuleEvaluation[]
+  alignmentComparisons AlignmentComparison[]
 
   @@map("environment_snapshots")
 }
@@ -765,6 +784,7 @@ model Component {
   capabilityType      CapabilityType    @default(UNKNOWN)
 
   instances           ComponentInstance[]
+  releaseItems        ReleaseItem[]
 
   @@map("components")
 }
@@ -1144,4 +1164,644 @@ model CostSimulation {
   baseCostModel CostModel @relation(fields: [baseCostModelId], references: [id], onDelete: Cascade)
 
   @@map("cost_simulations")
+}
+
+// ============================================
+// 6-PILLAR MODEL - FLOW & STAGE DOMAIN
+// ============================================
+
+enum StageKey {
+  DEV
+  SIT
+  UAT
+  NFT
+  PREPROD
+  PROD_RO
+}
+
+enum FlowTemplateStatus {
+  DRAFT
+  ACTIVE
+  DEPRECATED
+}
+
+enum EnvironmentLinkType {
+  PROMOTION        // Standard promotion path
+  DATA_SYNC        // Data synchronization
+  REFERENCE        // Reference/lookup only
+}
+
+// Stage - Pipeline stages in the flow
+model Stage {
+  id          String     @id @default(uuid())
+  key         StageKey   @unique
+  name        String
+  description String?
+  sortOrder   Int        @default(0)
+  color       String?    // Hex color for UI
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  environments       Environment[]
+  flowTemplateStages FlowTemplateStage[]
+
+  @@map("stages")
+}
+
+// EnvironmentLink - Upstream/downstream relationships between environments
+model EnvironmentLink {
+  id                    String              @id @default(uuid())
+  upstreamEnvironmentId String
+  downstreamEnvironmentId String
+  linkType              EnvironmentLinkType @default(PROMOTION)
+  isActive              Boolean             @default(true)
+  notes                 String?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  upstreamEnvironment   Environment @relation("UpstreamEnvironment", fields: [upstreamEnvironmentId], references: [id], onDelete: Cascade)
+  downstreamEnvironment Environment @relation("DownstreamEnvironment", fields: [downstreamEnvironmentId], references: [id], onDelete: Cascade)
+
+  @@unique([upstreamEnvironmentId, downstreamEnvironmentId])
+  @@map("environment_links")
+}
+
+// FlowTemplate - Allowed transition patterns
+model FlowTemplate {
+  id          String              @id @default(uuid())
+  name        String              @unique
+  description String?
+  status      FlowTemplateStatus  @default(DRAFT)
+  isDefault   Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  stages      FlowTemplateStage[]
+
+  @@map("flow_templates")
+}
+
+// FlowTemplateStage - Stages within templates with ordering
+model FlowTemplateStage {
+  id              String   @id @default(uuid())
+  flowTemplateId  String
+  stageId         String
+  sortOrder       Int      @default(0)
+  isRequired      Boolean  @default(true)
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  flowTemplate    FlowTemplate @relation(fields: [flowTemplateId], references: [id], onDelete: Cascade)
+  stage           Stage        @relation(fields: [stageId], references: [id], onDelete: Cascade)
+
+  @@unique([flowTemplateId, stageId])
+  @@map("flow_template_stages")
+}
+
+// ============================================
+// 6-PILLAR MODEL - GOVERNANCE DOMAIN
+// ============================================
+
+enum BlueprintStatus {
+  DRAFT
+  APPROVED
+  DEPRECATED
+}
+
+enum ReleaseStatus {
+  PLANNING
+  IN_PROGRESS
+  READY
+  DEPLOYED
+  CANCELLED
+}
+
+enum AlignmentStatus {
+  ALIGNED
+  DRIFTED
+  PARTIAL
+  UNKNOWN
+}
+
+enum ComparisonType {
+  BLUEPRINT_VS_SNAPSHOT
+  SNAPSHOT_VS_RELEASE
+  CROSS_ENVIRONMENT
+  NONPROD_VS_PROD
+}
+
+enum GovernanceRuleType {
+  VERSION_CHECK
+  COMPONENT_PRESENCE
+  CONNECTION_REQUIRED
+  DATA_CLASSIFICATION
+  CUSTOM
+}
+
+enum GovernanceRuleSeverity {
+  INFO
+  WARNING
+  ERROR
+  BLOCKER
+}
+
+// Blueprint - Expected state definitions
+model Blueprint {
+  id            String           @id @default(uuid())
+  name          String           @unique
+  description   String?
+  status        BlueprintStatus  @default(DRAFT)
+  targetStageId String?          // Optional stage this blueprint targets
+  specJson      Json             // Expected component versions, connections, etc.
+  createdBy     String?
+  approvedBy    String?
+  approvedAt    DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  alignmentComparisons AlignmentComparison[]
+  releaseItems         ReleaseItem[]
+
+  @@map("blueprints")
+}
+
+// Release - Target groupings for deployment
+model Release {
+  id            String        @id @default(uuid())
+  name          String
+  version       String
+  description   String?
+  status        ReleaseStatus @default(PLANNING)
+  targetDate    DateTime?
+  deployedAt    DateTime?
+  createdBy     String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  items                ReleaseItem[]
+  alignmentComparisons AlignmentComparison[]
+
+  @@unique([name, version])
+  @@map("releases")
+}
+
+// ReleaseItem - Components/versions in a release
+model ReleaseItem {
+  id                String   @id @default(uuid())
+  releaseId         String
+  blueprintId       String?  // Optional blueprint reference
+  componentId       String?  // Optional specific component
+  targetVersion     String
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  release   Release    @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  blueprint Blueprint? @relation(fields: [blueprintId], references: [id])
+  component Component? @relation(fields: [componentId], references: [id])
+
+  @@map("release_items")
+}
+
+// GovernanceRule - Promotion readiness rules
+model GovernanceRule {
+  id          String                  @id @default(uuid())
+  name        String                  @unique
+  description String?
+  ruleType    GovernanceRuleType
+  severity    GovernanceRuleSeverity  @default(WARNING)
+  isActive    Boolean                 @default(true)
+  configJson  Json                    // Rule configuration (patterns, thresholds, etc.)
+  targetStages StageKey[]             // Which stages this rule applies to
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+
+  evaluations RuleEvaluation[]
+
+  @@map("governance_rules")
+}
+
+// RuleEvaluation - Rule evaluation results
+model RuleEvaluation {
+  id              String                  @id @default(uuid())
+  ruleId          String
+  environmentId   String
+  snapshotId      String?
+  passed          Boolean
+  severity        GovernanceRuleSeverity
+  message         String?
+  detailsJson     Json?                   // Detailed evaluation results
+  evaluatedAt     DateTime                @default(now())
+
+  rule        GovernanceRule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  environment Environment        @relation(fields: [environmentId], references: [id], onDelete: Cascade)
+  snapshot    EnvironmentSnapshot? @relation(fields: [snapshotId], references: [id])
+
+  @@index([environmentId, evaluatedAt])
+  @@map("rule_evaluations")
+}
+
+// AlignmentComparison - Comparison results storage
+model AlignmentComparison {
+  id                String          @id @default(uuid())
+  comparisonType    ComparisonType
+  environmentId     String?
+  snapshotId        String?
+  blueprintId       String?
+  releaseId         String?
+  targetEnvironmentId String?       // For cross-environment comparisons
+  status            AlignmentStatus
+  alignedCount      Int             @default(0)
+  driftedCount      Int             @default(0)
+  missingCount      Int             @default(0)
+  extraCount        Int             @default(0)
+  detailsJson       Json?           // Detailed diff results
+  comparedAt        DateTime        @default(now())
+
+  environment       Environment?        @relation("EnvironmentAlignments", fields: [environmentId], references: [id], onDelete: Cascade)
+  snapshot          EnvironmentSnapshot? @relation(fields: [snapshotId], references: [id])
+  blueprint         Blueprint?          @relation(fields: [blueprintId], references: [id])
+  release           Release?            @relation(fields: [releaseId], references: [id])
+
+  @@index([environmentId, comparisonType])
+  @@map("alignment_comparisons")
+}
+
+// ============================================
+// 6-PILLAR MODEL - ORGANISATION DOMAIN
+// ============================================
+
+enum RACIRole {
+  RESPONSIBLE   // R - Does the work
+  ACCOUNTABLE   // A - Ultimately answerable
+  CONSULTED     // C - Provides input
+  INFORMED      // I - Kept updated
+}
+
+enum PersonStatus {
+  ACTIVE
+  INACTIVE
+  EXTERNAL
+}
+
+enum AssetEntityType {
+  ENVIRONMENT
+  COMPONENT
+  COMPONENT_INSTANCE
+  HOST
+  CONNECTION
+}
+
+// Person - People registry
+model Person {
+  id            String        @id @default(uuid())
+  email         String        @unique
+  displayName   String
+  department    String?
+  team          String?
+  role          String?
+  phone         String?
+  status        PersonStatus  @default(ACTIVE)
+  externalId    String?       // ID from HR system or identity provider
+  metadata      Json?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  raciMappings  RACIMapping[]
+
+  @@map("people")
+}
+
+// RACIMapping - R/A/C/I assignments
+model RACIMapping {
+  id            String        @id @default(uuid())
+  personId      String
+  entityType    AssetEntityType
+  entityId      String        // ID of the entity (environment, component, etc.)
+  raciRole      RACIRole
+  notes         String?
+  assignedBy    String?
+  assignedAt    DateTime      @default(now())
+  expiresAt     DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  person        Person        @relation(fields: [personId], references: [id], onDelete: Cascade)
+  environment   Environment?  @relation(fields: [entityId], references: [id], onDelete: Cascade, map: "raci_environment")
+
+  @@unique([personId, entityType, entityId, raciRole])
+  @@index([entityType, entityId])
+  @@map("raci_mappings")
+}
+
+// OrphanedAsset - Assets without ownership
+model OrphanedAsset {
+  id            String          @id @default(uuid())
+  entityType    AssetEntityType
+  entityId      String
+  entityName    String
+  detectedAt    DateTime        @default(now())
+  resolvedAt    DateTime?
+  resolvedBy    String?
+  notes         String?
+
+  @@unique([entityType, entityId])
+  @@index([entityType])
+  @@map("orphaned_assets")
+}
+
+// ============================================
+// 6-PILLAR MODEL - CONFIGURATION DOMAIN
+// ============================================
+
+enum ConnectorStatus {
+  ACTIVE
+  DISABLED
+  ERROR
+  PENDING_CONFIG
+}
+
+enum ConnectorType {
+  KUBERNETES
+  GITOPS
+  CMDB
+  APM
+  MANUAL
+  CUSTOM
+}
+
+enum IntegrationRuleAction {
+  MAP_FIELD
+  TRANSFORM
+  FILTER
+  MERGE
+  SKIP
+}
+
+enum SettingScope {
+  GLOBAL
+  ENVIRONMENT
+  STAGE
+  USER
+}
+
+// Connector - Connector definitions (extends ConnectorCredential concept)
+model Connector {
+  id              String          @id @default(uuid())
+  name            String          @unique
+  connectorType   ConnectorType
+  description     String?
+  status          ConnectorStatus @default(PENDING_CONFIG)
+  credentialId    String?         // Reference to ConnectorCredential
+  configJson      Json?           // Non-sensitive configuration
+  scheduleJson    Json?           // Scheduling configuration
+  lastRunAt       DateTime?
+  lastRunStatus   String?
+  createdBy       String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  integrationRules IntegrationRule[]
+
+  @@map("connectors")
+}
+
+// IntegrationRule - Field mapping rules
+model IntegrationRule {
+  id            String                @id @default(uuid())
+  connectorId   String
+  name          String
+  description   String?
+  action        IntegrationRuleAction
+  sourceField   String
+  targetField   String?
+  transformExpr String?               // Transformation expression
+  priority      Int                   @default(0)
+  isActive      Boolean               @default(true)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+
+  connector     Connector             @relation(fields: [connectorId], references: [id], onDelete: Cascade)
+
+  @@map("integration_rules")
+}
+
+// PlatformSetting - Global/scoped settings
+model PlatformSetting {
+  id            String        @id @default(uuid())
+  key           String
+  value         String
+  valueType     String        @default("string") // string, number, boolean, json
+  scope         SettingScope  @default(GLOBAL)
+  scopeId       String?       // ID of the scoped entity (environment, stage, user)
+  description   String?
+  isEncrypted   Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([key, scope, scopeId])
+  @@map("platform_settings")
+}
+
+// ============================================
+// GOVERNANCE ALIGNMENT MODULE
+// Premium governance controls, compliance, approvals, exceptions
+// ============================================
+
+enum PolicyControlCategory {
+  DATA_GOVERNANCE
+  VERSION_COMPLIANCE
+  TOPOLOGY_RULES
+  SECURITY
+  CHANGE_MANAGEMENT
+  OWNERSHIP
+  FRESHNESS
+  CUSTOM
+}
+
+enum PolicyControlScope {
+  GLOBAL
+  STAGE
+  ENVIRONMENT
+  COMPONENT
+}
+
+enum ComplianceResultStatus {
+  PASS
+  WARN
+  FAIL
+  NOT_APPLICABLE
+  PENDING
+}
+
+enum ApprovalType {
+  PROMOTION
+  EXCEPTION_REQUEST
+  DATA_ACCESS
+  CONFIGURATION_CHANGE
+  COUPLING_REVIEW
+  RELEASE_GATE
+}
+
+enum ApprovalStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+  CANCELLED
+}
+
+enum ExceptionStatus {
+  REQUESTED
+  APPROVED
+  ACTIVE
+  EXPIRED
+  REVOKED
+}
+
+enum CouplingStatus {
+  UNREVIEWED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  MITIGATION_REQUIRED
+}
+
+// PolicyControl - Configurable governance controls
+model PolicyControl {
+  id            String                @id @default(uuid())
+  name          String                @unique
+  description   String?
+  category      PolicyControlCategory
+  scope         PolicyControlScope    @default(GLOBAL)
+  scopeId       String?               // ID of stage/env/component if scoped
+  severity      GovernanceRuleSeverity @default(WARNING)
+  isActive      Boolean               @default(true)
+  configJson    Json                  // Control configuration (thresholds, patterns, etc.)
+  evaluatorType String                // e.g., "version_check", "owner_assigned", "freshness"
+  remediation   String?               // Remediation guidance
+  createdBy     String?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+
+  complianceResults ComplianceResult[]
+  exceptions        ExceptionItem[]
+
+  @@index([category, isActive])
+  @@map("policy_controls")
+}
+
+// ComplianceResult - Evaluation results per environment/control
+model ComplianceResult {
+  id                String                @id @default(uuid())
+  policyControlId   String
+  environmentId     String
+  snapshotId        String?
+  status            ComplianceResultStatus
+  score             Int?                  // 0-100 if applicable
+  message           String?
+  detailsJson       Json?                 // Detailed findings
+  evidenceJson      Json?                 // Supporting evidence
+  evaluatedAt       DateTime              @default(now())
+  evaluatedBy       String?               // System or user who triggered eval
+  expiresAt         DateTime?             // When this result becomes stale
+
+  policyControl     PolicyControl         @relation(fields: [policyControlId], references: [id], onDelete: Cascade)
+
+  @@index([environmentId, evaluatedAt])
+  @@index([policyControlId, environmentId])
+  @@map("compliance_results")
+}
+
+// ApprovalItem - Lightweight approval workflow
+model ApprovalItem {
+  id                String          @id @default(uuid())
+  approvalType      ApprovalType
+  status            ApprovalStatus  @default(PENDING)
+  title             String
+  description       String?
+  requesterId       String?
+  requesterName     String?
+  requesterEmail    String?
+  assigneeId        String?         // Person assigned to approve
+  assigneeName      String?
+  assigneeEmail     String?
+  environmentId     String?
+  componentId       String?
+  releaseId         String?
+  contextJson       Json?           // Additional context (what's being approved)
+  decisionReason    String?         // Reason for approve/reject
+  decisionBy        String?
+  decisionAt        DateTime?
+  expiresAt         DateTime?       // Auto-expire if not actioned
+  dueDate           DateTime?
+  priority          Int             @default(0) // Higher = more urgent
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([status, assigneeId])
+  @@index([environmentId, status])
+  @@map("approval_items")
+}
+
+// ExceptionItem - Approved policy deviations with expiry
+model ExceptionItem {
+  id                String          @id @default(uuid())
+  policyControlId   String
+  environmentId     String?
+  componentId       String?
+  status            ExceptionStatus @default(REQUESTED)
+  reason            String
+  justification     String?
+  riskAssessment    String?
+  mitigationPlan    String?
+  requestedBy       String?
+  requestedByName   String?
+  requestedAt       DateTime        @default(now())
+  approvedBy        String?
+  approvedByName    String?
+  approvedAt        DateTime?
+  expiresAt         DateTime?       // When exception expires
+  revokedBy         String?
+  revokedAt         DateTime?
+  revocationReason  String?
+  reviewReminder    DateTime?       // Reminder for periodic review
+  attachmentsJson   Json?           // Links to supporting docs
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  policyControl     PolicyControl   @relation(fields: [policyControlId], references: [id], onDelete: Cascade)
+
+  @@index([status, expiresAt])
+  @@index([environmentId, status])
+  @@map("exception_items")
+}
+
+// CouplingLink - Project/environment coupling detection
+model CouplingLink {
+  id                    String          @id @default(uuid())
+  sourceEnvironmentId   String
+  targetEnvironmentId   String
+  sourceProjectName     String?
+  targetProjectName     String?
+  couplingType          String          // e.g., "shared_component", "data_dependency", "interface_dependency"
+  status                CouplingStatus  @default(UNREVIEWED)
+  riskLevel             Int             @default(0) // 0-100
+  description           String?
+  detectedAt            DateTime        @default(now())
+  detectedBy            String?         // System or user who detected
+  evidenceJson          Json?           // What triggered detection
+  reviewedBy            String?
+  reviewedAt            DateTime?
+  reviewNotes           String?
+  mitigationRequired    Boolean         @default(false)
+  mitigationPlan        String?
+  resolvedAt            DateTime?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  @@unique([sourceEnvironmentId, targetEnvironmentId, couplingType])
+  @@index([status, riskLevel])
+  @@map("coupling_links")
 }

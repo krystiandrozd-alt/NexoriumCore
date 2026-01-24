@@ -1,6 +1,7 @@
 'use client';
 
 // TelEnvIQ - Dashboard Layout
+// 6-Pillar Enterprise Structure
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -9,28 +10,77 @@ import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
   Network,
-  Database,
-  Camera,
+  ShieldCheck,
+  Zap,
+  BarChart3,
+  Users,
   Settings,
   Menu,
   X,
   ChevronRight,
-  ShieldCheck,
-  Plug,
-  Activity,
-  DollarSign,
+  Camera,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { EnvironmentSwitcher } from '@/components/navigation/EnvironmentSwitcher';
+import { EnvironmentProvider } from '@/contexts/EnvironmentContext';
 
+// Overview + 6-Pillar Navigation Structure
 const navigation = [
-  { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Environments', href: '/dashboard/environments', icon: Network },
-  { name: 'Data Intelligence', href: '/dashboard/data-intelligence', icon: Database },
-  { name: 'Data Governance', href: '/dashboard/data-governance', icon: ShieldCheck },
-  { name: 'Cost & Budget', href: '/dashboard/cost', icon: DollarSign },
-  { name: 'Connectors', href: '/dashboard/connectors', icon: Plug },
-  { name: 'Activity', href: '/dashboard/activity', icon: Activity },
+  {
+    name: 'Overview',
+    href: '/dashboard/overview',
+    icon: LayoutDashboard,
+    description: 'Dashboard Home',
+  },
+  {
+    name: 'Environments',
+    href: '/dashboard/environments',
+    icon: Network,
+    description: 'Truth Layer',
+  },
+  {
+    name: 'Governance',
+    href: '/dashboard/governance',
+    icon: ShieldCheck,
+    description: 'Alignment Layer',
+  },
+  {
+    name: 'Impact',
+    href: '/dashboard/impact',
+    icon: Zap,
+    description: 'Risk Layer',
+  },
+  {
+    name: 'Insight',
+    href: '/dashboard/insight',
+    icon: BarChart3,
+    description: 'Reporting Layer',
+  },
+  {
+    name: 'Organisation',
+    href: '/dashboard/organisation',
+    icon: Users,
+    description: 'Accountability Layer',
+  },
+  {
+    name: 'Configuration',
+    href: '/dashboard/configuration',
+    icon: Settings,
+    description: 'Control Surface',
+  },
 ];
+
+// Get breadcrumb label from pathname
+function getBreadcrumbLabel(pathname: string): string {
+  if (pathname.includes('/overview')) return 'Overview';
+  if (pathname.includes('/environments')) return 'Environments';
+  if (pathname.includes('/governance')) return 'Governance';
+  if (pathname.includes('/impact')) return 'Impact';
+  if (pathname.includes('/insight')) return 'Insight';
+  if (pathname.includes('/organisation')) return 'Organisation';
+  if (pathname.includes('/configuration')) return 'Configuration';
+  return '';
+}
 
 export default function DashboardLayout({
   children,
