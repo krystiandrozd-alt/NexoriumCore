@@ -23,6 +23,7 @@ import '@xyflow/react/dist/style.css';
 
 import Custom5LayerNode from './Custom5LayerNode';
 import Custom5LayerEdge from './Custom5LayerEdge';
+import NoteNode from './NoteNode';
 import { applyLayerAwareDagreLayout } from '@/lib/utils/dagre-layout';
 import type {
   Graph5LayerNode,
@@ -43,10 +44,12 @@ interface EnvironmentGraphViewProps {
   onPositionChange?: () => void;
   fitViewTrigger?: number;
   autoArrangeTrigger?: number;
+  addNoteTrigger?: number;
 }
 
 const nodeTypes: NodeTypes = {
   custom5layer: Custom5LayerNode,
+  note: NoteNode,
 };
 
 const edgeTypes: EdgeTypes = {
@@ -76,10 +79,12 @@ export default function EnvironmentGraphView({
   onPositionChange,
   fitViewTrigger,
   autoArrangeTrigger,
+  addNoteTrigger,
 }: EnvironmentGraphViewProps) {
   const { fitView } = useReactFlow();
   const prevFitViewTrigger = useRef(fitViewTrigger);
   const prevAutoArrangeTrigger = useRef(autoArrangeTrigger);
+  const prevAddNoteTrigger = useRef(addNoteTrigger);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Filter nodes based on showInfra
@@ -98,16 +103,21 @@ export default function EnvironmentGraphView({
 
   // Determine initial nodes - use saved positions if available
   const getInitialNodes = useCallback(() => {
+    // Extract saved notes (type: 'note')
+    const savedNotes = savedNodes?.filter((n) => n.type === 'note') || [];
+
     if (savedNodes && savedNodes.length > 0) {
       // Merge saved positions with current node data
       const savedPositions = new Map(savedNodes.map((n) => [n.id, n.position]));
-      return filteredNodes.map((node) => {
+      const mergedNodes = filteredNodes.map((node) => {
         const savedPos = savedPositions.get(node.id);
         if (savedPos) {
           return { ...node, position: savedPos };
         }
         return node;
       });
+      // Add back any saved notes
+      return [...mergedNodes, ...savedNotes];
     }
     // Apply auto-layout for new diagrams
     const { nodes: layoutedNodes } = applyLayerAwareDagreLayout(
@@ -168,28 +178,64 @@ export default function EnvironmentGraphView({
   useEffect(() => {
     if (autoArrangeTrigger !== prevAutoArrangeTrigger.current) {
       prevAutoArrangeTrigger.current = autoArrangeTrigger;
+      // Preserve existing notes when re-arranging
+      const existingNotes = nodes.filter((n) => n.type === 'note');
       const { nodes: layoutedNodes } = applyLayerAwareDagreLayout(
         filteredNodes as Node[],
         filteredEdges as Edge[],
         { nodeWidth: 200, nodeHeight: 80 }
       );
-      setNodes(layoutedNodes);
+      setNodes([...layoutedNodes, ...existingNotes]);
       setTimeout(() => {
         fitView({ padding: 0.1, duration: 300 });
       }, 50);
     }
-  }, [autoArrangeTrigger, filteredNodes, filteredEdges, setNodes, fitView]);
+  }, [autoArrangeTrigger, filteredNodes, filteredEdges, nodes, setNodes, fitView]);
+
+  // Add note on trigger
+  useEffect(() => {
+    if (addNoteTrigger !== undefined && addNoteTrigger !== prevAddNoteTrigger.current) {
+      prevAddNoteTrigger.current = addNoteTrigger;
+
+      // Count existing notes for offset positioning
+      const existingNotes = nodes.filter((n) => n.type === 'note');
+      const offsetX = existingNotes.length * 20;
+      const offsetY = existingNotes.length * 20;
+
+      const newNote: Node = {
+        id: `note-${Date.now()}`,
+        type: 'note',
+        position: { x: 100 + offsetX, y: 100 + offsetY },
+        data: {
+          content: '',
+          color: 'yellow',
+          width: 200,
+          height: 120,
+        },
+      };
+
+      setNodes((nds) => [...nds, newNote]);
+
+      // Trigger position change for autosave
+      setTimeout(() => {
+        onPositionChange?.();
+      }, 100);
+    }
+  }, [addNoteTrigger, nodes, setNodes, onPositionChange]);
 
   // Update when showInfra changes
   useEffect(() => {
+    // Preserve existing notes when re-arranging
+    const existingNotes = nodes.filter((n) => n.type === 'note');
     // Re-layout when filter changes
     const { nodes: layoutedNodes } = applyLayerAwareDagreLayout(
       filteredNodes as Node[],
       filteredEdges as Edge[],
       { nodeWidth: 200, nodeHeight: 80 }
     );
-    setNodes(layoutedNodes);
+    setNodes([...layoutedNodes, ...existingNotes]);
     setEdges(filteredEdges as Edge[]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showInfra, filteredNodes, filteredEdges, setNodes, setEdges]);
 
   // Compute swimlane layout

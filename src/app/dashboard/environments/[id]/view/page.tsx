@@ -76,6 +76,7 @@ export default function EnvironmentViewPage() {
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [fitViewTrigger, setFitViewTrigger] = useState(0);
   const [autoArrangeTrigger, setAutoArrangeTrigger] = useState(0);
+  const [addNoteTrigger, setAddNoteTrigger] = useState(0);
 
   // Component edit modal
   const [editingComponent, setEditingComponent] = useState<{
@@ -262,6 +263,11 @@ export default function EnvironmentViewPage() {
     await fetchTopology();
   }, [fetchTopology]);
 
+  // Add note handler - triggers note creation in graph view
+  const handleAddNote = useCallback(() => {
+    setAddNoteTrigger((t) => t + 1);
+  }, []);
+
   const handleNodeClick = useCallback((nodeId: string) => {
     const node = topologyData?.nodes.find((n) => n.id === nodeId);
     if (node) {
@@ -326,6 +332,7 @@ export default function EnvironmentViewPage() {
         saveStatus={saveStatus}
         onAutoArrange={handleAutoArrange}
         onFitView={handleFitView}
+        onAddNote={handleAddNote}
         onExport={handleExport}
         onRefresh={handleRefresh}
         onResetLayout={handleResetLayout}
@@ -351,6 +358,7 @@ export default function EnvironmentViewPage() {
               onPositionChange={handlePositionChange}
               fitViewTrigger={fitViewTrigger}
               autoArrangeTrigger={autoArrangeTrigger}
+              addNoteTrigger={addNoteTrigger}
             />
           </ReactFlowProvider>
         ) : viewMode === 'table' && topologyData ? (

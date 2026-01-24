@@ -688,5 +688,13 @@ export interface GraphAnalysisResult {
   overriddenExit?: string | null;
 }
 
+// Note node data for diagram annotations
+export interface NoteNodeData {
+  content: string;
+  color: 'yellow' | 'blue' | 'green' | 'pink' | 'purple';
+  width?: number;
+  height?: number;
+}
+
 // Cost & Budget Types (re-export from dedicated file)
 export * from './cost';
