@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Ownership Page
+// Nexorium Core - Ownership Page
 // Asset ownership views
 
 import { Card, CardContent } from '@/components/ui/card';

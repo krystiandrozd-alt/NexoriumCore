@@ -1,4 +1,4 @@
-// TelEnvIQ - Insight Reports Service
+// Nexorium Core - Insight Reports Service
 // Core business logic for generating reports and dashboards
 
 import prisma from '@/lib/db';

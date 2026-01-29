@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Health Page
+// Nexorium Core - Environment Health Page
 // Health overlay and readiness indicators
 
 import { useState, useEffect } from 'react';

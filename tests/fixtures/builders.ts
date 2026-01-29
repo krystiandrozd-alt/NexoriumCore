@@ -1,4 +1,4 @@
-// TelEnvIQ - Fixture Builders
+// Nexorium Core - Fixture Builders
 // Factory functions for creating test data with overrides
 
 import type {

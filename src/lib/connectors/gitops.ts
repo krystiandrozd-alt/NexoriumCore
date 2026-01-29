@@ -1,4 +1,4 @@
-// TelEnvIQ - GitOps Connector
+// Nexorium Core - GitOps Connector
 // Discovery from GitOps manifests (Kubernetes YAML files)
 
 import { BaseConnector, type ConnectorConfig, type DiscoveryPayload, type DiscoveredNode, type DiscoveredEdge } from './base';
@@ -175,8 +175,8 @@ export class GitOpsConnector extends BaseConnector {
     if (labels['app.kubernetes.io/component']) {
       const component = labels['app.kubernetes.io/component'].toLowerCase();
       nodeType = this.mapComponentToNodeType(component);
-    } else if (annotations['telenviq.io/type']) {
-      nodeType = annotations['telenviq.io/type'] as NodeType;
+    } else if (annotations['nexorium.io/type']) {
+      nodeType = annotations['nexorium.io/type'] as NodeType;
     } else {
       // Infer from image
       nodeType = this.inferNodeTypeFromImage(image);
@@ -184,15 +184,15 @@ export class GitOpsConnector extends BaseConnector {
 
     // Determine criticality
     let criticality: DiscoveredNode['criticality'] = 'MEDIUM';
-    if (annotations['telenviq.io/criticality']) {
-      const crit = annotations['telenviq.io/criticality'].toUpperCase();
+    if (annotations['nexorium.io/criticality']) {
+      const crit = annotations['nexorium.io/criticality'].toUpperCase();
       if (['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].includes(crit)) {
         criticality = crit as DiscoveredNode['criticality'];
       }
     }
 
     // Get owner
-    const owner = annotations['telenviq.io/owner'] ||
+    const owner = annotations['nexorium.io/owner'] ||
       labels['app.kubernetes.io/managed-by'] ||
       labels['app.kubernetes.io/part-of'];
 

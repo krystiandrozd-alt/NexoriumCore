@@ -1,4 +1,4 @@
-// TelEnvIQ - Kubernetes Connector
+// Nexorium Core - Kubernetes Connector
 // Read-only discovery of Kubernetes resources
 
 import { BaseConnector, type ConnectorConfig, type DiscoveryPayload, type DiscoveredNode, type DiscoveredEdge } from './base';
@@ -197,15 +197,15 @@ export class KubernetesConnector extends BaseConnector {
 
     // Determine criticality from labels
     let criticality: DiscoveredNode['criticality'] = 'MEDIUM';
-    if (labels['telenviq.io/criticality']) {
-      const crit = labels['telenviq.io/criticality'].toUpperCase();
+    if (labels['nexorium.io/criticality']) {
+      const crit = labels['nexorium.io/criticality'].toUpperCase();
       if (['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].includes(crit)) {
         criticality = crit as DiscoveredNode['criticality'];
       }
     }
 
     // Get owner from labels
-    const owner = labels['telenviq.io/owner'] || labels['app.kubernetes.io/managed-by'];
+    const owner = labels['nexorium.io/owner'] || labels['app.kubernetes.io/managed-by'];
 
     return {
       name,

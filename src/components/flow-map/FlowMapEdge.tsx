@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Flow Map Edge Components
+// Nexorium Core - Flow Map Edge Components
 // Animated edges with particle effects for change flow visualization
 
 import { memo, useMemo } from 'react';

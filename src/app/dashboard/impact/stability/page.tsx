@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Stability Page
+// Nexorium Core - Stability Page
 // Environment stability index and metrics
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

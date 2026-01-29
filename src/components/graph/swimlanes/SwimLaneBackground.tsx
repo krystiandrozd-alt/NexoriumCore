@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Swimlane Background Component
+// Nexorium Core - Swimlane Background Component
 // SVG background rendering for swimlanes
 
 import { memo } from 'react';

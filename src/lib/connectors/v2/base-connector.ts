@@ -1,4 +1,4 @@
-// TelEnvIQ - Base Connector V2
+// Nexorium Core - Base Connector V2
 // Abstract base class for 5-layer model connectors
 
 import prisma from '@/lib/db';

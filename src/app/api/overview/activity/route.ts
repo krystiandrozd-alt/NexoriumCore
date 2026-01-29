@@ -1,10 +1,12 @@
-// TelEnvIQ - Overview Activity API
+// Nexorium Core - Overview Activity API
 // GET /api/overview/activity - Paginated activity feed
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import type { ActivityItem } from '@/types/overview';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const QuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100).optional().default(20),
@@ -13,6 +15,9 @@ const QuerySchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const validation = QuerySchema.safeParse({

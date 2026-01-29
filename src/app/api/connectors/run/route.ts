@@ -1,10 +1,12 @@
-// TelEnvIQ - Connector Run API
+// Nexorium Core - Connector Run API
 // POST /api/connectors/run - Run a connector
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { runConnectorV2, type ConnectorType } from '@/lib/connectors/v2';
 import path from 'path';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const RunConnectorSchema = z.object({
   environmentId: z.string().uuid(),
@@ -14,6 +16,9 @@ const RunConnectorSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_CREDENTIALS);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = RunConnectorSchema.safeParse(body);

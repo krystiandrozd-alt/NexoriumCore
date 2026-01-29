@@ -1,4 +1,4 @@
-// TelEnvIQ - Connector Unit Tests
+// Nexorium Core - Connector Unit Tests
 // Tests for connector framework behavior
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';

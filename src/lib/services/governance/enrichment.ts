@@ -1,4 +1,4 @@
-// TelEnvIQ - Enrichment Service
+// Nexorium Core - Enrichment Service
 // Versioned manual enrichment management with rollback support
 
 import prisma from '@/lib/db';

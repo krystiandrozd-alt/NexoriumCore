@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Recent Activity Timeline Component
+// Nexorium Core - Recent Activity Timeline Component
 // Vertical timeline displaying recent activity feed
 
 import Link from 'next/link';

@@ -1,4 +1,4 @@
-// TelEnvIQ - Premium Canvas Unit Tests
+// Nexorium Core - Premium Canvas Unit Tests
 // Tests for the Premium Environment Graph Canvas components
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';

@@ -1,4 +1,4 @@
-// TelEnvIQ - Flow Map Types
+// Nexorium Core - Flow Map Types
 // Portfolio Change Intelligence Data Model
 
 // ============================================

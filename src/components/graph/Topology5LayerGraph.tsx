@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - 5-Layer Model Topology Graph
+// Nexorium Core - 5-Layer Model Topology Graph
 // Architecture-aware visualization with layer-based layout
 
 import { useCallback, useMemo, useState, useEffect } from 'react';
@@ -135,10 +135,11 @@ export default function Topology5LayerGraph({
 
     const positions = computeLayerPositions(nodesWithLayer, edgesForLayout, {
       width: 1400,
+      laneHeight: 180,
       nodeWidth: 180,
       nodeHeight: 100,
       horizontalGap: 60,
-      verticalGap: 80,
+      startX: 250,
     });
 
     const layoutedNodes = filteredNodes.map((node) => {

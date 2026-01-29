@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Promotion Readiness Page
+// Nexorium Core - Promotion Readiness Page
 // Governance rules and readiness checks
 
 import { useState, useEffect } from 'react';

@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Cost & Budget Overview Dashboard
+// Nexorium Core - Cost & Budget Overview Dashboard
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';

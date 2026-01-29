@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-// TelEnvIQ - Environments Pillar Index
+// Nexorium Core - Environments Pillar Index
 // Redirects to Flow Map (default view)
 
 export default function EnvironmentsPage() {

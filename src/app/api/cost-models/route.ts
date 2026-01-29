@@ -1,10 +1,12 @@
-// TelEnvIQ - Cost Models API
+// Nexorium Core - Cost Models API
 // GET /api/cost-models - List all cost models
 // POST /api/cost-models - Create new cost model
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getCostModels, createCostModel } from '@/lib/services/cost-engine';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateCostModelSchema = z.object({
   name: z.string().min(1).max(255),
@@ -15,6 +17,9 @@ const CreateCostModelSchema = z.object({
 });
 
 export async function GET() {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const costModels = await getCostModels();
     return NextResponse.json({ success: true, data: costModels });
@@ -28,6 +33,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateCostModelSchema.safeParse(body);

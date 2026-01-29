@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Governance Pillar Layout
+// Nexorium Core - Governance Pillar Layout
 // Alignment Layer - Blueprints, releases, governance controls, compliance
 
 import { useEffect, useState } from 'react';

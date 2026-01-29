@@ -1,4 +1,4 @@
-// TelEnvIQ - Single Approval API
+// Nexorium Core - Single Approval API
 // GET /api/governance/approvals/[id] - Get a single approval
 // PUT /api/governance/approvals/[id] - Update an approval
 
@@ -7,12 +7,17 @@ import {
   getApproval,
   updateApproval,
 } from '@/lib/services/governance/approvals';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
 export async function GET(_request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const approval = await getApproval(id);
@@ -35,6 +40,9 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

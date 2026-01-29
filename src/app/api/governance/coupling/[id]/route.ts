@@ -1,4 +1,4 @@
-// TelEnvIQ - Single Coupling Link API
+// Nexorium Core - Single Coupling Link API
 // GET /api/governance/coupling/[id] - Get a single coupling link
 // PUT /api/governance/coupling/[id] - Update a coupling link
 // DELETE /api/governance/coupling/[id] - Delete a coupling link
@@ -11,12 +11,17 @@ import {
   approveCoupling,
   rejectCoupling,
 } from '@/lib/services/governance/coupling';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
 export async function GET(_request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const coupling = await getCoupling(id);
@@ -39,6 +44,9 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -83,6 +91,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     await deleteCoupling(id);

@@ -1,4 +1,4 @@
-// TelEnvIQ - Runtime Layer Service
+// Nexorium Core - Runtime Layer Service
 // Virtualization and runtime layer management
 
 import prisma from '@/lib/db';

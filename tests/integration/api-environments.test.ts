@@ -1,4 +1,4 @@
-// TelEnvIQ - API Integration Tests
+// Nexorium Core - API Integration Tests
 // Tests for environment API routes with mocked Prisma
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

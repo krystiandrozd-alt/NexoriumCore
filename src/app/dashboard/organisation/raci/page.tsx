@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - RACI Page
+// Nexorium Core - RACI Page
 // RACI matrix management
 
 import { useState, useEffect } from 'react';

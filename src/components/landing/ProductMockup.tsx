@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnv IQ - Premium Product Mockup
+// Nexorium Core - Product Mockup
 
 import { useEffect, useState } from 'react';
 import {
@@ -83,7 +83,7 @@ export default function ProductMockup() {
             <div className="w-3 h-3 rounded-full bg-green-500/80" />
           </div>
           <div className="flex-1 text-center">
-            <span className="text-xs text-slate-500">TelEnv IQ — Environment Topology</span>
+            <span className="text-xs text-slate-500">Nexorium Core — Environment Topology</span>
           </div>
         </div>
 

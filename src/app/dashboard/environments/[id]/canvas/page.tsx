@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Premium Environment Canvas (Flagship Screen)
+// Nexorium Core - Environment Canvas (Flagship Screen)
 // Immersive graph visualization with inspector, overlays, and keyboard shortcuts
 
 import { useState, useEffect, useCallback, useRef } from 'react';

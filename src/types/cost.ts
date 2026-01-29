@@ -1,4 +1,4 @@
-// TelEnvIQ - Cost & Budget Type Definitions
+// Nexorium Core - Cost & Budget Type Definitions
 
 // Enums matching Prisma schema
 export type CostPeriod = 'MONTHLY' | 'QUARTERLY' | 'YEARLY';

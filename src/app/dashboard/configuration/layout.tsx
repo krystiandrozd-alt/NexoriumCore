@@ -1,13 +1,15 @@
 'use client';
 
-// TelEnvIQ - Configuration Pillar Layout
+// Nexorium Core - Configuration Pillar Layout
 // Control Surface - Connectors, settings, templates
 
 import { PillarNav, PillarNavItem } from '@/components/navigation';
-import { Plug, FileJson, GitBranch, Settings } from 'lucide-react';
+import { Plug, FileJson, GitBranch, Settings, Server, FolderKanban } from 'lucide-react';
 
 const configurationNavItems: PillarNavItem[] = [
   { name: 'Connectors', href: '/dashboard/configuration/connectors', icon: Plug },
+  { name: 'Projects', href: '/dashboard/configuration/projects', icon: FolderKanban },
+  { name: 'Systems', href: '/dashboard/configuration/systems', icon: Server },
   { name: 'Integration Rules', href: '/dashboard/configuration/integration-rules', icon: FileJson },
   { name: 'Flow Templates', href: '/dashboard/configuration/flow-templates', icon: GitBranch },
   { name: 'Platform Settings', href: '/dashboard/configuration/platform-settings', icon: Settings },

@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Data Governance Panel
+// Nexorium Core - Data Governance Panel
 // Governance dashboard with compliance and violation summaries
 
 import { useEffect, useState } from 'react';

@@ -1,4 +1,4 @@
-// TelEnvIQ - Governance Overview API
+// Nexorium Core - Governance Overview API
 // GET /api/governance/overview - Get governance dashboard metrics
 
 import { NextResponse } from 'next/server';
@@ -6,8 +6,13 @@ import { getGovernanceOverview } from '@/lib/services/governance/compliance';
 import { getCouplingAnalysis } from '@/lib/services/governance/coupling';
 import { getExceptionStats } from '@/lib/services/governance/exceptions';
 import { getApprovalStats } from '@/lib/services/governance/approvals';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET() {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const [overview, couplingAnalysis, exceptionStats, approvalStats] = await Promise.all([
       getGovernanceOverview(),

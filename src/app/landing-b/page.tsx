@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnv IQ - Landing Version B: Dark Minimal Enterprise
+// Nexorium Core - Landing Version B: Dark Minimal Enterprise
 // Style: Ultra-minimal dark theme, flat structured sections, high contrast typography
 // Tone: CIO-level, serious, minimal, confident
 

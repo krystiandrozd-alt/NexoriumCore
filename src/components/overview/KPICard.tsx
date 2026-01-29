@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - KPI Card Component
+// Nexorium Core - KPI Card Component
 // Premium glass morphism card with animated counter
 
 import { useEffect, useState, useRef } from 'react';

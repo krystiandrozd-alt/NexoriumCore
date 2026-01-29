@@ -1,4 +1,4 @@
-// TelEnvIQ - Test Fixtures
+// Nexorium Core - Test Fixtures
 // Deterministic test data for all test scenarios
 
 export * from './environments';

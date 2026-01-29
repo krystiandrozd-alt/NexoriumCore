@@ -1,10 +1,15 @@
-// TelEnvIQ - Compliance Results API
+// Nexorium Core - Compliance Results API
 // GET /api/governance/compliance - Get compliance results
 
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const environmentId = searchParams.get('environmentId');

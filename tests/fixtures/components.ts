@@ -1,4 +1,4 @@
-// TelEnvIQ - Component Fixtures
+// Nexorium Core - Component Fixtures
 // Deterministic component catalog test data
 
 import type { Component } from '@prisma/client';

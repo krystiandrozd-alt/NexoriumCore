@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Context
+// Nexorium Core - Environment Context
 // Global environment state provider for scoped navigation
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
@@ -38,13 +38,14 @@ export function EnvironmentProvider({ children }: { children: React.ReactNode })
       if (!response.ok) {
         throw new Error('Failed to fetch environments');
       }
-      const data = await response.json();
-      setEnvironments(data);
+      const result = await response.json();
+      const envData = result.data || [];
+      setEnvironments(envData);
 
       // Restore previously selected environment from localStorage
       const savedEnvId = localStorage.getItem('selectedEnvironmentId');
       if (savedEnvId) {
-        const savedEnv = data.find((e: Environment) => e.id === savedEnvId);
+        const savedEnv = envData.find((e: Environment) => e.id === savedEnvId);
         if (savedEnv) {
           setSelectedEnvironment(savedEnv);
         }

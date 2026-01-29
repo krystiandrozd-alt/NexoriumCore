@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Activity Log Panel
+// Nexorium Core - Activity Log Panel
 // Display activity timeline for an environment
 
 import { useEffect, useState } from 'react';

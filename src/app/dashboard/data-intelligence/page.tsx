@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Data Intelligence Page
+// Nexorium Core - Data Intelligence Page
 // Test data lifecycle tracking and monitoring
 
 import { useState, useEffect } from 'react';

@@ -1,8 +1,10 @@
-// TelEnvIQ - Environment Diagram Layout API
+// Nexorium Core - Environment Diagram Layout API
 // Save and load graph layout positions per environment
 
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -10,6 +12,9 @@ interface RouteParams {
 
 // GET - Load saved diagram layout
 export async function GET(request: Request, context: RouteParams) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id: environmentId } = await context.params;
 
@@ -49,6 +54,9 @@ export async function GET(request: Request, context: RouteParams) {
 
 // PUT - Save diagram layout (full replace)
 export async function PUT(request: Request, context: RouteParams) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id: environmentId } = await context.params;
     const body = await request.json();
@@ -116,6 +124,9 @@ export async function PUT(request: Request, context: RouteParams) {
 
 // PATCH - Partial update (just positions)
 export async function PATCH(request: Request, context: RouteParams) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id: environmentId } = await context.params;
     const body = await request.json();
@@ -182,6 +193,9 @@ export async function PATCH(request: Request, context: RouteParams) {
 
 // DELETE - Reset diagram layout
 export async function DELETE(request: Request, context: RouteParams) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id: environmentId } = await context.params;
 

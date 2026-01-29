@@ -1,13 +1,18 @@
-// TelEnvIQ - Hosting Domain Nodes API
+// Nexorium Core - Hosting Domain Nodes API
 // GET /api/hosting-domains/[id]/nodes - Get nodes in hosting domain
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getHostingDomainNodes } from '@/lib/services/hosting-domain';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const nodes = await getHostingDomainNodes(id);

@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Custom Node for 5-Layer Model
+// Nexorium Core - Custom Node for 5-Layer Model
 // Displays component instance with layer, version, entry/exit badges
 
 import { memo } from 'react';

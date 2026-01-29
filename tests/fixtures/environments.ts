@@ -1,4 +1,4 @@
-// TelEnvIQ - Environment Fixtures
+// Nexorium Core - Environment Fixtures
 // Deterministic environment test data
 
 import type { Environment } from '@prisma/client';

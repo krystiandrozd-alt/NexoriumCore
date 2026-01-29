@@ -1,9 +1,9 @@
 'use client';
 
-// TelEnv IQ - Shared Landing Header Component
+// Nexorium Core - Shared Landing Header Component
 
 import { motion } from 'framer-motion';
-import { Map } from 'lucide-react';
+import { Hexagon } from 'lucide-react';
 import Link from 'next/link';
 
 interface LandingHeaderProps {
@@ -31,9 +31,9 @@ export default function LandingHeader({ variant = 'glass' }: LandingHeaderProps)
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#5B5FEF] to-[#7C3AED] flex items-center justify-center">
-              <Map className="w-4 h-4 text-white" />
+              <Hexagon className="w-4 h-4 text-white" />
             </div>
-            <span className="text-lg font-semibold text-white">TelEnv IQ</span>
+            <span className="text-lg font-semibold text-white">Nexorium Core</span>
           </Link>
 
           {/* CTA */}

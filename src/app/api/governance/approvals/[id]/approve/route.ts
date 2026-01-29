@@ -1,26 +1,38 @@
-// TelEnvIQ - Approve Approval API
+// Nexorium Core - Approve Approval API
 // POST /api/governance/approvals/[id]/approve - Approve an approval item
 
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { approveItem } from '@/lib/services/governance/approvals';
+import { requireAuth } from '@/lib/auth/api-auth';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
+const ApproveSchema = z.object({
+  reason: z.string().optional(),
+});
+
 export async function POST(request: NextRequest, { params }: RouteParams) {
+  // Require authentication - user identity comes from session, not request body
+  const auth = await requireAuth();
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
-    const body = await request.json();
+    const body = await request.json().catch(() => ({}));
+    const validation = ApproveSchema.safeParse(body);
 
-    if (!body.approvedBy) {
+    if (!validation.success) {
       return NextResponse.json(
-        { success: false, error: 'approvedBy is required' },
+        { success: false, error: validation.error.issues[0].message },
         { status: 400 }
       );
     }
 
-    const approval = await approveItem(id, body.approvedBy, body.reason);
+    // Use authenticated user's name instead of trusting client-provided identity
+    const approval = await approveItem(id, auth.user!.name, validation.data.reason);
 
     return NextResponse.json({ success: true, data: approval });
   } catch (error) {

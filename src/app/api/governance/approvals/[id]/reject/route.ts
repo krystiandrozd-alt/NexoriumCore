@@ -1,14 +1,19 @@
-// TelEnvIQ - Reject Approval API
+// Nexorium Core - Reject Approval API
 // POST /api/governance/approvals/[id]/reject - Reject an approval item
 
 import { NextRequest, NextResponse } from 'next/server';
 import { rejectItem } from '@/lib/services/governance/approvals';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

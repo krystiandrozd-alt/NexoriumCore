@@ -1,4 +1,4 @@
-// TelEnvIQ - Governance Seed Data
+// Nexorium Core - Governance Seed Data
 // Sample data for governance alignment module
 
 import { PrismaClient } from '@prisma/client';

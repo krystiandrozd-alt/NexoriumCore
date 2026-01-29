@@ -1,4 +1,4 @@
-// TelEnvIQ - Test Database Utilities
+// Nexorium Core - Test Database Utilities
 // Helpers for database-backed integration tests
 
 import { PrismaClient } from '@prisma/client';
@@ -28,7 +28,7 @@ export function getTestPrisma(): PrismaClient {
     testPrisma = new PrismaClient({
       datasources: {
         db: {
-          url: process.env.DATABASE_URL || 'postgresql://localhost:5432/telenviq_test',
+          url: process.env.DATABASE_URL || 'postgresql://localhost:5432/nexorium_core_test',
         },
       },
       log: process.env.DEBUG_PRISMA ? ['query', 'info', 'warn', 'error'] : ['error'],

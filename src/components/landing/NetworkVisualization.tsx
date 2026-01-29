@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Abstract Network Visualization for Landing Page
+// Nexorium Core - Abstract Network Visualization for Landing Page
 // Animated SVG graph visualization
 
 import { useEffect, useState } from 'react';

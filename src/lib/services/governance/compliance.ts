@@ -1,4 +1,4 @@
-// TelEnvIQ - Compliance Evaluation Service
+// Nexorium Core - Compliance Evaluation Service
 // Evaluates policy controls and computes compliance scores
 
 import prisma from '@/lib/db';

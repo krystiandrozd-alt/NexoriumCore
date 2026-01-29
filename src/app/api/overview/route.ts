@@ -1,4 +1,4 @@
-// TelEnvIQ - Overview API
+// Nexorium Core - Overview API
 // GET /api/overview - Aggregated overview data for dashboard
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -11,6 +11,8 @@ import type {
   ActivityItem,
   DriftAlert,
 } from '@/types/overview';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const QuerySchema = z.object({
   projectIds: z.string().optional(),
@@ -20,6 +22,10 @@ const QuerySchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  // Require authentication and VIEW_ENVIRONMENT permission
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const validation = QuerySchema.safeParse({

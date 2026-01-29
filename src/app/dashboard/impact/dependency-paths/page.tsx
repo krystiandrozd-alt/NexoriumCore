@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Dependency Paths Page
+// Nexorium Core - Dependency Paths Page
 // Entry/exit detection and dependency analysis
 
 import { useState, useEffect } from 'react';

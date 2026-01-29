@@ -1,4 +1,4 @@
-// TelEnvIQ - Governance Components Index
+// Nexorium Core - Governance Components Index
 
 export { ComplianceScoreGauge } from './ComplianceScoreGauge';
 export { GovernanceOverviewCard } from './GovernanceOverviewCard';

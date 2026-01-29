@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Data Governance Dashboard
+// Nexorium Core - Data Governance Dashboard
 // Governance dashboard with compliance and policy management
 
 import { useState, useEffect } from 'react';

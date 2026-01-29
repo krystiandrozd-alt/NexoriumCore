@@ -1,4 +1,4 @@
-// TelEnvIQ - Playwright Configuration
+// Nexorium Core - Playwright Configuration
 // E2E testing configuration for critical user journeys
 
 import { defineConfig, devices } from '@playwright/test';

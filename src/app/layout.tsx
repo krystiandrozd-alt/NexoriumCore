@@ -22,23 +22,23 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: 'TelEnv IQ - Non-Production Environment Visibility & Governance',
+  title: 'Nexorium Core — Architectural Control for Non-Production Environments',
   description:
-    'End-to-end visibility and governance for non-production environments. From infrastructure to data, with governance embedded directly into the landscape.',
+    'The architectural control layer for non-production environments. Model, govern, and align your test environments with structural precision.',
   keywords: [
-    'environment visibility',
+    'environment governance',
     'non-production',
-    'governance',
     'test environments',
-    'infrastructure',
-    'DevOps',
+    'architecture',
+    'topology',
+    'enterprise',
     'platform engineering',
   ],
-  authors: [{ name: 'TelEnv IQ' }],
+  authors: [{ name: 'Nexorium Core' }],
   openGraph: {
-    title: 'TelEnv IQ - Non-Production Environment Visibility & Governance',
+    title: 'Nexorium Core — Architectural Control for Non-Production Environments',
     description:
-      'End-to-end visibility across development, test, and staging systems with governance embedded directly into the environment landscape.',
+      'The architectural control layer for non-production environments. Structural visibility, governance enforcement, and cross-environment awareness.',
     type: 'website',
   },
 };

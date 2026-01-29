@@ -1,13 +1,18 @@
-// TelEnvIQ - Run Connector API
+// Nexorium Core - Run Connector API
 // POST /api/configuration/connectors/[id]/run - Trigger connector run
 
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_CONFIGURATION);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 

@@ -1,15 +1,20 @@
-// TelEnvIQ - Single Simulation API
+// Nexorium Core - Single Simulation API
 // GET /api/cost/simulations/[id] - Get simulation details
 // DELETE /api/cost/simulations/[id] - Delete simulation
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSimulation, deleteSimulation } from '@/lib/services/cost-engine';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
 export async function GET(request: NextRequest, context: RouteParams) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await context.params;
     const simulation = await getSimulation(id);
@@ -32,6 +37,9 @@ export async function GET(request: NextRequest, context: RouteParams) {
 }
 
 export async function DELETE(request: NextRequest, context: RouteParams) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await context.params;
     await deleteSimulation(id);

@@ -1,4 +1,4 @@
-// TelEnvIQ - Base Connector Interface
+// Nexorium Core - Base Connector Interface
 // All connectors implement this interface for consistent behavior
 
 import type { ConnectorResult, Evidence, Node, Edge } from '@/types';

@@ -1,4 +1,4 @@
-// TelEnvIQ - Supabase Middleware Client
+// Nexorium Core - Supabase Middleware Client
 // Used in middleware.ts for session refresh
 
 import { createServerClient } from '@supabase/ssr';

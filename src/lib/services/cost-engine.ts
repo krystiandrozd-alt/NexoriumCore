@@ -1,4 +1,4 @@
-// TelEnvIQ - Cost Engine Service
+// Nexorium Core - Cost Engine Service
 // Business logic for cost calculation, rollups, and simulation
 
 import prisma from '@/lib/db';

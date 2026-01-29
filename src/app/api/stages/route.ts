@@ -1,4 +1,4 @@
-// TelEnvIQ - Stages API
+// Nexorium Core - Stages API
 // GET /api/stages - List all stages
 // POST /api/stages - Create new stage
 

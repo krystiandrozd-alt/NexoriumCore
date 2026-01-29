@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Health Grid Component
+// Nexorium Core - Environment Health Grid Component
 // Displays environment health status cards in a responsive grid
 
 import { useRouter } from 'next/navigation';

@@ -1,4 +1,4 @@
-// TelEnvIQ - Connector Credential API
+// Nexorium Core - Connector Credential API
 // GET /api/connectors/credentials/[id] - Get credential
 // PUT /api/connectors/credentials/[id] - Update credential
 // DELETE /api/connectors/credentials/[id] - Delete credential
@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getCredential, updateCredential, deleteCredential } from '@/lib/services/security/credentials';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateCredentialSchema = z.object({
   name: z.string().min(1).max(255).optional(),
@@ -17,6 +19,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_CREDENTIALS);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const credential = await getCredential(id);
@@ -46,6 +51,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_CREDENTIALS);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -78,6 +86,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_CREDENTIALS);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     await deleteCredential(id);

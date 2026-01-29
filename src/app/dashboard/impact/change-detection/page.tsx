@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Change Detection Page
+// Nexorium Core - Change Detection Page
 // Track changes across snapshots
 
 import { Card, CardContent } from '@/components/ui/card';

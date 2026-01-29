@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Approval Card Component
+// Nexorium Core - Approval Card Component
 // Display a single approval item
 
 import { Clock, Check, X, AlertCircle } from 'lucide-react';

@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Executive Dashboard
+// Nexorium Core - Executive Dashboard
 // High-level metrics and KPIs
 
 import { useState, useEffect } from 'react';

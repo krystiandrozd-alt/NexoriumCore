@@ -1,4 +1,4 @@
-// TelEnvIQ - Audit Service
+// Nexorium Core - Audit Service
 // Immutable audit logging with append-only operations and checksum verification
 
 import prisma from '@/lib/db';

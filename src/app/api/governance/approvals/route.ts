@@ -1,4 +1,4 @@
-// TelEnvIQ - Approvals API
+// Nexorium Core - Approvals API
 // GET /api/governance/approvals - List approval items
 // POST /api/governance/approvals - Create a new approval request
 
@@ -8,8 +8,13 @@ import {
   createApproval,
 } from '@/lib/services/governance/approvals';
 import { ApprovalStatus, ApprovalType } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') as ApprovalStatus | null;
@@ -39,6 +44,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
 

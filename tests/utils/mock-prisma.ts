@@ -1,4 +1,4 @@
-// TelEnvIQ - Mock Prisma Client
+// Nexorium Core - Mock Prisma Client
 // Type-safe mocking for Prisma client in tests
 
 import { vi } from 'vitest';

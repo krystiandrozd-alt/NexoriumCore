@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Policy Controls Page
+// Nexorium Core - Policy Controls Page
 // Manage policy controls library
 
 import { useEffect, useState } from 'react';

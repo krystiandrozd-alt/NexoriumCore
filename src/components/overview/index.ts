@@ -1,4 +1,4 @@
-// TelEnvIQ - Overview Components Index
+// Nexorium Core - Overview Components Index
 // Re-exports all overview components for cleaner imports
 
 export { KPICard, KPICardSkeleton, type KPICardProps } from './KPICard';

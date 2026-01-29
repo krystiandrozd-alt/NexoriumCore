@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnv IQ - Landing Page Selector
+// Nexorium Core - Landing Page Selector
 // Preview and navigate between all landing page variants
 
 import { motion } from 'framer-motion';
@@ -171,7 +171,7 @@ export default function LandingSelectorPage() {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#5B5FEF] to-[#7C3AED] flex items-center justify-center">
               <Map className="w-4 h-4 text-white" />
             </div>
-            <span className="text-lg font-semibold text-white">TelEnv IQ</span>
+            <span className="text-lg font-semibold text-white">Nexorium Core</span>
           </Link>
           <Link
             href="/login"
@@ -193,7 +193,7 @@ export default function LandingSelectorPage() {
           >
             <h1 className="text-4xl font-semibold text-white">Landing Page Variants</h1>
             <p className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
-              Five distinct landing page designs for TelEnv IQ, each tailored to different audiences
+              Five distinct landing page designs for Nexorium Core, each tailored to different audiences
               and presentation contexts. Click any variant to view the full page.
             </p>
           </motion.div>
@@ -248,7 +248,7 @@ export default function LandingSelectorPage() {
       {/* Footer */}
       <footer className="border-t border-white/[0.06] py-8">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center text-sm text-slate-500">
-          TelEnv IQ Landing Page Selector — Internal Preview Tool
+          Nexorium Core Landing Page Selector — Internal Preview Tool
         </div>
       </footer>
     </div>

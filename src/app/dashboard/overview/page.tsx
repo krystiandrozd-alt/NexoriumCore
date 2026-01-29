@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Overview Dashboard Page
+// Nexorium Core - Overview Dashboard Page
 // Aggregated view of all 6 pillars with premium styling
 
 import { useState, useCallback } from 'react';

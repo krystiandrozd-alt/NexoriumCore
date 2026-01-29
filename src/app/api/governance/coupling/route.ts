@@ -1,11 +1,16 @@
-// TelEnvIQ - Coupling Links API
+// Nexorium Core - Coupling Links API
 // GET /api/governance/coupling - List coupling links
 
 import { NextRequest, NextResponse } from 'next/server';
 import { listCouplings } from '@/lib/services/governance/coupling';
 import { CouplingStatus } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') as CouplingStatus | null;

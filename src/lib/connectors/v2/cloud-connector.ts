@@ -1,4 +1,4 @@
-// TelEnvIQ - Cloud Control Plane Connector
+// Nexorium Core - Cloud Control Plane Connector
 // Reads from AWS/Azure/GCP control plane APIs (using fixture files for MVP)
 
 import * as fs from 'fs';

@@ -1,6 +1,7 @@
 'use client';
 
-// TelEnvIQ - Tabs Component
+// Nexorium Core - Tabs Component
+// Premium dark theme
 
 import * as React from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
@@ -15,7 +16,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      'inline-flex h-10 items-center justify-center rounded-md bg-slate-100 p-1 text-slate-500',
+      'inline-flex h-10 items-center justify-center rounded-lg bg-white/[0.03] border border-white/[0.08] p-1 text-slate-400',
       className
     )}
     {...props}
@@ -30,10 +31,11 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-white transition-all',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2',
+      'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-[#0B1220] transition-all',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5B5FEF]/50 focus-visible:ring-offset-2',
       'disabled:pointer-events-none disabled:opacity-50',
-      'data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm',
+      'data-[state=active]:bg-[#5B5FEF]/15 data-[state=active]:text-[#C7D2FE] data-[state=active]:shadow-sm',
+      'hover:text-slate-200 hover:bg-white/[0.04]',
       className
     )}
     {...props}
@@ -48,7 +50,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      'mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2',
+      'mt-4 ring-offset-[#0B1220] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5B5FEF]/50 focus-visible:ring-offset-2',
       className
     )}
     {...props}

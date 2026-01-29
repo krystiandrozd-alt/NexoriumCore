@@ -1,10 +1,12 @@
-// TelEnvIQ - Cost Items API
+// Nexorium Core - Cost Items API
 // GET /api/cost-models/[id]/items - List cost items for a model
 // POST /api/cost-models/[id]/items - Create new cost item
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getCostItems, createCostItem, updateCostItem, deleteCostItem } from '@/lib/services/cost-engine';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateCostItemSchema = z.object({
   itemType: z.enum(['HOST', 'COMPONENT_LICENSE', 'SHARED_PLATFORM', 'OTHER']),
@@ -22,6 +24,9 @@ interface RouteParams {
 }
 
 export async function GET(request: NextRequest, context: RouteParams) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await context.params;
     const costItems = await getCostItems(id);
@@ -36,6 +41,9 @@ export async function GET(request: NextRequest, context: RouteParams) {
 }
 
 export async function POST(request: NextRequest, context: RouteParams) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await context.params;
     const body = await request.json();
@@ -76,6 +84,9 @@ const UpdateCostItemSchema = z.object({
 });
 
 export async function PUT(request: NextRequest) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = UpdateCostItemSchema.safeParse(body);
@@ -100,6 +111,9 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const itemId = searchParams.get('itemId');

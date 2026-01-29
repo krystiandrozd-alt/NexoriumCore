@@ -1,10 +1,15 @@
-// TelEnvIQ - Connector Runs API
+// Nexorium Core - Connector Runs API
 // GET /api/connectors/runs - Get connector run history
 
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_CREDENTIALS);
+  if (auth.error) return auth.error;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const environmentId = searchParams.get('environmentId');

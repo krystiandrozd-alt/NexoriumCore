@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Runtime Layer Swimlanes
+// Nexorium Core - Runtime Layer Swimlanes
 // Generate swimlane configuration for VM/Container/CNF view
 
 import type { SwimLane, VirtualizationType } from '@/types';

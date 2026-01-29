@@ -1,9 +1,11 @@
-// TelEnvIQ - Policy Violation Resolve API
+// Nexorium Core - Policy Violation Resolve API
 // POST /api/governance/violations/[id]/resolve - Resolve a violation
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { resolveViolation, acknowledgeViolation } from '@/lib/services/governance/policy';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const ResolveViolationSchema = z.object({
   action: z.enum(['resolve', 'acknowledge']),
@@ -14,6 +16,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

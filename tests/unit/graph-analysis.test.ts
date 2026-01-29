@@ -1,4 +1,4 @@
-// TelEnvIQ - Graph Analysis Unit Tests
+// Nexorium Core - Graph Analysis Unit Tests
 // Tests for entry/exit node detection and topological sorting
 
 import { describe, it, expect } from 'vitest';

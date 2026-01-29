@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Versions Page
+// Nexorium Core - Environment Versions Page
 // Version matrix for the environment
 
 import { useState, useEffect } from 'react';

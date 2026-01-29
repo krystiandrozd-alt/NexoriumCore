@@ -1,12 +1,11 @@
 'use client';
 
-// TelEnvIQ - Flow Map Filter Sidebar
+// Nexorium Core - Flow Map Filter Sidebar
 // Collapsible filter panel for portfolio intelligence view
 
 import { memo, useState, useCallback } from 'react';
 import {
   ChevronLeft,
-  ChevronRight,
   Filter,
   AlertTriangle,
   Layers,
@@ -331,40 +330,14 @@ function FlowMapFiltersPanel({
     (filters.showCollisionsOnly ? 1 : 0) +
     (filters.showEmergentLinks ? 1 : 0);
 
-  return (
-    <>
-      {/* Toggle button when collapsed */}
-      {!isOpen && (
-        <button
-          onClick={onToggle}
-          className={cn(
-            'fixed left-0 top-1/2 -translate-y-1/2 z-50',
-            'px-1 py-4 rounded-r-lg',
-            'glass-panel-interactive',
-            'text-slate-400 hover:text-white',
-            'transition-all'
-          )}
-          data-testid="flowmap-filter-toggle"
-        >
-          <ChevronRight className="h-4 w-4" />
-          {activeFilterCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-violet-500 text-[9px] text-white flex items-center justify-center">
-              {activeFilterCount}
-            </span>
-          )}
-        </button>
-      )}
+  // Panel is now controlled by parent - just render content
+  if (!isOpen) return null;
 
-      {/* Filter panel */}
-      <div
-        className={cn(
-          'fixed left-0 top-0 h-full z-40',
-          'bg-slate-900/95 backdrop-blur-xl border-r border-white/5',
-          'transition-all duration-300 ease-out overflow-hidden',
-          isOpen ? 'w-72' : 'w-0'
-        )}
-        data-testid="flowmap-filter-panel"
-      >
+  return (
+    <div
+      className="w-full h-full"
+      data-testid="flowmap-filter-panel"
+    >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
           <div className="flex items-center gap-2">
@@ -575,8 +548,7 @@ function FlowMapFiltersPanel({
             </div>
           </FilterSection>
         </div>
-      </div>
-    </>
+    </div>
   );
 }
 

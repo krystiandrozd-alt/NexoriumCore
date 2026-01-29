@@ -1,4 +1,5 @@
-// TelEnvIQ - Card Component
+// Nexorium Core - Card Component
+// Premium dark theme with glass-morphism effects
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
@@ -10,7 +11,9 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'rounded-lg border border-slate-200 bg-white text-slate-950 shadow-sm',
+      'rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm',
+      'shadow-card transition-all duration-200',
+      'hover:bg-white/[0.05] hover:border-white/[0.12] hover:shadow-card-hover hover:-translate-y-0.5',
       className
     )}
     {...props}
@@ -37,7 +40,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      'text-2xl font-semibold leading-none tracking-tight',
+      'text-xl font-semibold leading-none tracking-tight text-white',
       className
     )}
     {...props}
@@ -51,7 +54,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-sm text-slate-500', className)}
+    className={cn('text-sm text-slate-400', className)}
     {...props}
   />
 ));

@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Graph Page
+// Nexorium Core - Environment Graph Page
 // Topology visualization for environment
 
 import { useState, useEffect, useCallback } from 'react';

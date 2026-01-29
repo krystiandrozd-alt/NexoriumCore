@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Coupling Analysis Page
+// Nexorium Core - Coupling Analysis Page
 // Environment coupling detection and management
 
 import { useEffect, useState } from 'react';

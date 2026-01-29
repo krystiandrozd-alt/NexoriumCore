@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Premium Node Component (Flagship)
+// Nexorium Core - Node Component (Flagship)
 // Dark theme node with glass styling, version badges, and selection states
 
 import { memo } from 'react';

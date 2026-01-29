@@ -1,4 +1,4 @@
-// TelEnvIQ - Landing Page Layout
+// Nexorium Core - Landing Page Layout
 
 export default function LandingLayout({
   children,

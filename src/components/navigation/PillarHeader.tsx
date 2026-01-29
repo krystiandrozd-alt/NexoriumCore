@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Pillar Header Component
+// Nexorium Core - Pillar Header Component
 // Header for pillar pages with title, description, and actions
 
 import { LucideIcon } from 'lucide-react';

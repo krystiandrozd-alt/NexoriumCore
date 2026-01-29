@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Visualization (MVP)
+// Nexorium Core - Environment Visualization (MVP)
 // Unified view with Graph/Table toggle, Dagre layout, and autosave
 
 import { useState, useEffect, useCallback, useRef } from 'react';

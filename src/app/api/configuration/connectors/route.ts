@@ -1,4 +1,4 @@
-// TelEnvIQ - Connectors Configuration API
+// Nexorium Core - Connectors Configuration API
 // GET /api/configuration/connectors - List all connectors
 // POST /api/configuration/connectors - Create new connector
 
@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { ConnectorType, ConnectorStatus, Prisma } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateConnectorSchema = z.object({
   name: z.string().min(1).max(255),
@@ -17,6 +19,9 @@ const CreateConnectorSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_CONFIGURATION);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') as ConnectorStatus | null;
@@ -45,6 +50,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_CONFIGURATION);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateConnectorSchema.safeParse(body);

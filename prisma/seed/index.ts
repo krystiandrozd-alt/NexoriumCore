@@ -1,15 +1,16 @@
-// TelEnvIQ - Seed Data Script
+// Nexorium Core - Seed Data Script
 // Realistic Telco Test Environment Topology
 // Run with: npx prisma db seed
 
 import { PrismaClient } from '@prisma/client';
 import { seedCostData } from './cost-data';
 import { seedGovernanceData } from './governance-data';
+import { seedCanonical5LayerData } from './canonical-5layer-data';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Seeding TelEnvIQ database with realistic telco topology...\n');
+  console.log('🌱 Seeding Nexorium Core database with realistic telco topology...\n');
 
   // Clear existing data (in dependency order)
   // Governance alignment tables
@@ -42,6 +43,7 @@ async function main() {
   await prisma.edge.deleteMany({});
   await prisma.node.deleteMany({});
   await prisma.environment.deleteMany({});
+  await prisma.project.deleteMany({});
   await prisma.stage.deleteMany({});
 
   // ============================================
@@ -110,6 +112,71 @@ async function main() {
     }),
   ]);
   console.log(`✓ Created ${stages.length} stages`);
+
+  // ============================================
+  // PROJECTS - Programme/Project containers
+  // ============================================
+  const bssTransformProject = await prisma.project.create({
+    data: {
+      id: 'project-bss-transform',
+      name: 'BSS Transformation Programme',
+      code: 'BSS-TX',
+      description: 'Enterprise-wide BSS modernisation initiative. Consolidating CRM, billing, and order management systems into a unified stack with API-first architecture.',
+      status: 'ACTIVE',
+      ownerTeam: 'Digital Transformation Office',
+      ownerEmail: 'bss-transformation@telco.com',
+      businessUnit: 'Consumer & SME',
+      costCenter: 'CC-DTX-001',
+      createdBy: 'John Mitchell',
+    },
+  });
+
+  const ossModernProject = await prisma.project.create({
+    data: {
+      id: 'project-oss-modern',
+      name: 'OSS Modernisation',
+      code: 'OSS-MOD',
+      description: 'Network operations modernisation programme. Migrating from legacy orchestration to cloud-native service orchestration with Cisco NSO and Nokia NetAct integration.',
+      status: 'ACTIVE',
+      ownerTeam: 'Network Engineering',
+      ownerEmail: 'oss-modern@telco.com',
+      businessUnit: 'Network Operations',
+      costCenter: 'CC-NET-042',
+      createdBy: 'Sarah Chen',
+    },
+  });
+
+  const dataAnalyticsProject = await prisma.project.create({
+    data: {
+      id: 'project-data-analytics',
+      name: 'Data & Analytics Platform',
+      code: 'DAP',
+      description: 'Enterprise data platform initiative. Building unified data lake with real-time streaming, ML/AI capabilities, and self-service BI for business users.',
+      status: 'PLANNING',
+      ownerTeam: 'Data & Analytics Centre of Excellence',
+      ownerEmail: 'data-coe@telco.com',
+      businessUnit: 'Corporate IT',
+      costCenter: 'CC-IT-088',
+      createdBy: 'Alex Kumar',
+    },
+  });
+
+  const securityComplianceProject = await prisma.project.create({
+    data: {
+      id: 'project-security-compliance',
+      name: 'Security & Compliance Uplift',
+      code: 'SEC-CMP',
+      description: 'Security hardening and compliance programme. Implementing zero-trust architecture, enhanced IAM, and regulatory compliance (PCI-DSS, SOC2, GDPR).',
+      status: 'ACTIVE',
+      ownerTeam: 'Information Security',
+      ownerEmail: 'infosec@telco.com',
+      businessUnit: 'Risk & Compliance',
+      costCenter: 'CC-SEC-015',
+      createdBy: 'Maria Santos',
+    },
+  });
+
+  console.log(`✓ Created 4 projects`);
 
   // ============================================
   // FLOW TEMPLATES - Allowed transition patterns
@@ -268,7 +335,7 @@ async function main() {
         connectorType: 'KUBERNETES',
         description: 'Auto-discovery from SIT Kubernetes cluster',
         status: 'ACTIVE',
-        configJson: { namespace: 'telco-sit', labelSelector: 'app.kubernetes.io/managed-by=telenviq' },
+        configJson: { namespace: 'telco-sit', labelSelector: 'app.kubernetes.io/managed-by=nexorium' },
         scheduleJson: { enabled: true, intervalMinutes: 60 },
         lastRunAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
         lastRunStatus: 'SUCCESS',
@@ -334,74 +401,543 @@ async function main() {
   console.log(`✓ Created 3 platform settings`);
 
   // ============================================
-  // DEV Environment - Development
+  // DEV Environment - Development (BSS Transformation)
   // ============================================
   const devEnv = await prisma.environment.create({
     data: {
       id: 'dev-env-001',
-      name: 'DEV Environment',
+      name: 'BSS-TX DEV',
       type: 'DEV',
-      description: 'Development environment for feature development',
+      description: 'Development environment for BSS Transformation - Feature development and unit testing',
       stageId: 'stage-dev',
+      projectId: bssTransformProject.id,
     },
   });
   console.log(`✓ Created environment: ${devEnv.name}`);
 
+  // DEV Environment Nodes
+  const devNodes = [
+    { id: 'dev-api-gateway', name: 'Kong-API-Gateway', type: 'GATEWAY' as const, owner: 'Platform Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'kong-dev.telco.internal', ip: '10.0.1.10', port: 8443, version: '3.4.2' } },
+    { id: 'dev-crm-app', name: 'Salesforce-CRM', type: 'APPLICATION' as const, owner: 'CRM Team', criticality: 'HIGH' as const, metadata: { hostname: 'crm-dev.telco.internal', ip: '10.0.2.10', port: 8080, version: 'Spring 2024' } },
+    { id: 'dev-cpq-engine', name: 'CPQ-Engine', type: 'APPLICATION' as const, owner: 'CPQ Team', criticality: 'HIGH' as const, metadata: { hostname: 'cpq-dev.telco.internal', ip: '10.0.2.11', port: 8080, version: '5.2.0' } },
+    { id: 'dev-order-mgmt', name: 'Order-Management-System', type: 'APPLICATION' as const, owner: 'Order Fulfillment Team', criticality: 'HIGH' as const, metadata: { hostname: 'oms-dev.telco.internal', ip: '10.0.3.10', port: 8080, version: '7.3.1' } },
+    { id: 'dev-kafka', name: 'Kafka-Local', type: 'MESSAGE_QUEUE' as const, owner: 'Platform Engineering', criticality: 'MEDIUM' as const, metadata: { hostname: 'kafka-dev.telco.internal', ip: '10.0.4.10', port: 9092, version: '3.6.0', brokers: 1 } },
+    { id: 'dev-postgres', name: 'PostgreSQL-Dev', type: 'DATABASE' as const, owner: 'DBA Team', criticality: 'HIGH' as const, metadata: { hostname: 'pg-dev.telco.internal', ip: '10.0.5.10', port: 5432, database: 'telco_dev' } },
+    { id: 'dev-redis', name: 'Redis-Local', type: 'DATABASE' as const, owner: 'Platform Engineering', criticality: 'MEDIUM' as const, metadata: { hostname: 'redis-dev.telco.internal', ip: '10.0.5.11', port: 6379 } },
+    { id: 'dev-mock-payment', name: 'Mock-Payment-Gateway', type: 'EXTERNAL' as const, owner: 'Dev Team', criticality: 'LOW' as const, metadata: { endpoint: 'http://localhost:9999/mock-payment' } },
+  ];
+
+  for (const node of devNodes) {
+    await prisma.node.create({
+      data: {
+        ...node,
+        environmentId: devEnv.id,
+        lastSeenAt: new Date(),
+        metadata: node.metadata,
+      },
+    });
+  }
+  console.log(`✓ Created ${devNodes.length} nodes for DEV`);
+
+  const devEdges = [
+    { source: 'dev-api-gateway', target: 'dev-crm-app', protocol: 'REST' as const, port: 8080, confidence: 0.95 },
+    { source: 'dev-api-gateway', target: 'dev-cpq-engine', protocol: 'REST' as const, port: 8080, confidence: 0.95 },
+    { source: 'dev-api-gateway', target: 'dev-order-mgmt', protocol: 'REST' as const, port: 8080, confidence: 0.95 },
+    { source: 'dev-crm-app', target: 'dev-cpq-engine', protocol: 'REST' as const, port: 8080, confidence: 0.88 },
+    { source: 'dev-cpq-engine', target: 'dev-order-mgmt', protocol: 'REST' as const, port: 8080, confidence: 0.90 },
+    { source: 'dev-crm-app', target: 'dev-postgres', protocol: 'JDBC' as const, port: 5432, confidence: 0.99 },
+    { source: 'dev-cpq-engine', target: 'dev-postgres', protocol: 'JDBC' as const, port: 5432, confidence: 0.99 },
+    { source: 'dev-order-mgmt', target: 'dev-postgres', protocol: 'JDBC' as const, port: 5432, confidence: 0.99 },
+    { source: 'dev-order-mgmt', target: 'dev-kafka', protocol: 'EVENT' as const, port: 9092, confidence: 0.92 },
+    { source: 'dev-api-gateway', target: 'dev-redis', protocol: 'JDBC' as const, port: 6379, confidence: 0.95 },
+    { source: 'dev-order-mgmt', target: 'dev-mock-payment', protocol: 'REST' as const, port: 9999, confidence: 0.75 },
+  ];
+
+  let devEdgeIndex = 0;
+  for (const edge of devEdges) {
+    await prisma.edge.create({
+      data: {
+        id: `dev-edge-${devEdgeIndex}`,
+        environmentId: devEnv.id,
+        sourceNodeId: edge.source,
+        targetNodeId: edge.target,
+        protocol: edge.protocol,
+        port: edge.port,
+        confidenceScore: edge.confidence,
+        lastObservedAt: new Date(),
+      },
+    });
+    devEdgeIndex++;
+  }
+  console.log(`✓ Created ${devEdges.length} edges for DEV`);
+
+  // Add database metadata for DEV databases
+  await Promise.all([
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'dev-postgres',
+        engine: 'PostgreSQL',
+        version: '15.3',
+        host: 'pg-dev.telco.internal',
+        port: 5432,
+      },
+    }),
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'dev-redis',
+        engine: 'Redis',
+        version: '7.0.0',
+        host: 'redis-dev.telco.internal',
+        port: 6379,
+      },
+    }),
+  ]);
+  console.log(`✓ Created 2 database metadata entries for DEV`);
+
   // ============================================
-  // SIT Environment - Full Telco OSS/BSS Stack
+  // SIT Environment - Full Telco OSS/BSS Stack (BSS Transformation)
   // ============================================
   const sitEnv = await prisma.environment.create({
     data: {
       id: 'sit-env-001',
-      name: 'SIT Environment',
+      name: 'BSS-TX SIT',
       type: 'SIT',
       description: 'System Integration Test - Full OSS/BSS stack with CRM, CPQ, Order Fulfillment, Network Orchestration',
       stageId: 'stage-sit',
+      projectId: bssTransformProject.id,
     },
   });
   console.log(`✓ Created environment: ${sitEnv.name}`);
 
   // ============================================
-  // UAT Environment - Business Validation
+  // UAT Environment - Business Validation (BSS Transformation)
   // ============================================
   const uatEnv = await prisma.environment.create({
     data: {
       id: 'uat-env-001',
-      name: 'UAT Environment',
+      name: 'BSS-TX UAT',
       type: 'UAT',
-      description: 'User Acceptance Test - Business validation with production-like data',
+      description: 'User Acceptance Test - Business validation with production-like data for BSS Transformation',
       stageId: 'stage-uat',
+      projectId: bssTransformProject.id,
     },
   });
   console.log(`✓ Created environment: ${uatEnv.name}`);
 
   // ============================================
-  // NFT Environment - Performance Testing
+  // NFT Environment - Performance Testing (OSS Modernisation)
   // ============================================
   const nftEnv = await prisma.environment.create({
     data: {
       id: 'nft-env-001',
-      name: 'NFT Environment',
+      name: 'OSS-MOD NFT',
       type: 'NFT',
-      description: 'Non-Functional Test - Performance, load, and stress testing',
+      description: 'Non-Functional Test - Performance and load testing for OSS Modernisation network orchestration components',
       stageId: 'stage-nft',
+      projectId: ossModernProject.id,
     },
   });
   console.log(`✓ Created environment: ${nftEnv.name}`);
 
   // ============================================
-  // PREPROD Environment - Pre-Production
+  // PREPROD Environment - Pre-Production (Security & Compliance)
   // ============================================
   const preprodEnv = await prisma.environment.create({
     data: {
       id: 'preprod-env-001',
-      name: 'PREPROD Environment',
+      name: 'SEC-CMP PREPROD',
       type: 'PREPROD',
-      description: 'Pre-Production - Final validation before production',
+      description: 'Pre-Production - Final validation for Security & Compliance Uplift programme with full PCI-DSS scope',
       stageId: 'stage-preprod',
+      projectId: securityComplianceProject.id,
     },
   });
   console.log(`✓ Created environment: ${preprodEnv.name}`);
+
+  // PREPROD Environment Nodes - Production-mirror topology
+  const preprodNodes = [
+    { id: 'preprod-f5-lb', name: 'F5-LTM-PREPROD', type: 'LOAD_BALANCER' as const, owner: 'Network Operations', criticality: 'CRITICAL' as const, metadata: { hostname: 'f5-preprod.telco.internal', ip: '10.60.1.10', segment: 'DMZ', vendor: 'F5 Networks' } },
+    { id: 'preprod-firewall', name: 'Palo-Alto-PREPROD', type: 'GATEWAY' as const, owner: 'Security Operations', criticality: 'CRITICAL' as const, metadata: { hostname: 'pa-fw-preprod.telco.internal', ip: '10.60.1.1', segment: 'DMZ', vendor: 'Palo Alto' } },
+    { id: 'preprod-api-gw', name: 'Kong-API-Gateway', type: 'GATEWAY' as const, owner: 'Platform Engineering', criticality: 'CRITICAL' as const, metadata: { hostname: 'kong-preprod.telco.internal', ip: '10.60.2.10', port: 8443, version: '3.4.2' } },
+    { id: 'preprod-crm', name: 'Salesforce-CRM', type: 'APPLICATION' as const, owner: 'CRM Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'crm-preprod.telco.internal', instance: 'telco-preprod.my.salesforce.com', version: 'Spring 2024' } },
+    { id: 'preprod-cpq', name: 'CPQ-Engine', type: 'APPLICATION' as const, owner: 'CPQ Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'cpq-preprod.telco.internal', port: 8080, version: '5.2.0' } },
+    { id: 'preprod-product-catalog', name: 'Product-Catalog-Service', type: 'SERVICE' as const, owner: 'Product Team', criticality: 'HIGH' as const, metadata: { hostname: 'catalog-preprod.telco.internal', port: 8083, version: '4.0.2' } },
+    { id: 'preprod-oms', name: 'Order-Management-System', type: 'APPLICATION' as const, owner: 'Order Fulfillment Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'oms-preprod.telco.internal', port: 8080, version: '7.3.1' } },
+    { id: 'preprod-orchestrator', name: 'Order-Orchestrator', type: 'SERVICE' as const, owner: 'Order Fulfillment Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'order-orch-preprod.telco.internal', port: 8081, version: '3.2.0' } },
+    { id: 'preprod-provisioning', name: 'Provisioning-Engine', type: 'SERVICE' as const, owner: 'Provisioning Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'provision-preprod.telco.internal', port: 8083, version: '4.1.2' } },
+    { id: 'preprod-nso', name: 'Cisco-NSO', type: 'APPLICATION' as const, owner: 'Network Automation Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'nso-preprod.telco.internal', port: 8080, version: '6.1' } },
+    { id: 'preprod-sa', name: 'Service-Assurance-Platform', type: 'APPLICATION' as const, owner: 'Service Assurance Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'sa-preprod.telco.internal', port: 8080, version: '8.2.0' } },
+    { id: 'preprod-alarm-mgr', name: 'Alarm-Manager', type: 'SERVICE' as const, owner: 'Service Assurance Team', criticality: 'HIGH' as const, metadata: { hostname: 'alarm-mgr-preprod.telco.internal', port: 8081, version: '3.5.0' } },
+    { id: 'preprod-kafka', name: 'Kafka-Cluster', type: 'MESSAGE_QUEUE' as const, owner: 'Platform Engineering', criticality: 'CRITICAL' as const, metadata: { hostname: 'kafka-preprod.telco.internal', port: 9092, version: '3.6.0', brokers: 3 } },
+    { id: 'preprod-oracle-main', name: 'Oracle-RAC-Primary', type: 'DATABASE' as const, owner: 'DBA Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'ora-primary-preprod.telco.internal', port: 1521, sid: 'PREPRODDB', rac: true } },
+    { id: 'preprod-postgres', name: 'PostgreSQL-Catalog', type: 'DATABASE' as const, owner: 'DBA Team', criticality: 'HIGH' as const, metadata: { hostname: 'pg-preprod.telco.internal', port: 5432, database: 'product_catalog' } },
+    { id: 'preprod-mongodb', name: 'MongoDB-Events', type: 'DATABASE' as const, owner: 'DBA Team', criticality: 'HIGH' as const, metadata: { hostname: 'mongo-preprod.telco.internal', port: 27017, replicaSet: 'rs-events' } },
+    { id: 'preprod-redis', name: 'Redis-Cache-Cluster', type: 'DATABASE' as const, owner: 'Platform Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'redis-preprod.telco.internal', port: 6379, mode: 'cluster', nodes: 6 } },
+    { id: 'preprod-payment', name: 'Payment-Gateway-API', type: 'EXTERNAL' as const, owner: 'External - Finance', criticality: 'CRITICAL' as const, metadata: { endpoint: 'https://payment-preprod.provider.com/api/v2', vendor: 'Stripe', environment: 'preprod' } },
+    { id: 'preprod-sms', name: 'SMS-Gateway-API', type: 'EXTERNAL' as const, owner: 'External - Communications', criticality: 'HIGH' as const, metadata: { endpoint: 'https://sms-preprod.twilio.com/api', vendor: 'Twilio' } },
+  ];
+
+  for (const node of preprodNodes) {
+    await prisma.node.create({
+      data: {
+        ...node,
+        environmentId: preprodEnv.id,
+        lastSeenAt: new Date(),
+        metadata: node.metadata,
+      },
+    });
+  }
+  console.log(`✓ Created ${preprodNodes.length} nodes for PREPROD`);
+
+  const preprodEdges = [
+    // DMZ layer
+    { source: 'preprod-f5-lb', target: 'preprod-firewall', protocol: 'REST' as const, port: 443, confidence: 1.0 },
+    { source: 'preprod-firewall', target: 'preprod-api-gw', protocol: 'REST' as const, port: 8443, confidence: 1.0 },
+    // API Gateway to applications
+    { source: 'preprod-api-gw', target: 'preprod-crm', protocol: 'REST' as const, port: 443, confidence: 0.98 },
+    { source: 'preprod-api-gw', target: 'preprod-cpq', protocol: 'REST' as const, port: 8080, confidence: 0.97 },
+    { source: 'preprod-api-gw', target: 'preprod-oms', protocol: 'REST' as const, port: 8080, confidence: 0.97 },
+    { source: 'preprod-api-gw', target: 'preprod-sa', protocol: 'REST' as const, port: 8080, confidence: 0.95 },
+    // CRM → CPQ flow
+    { source: 'preprod-crm', target: 'preprod-cpq', protocol: 'REST' as const, port: 8080, confidence: 0.92 },
+    { source: 'preprod-cpq', target: 'preprod-product-catalog', protocol: 'REST' as const, port: 8083, confidence: 0.96 },
+    // CPQ → Order flow
+    { source: 'preprod-cpq', target: 'preprod-oms', protocol: 'REST' as const, port: 8080, confidence: 0.94 },
+    { source: 'preprod-oms', target: 'preprod-orchestrator', protocol: 'REST' as const, port: 8081, confidence: 0.97 },
+    { source: 'preprod-orchestrator', target: 'preprod-provisioning', protocol: 'REST' as const, port: 8083, confidence: 0.96 },
+    // Provisioning → NSO
+    { source: 'preprod-provisioning', target: 'preprod-nso', protocol: 'REST' as const, port: 8080, confidence: 0.93 },
+    // NSO → Service Assurance
+    { source: 'preprod-nso', target: 'preprod-sa', protocol: 'REST' as const, port: 8080, confidence: 0.90 },
+    { source: 'preprod-sa', target: 'preprod-alarm-mgr', protocol: 'REST' as const, port: 8081, confidence: 0.95 },
+    // Event streaming
+    { source: 'preprod-oms', target: 'preprod-kafka', protocol: 'EVENT' as const, port: 9092, confidence: 0.96 },
+    { source: 'preprod-alarm-mgr', target: 'preprod-kafka', protocol: 'EVENT' as const, port: 9092, confidence: 0.94 },
+    // Database connections
+    { source: 'preprod-crm', target: 'preprod-oracle-main', protocol: 'JDBC' as const, port: 1521, confidence: 0.99 },
+    { source: 'preprod-cpq', target: 'preprod-oracle-main', protocol: 'JDBC' as const, port: 1521, confidence: 0.99 },
+    { source: 'preprod-oms', target: 'preprod-oracle-main', protocol: 'JDBC' as const, port: 1521, confidence: 0.99 },
+    { source: 'preprod-orchestrator', target: 'preprod-oracle-main', protocol: 'JDBC' as const, port: 1521, confidence: 0.98 },
+    { source: 'preprod-product-catalog', target: 'preprod-postgres', protocol: 'JDBC' as const, port: 5432, confidence: 0.99 },
+    { source: 'preprod-sa', target: 'preprod-mongodb', protocol: 'JDBC' as const, port: 27017, confidence: 0.97 },
+    { source: 'preprod-alarm-mgr', target: 'preprod-mongodb', protocol: 'JDBC' as const, port: 27017, confidence: 0.96 },
+    // Cache
+    { source: 'preprod-api-gw', target: 'preprod-redis', protocol: 'JDBC' as const, port: 6379, confidence: 0.98 },
+    { source: 'preprod-cpq', target: 'preprod-redis', protocol: 'JDBC' as const, port: 6379, confidence: 0.95 },
+    { source: 'preprod-product-catalog', target: 'preprod-redis', protocol: 'JDBC' as const, port: 6379, confidence: 0.97 },
+    // External integrations
+    { source: 'preprod-oms', target: 'preprod-payment', protocol: 'REST' as const, port: 443, confidence: 0.88 },
+    { source: 'preprod-orchestrator', target: 'preprod-sms', protocol: 'REST' as const, port: 443, confidence: 0.82 },
+  ];
+
+  let preprodEdgeIndex = 0;
+  for (const edge of preprodEdges) {
+    await prisma.edge.create({
+      data: {
+        id: `preprod-edge-${preprodEdgeIndex}`,
+        environmentId: preprodEnv.id,
+        sourceNodeId: edge.source,
+        targetNodeId: edge.target,
+        protocol: edge.protocol,
+        port: edge.port,
+        confidenceScore: edge.confidence,
+        lastObservedAt: new Date(),
+      },
+    });
+    preprodEdgeIndex++;
+  }
+  console.log(`✓ Created ${preprodEdges.length} edges for PREPROD`);
+
+  // Add database metadata for PREPROD databases
+  await Promise.all([
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'preprod-oracle-main',
+        engine: 'Oracle',
+        version: '19c',
+        host: 'ora-primary-preprod.telco.internal',
+        port: 1521,
+      },
+    }),
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'preprod-postgres',
+        engine: 'PostgreSQL',
+        version: '15.4',
+        host: 'pg-preprod.telco.internal',
+        port: 5432,
+      },
+    }),
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'preprod-mongodb',
+        engine: 'MongoDB',
+        version: '7.0',
+        host: 'mongo-preprod.telco.internal',
+        port: 27017,
+      },
+    }),
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'preprod-redis',
+        engine: 'Redis',
+        version: '7.2.0',
+        host: 'redis-preprod.telco.internal',
+        port: 6379,
+      },
+    }),
+  ]);
+  console.log(`✓ Created 4 database metadata entries for PREPROD`);
+
+  // ============================================
+  // OSS-MOD SIT Environment - Network Orchestration Focus
+  // ============================================
+  const ossModSitEnv = await prisma.environment.create({
+    data: {
+      id: 'oss-mod-sit-001',
+      name: 'OSS-MOD SIT',
+      type: 'SIT',
+      description: 'System Integration Test for OSS Modernisation - Network orchestration and service provisioning testing',
+      stageId: 'stage-sit',
+      projectId: ossModernProject.id,
+    },
+  });
+  console.log(`✓ Created environment: ${ossModSitEnv.name}`);
+
+  // OSS-MOD SIT Nodes - Network and orchestration focused
+  const ossModSitNodes = [
+    { id: 'oss-sit-nso', name: 'Cisco-NSO-Primary', type: 'APPLICATION' as const, owner: 'Network Automation Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'nso-sit.telco.internal', ip: '10.30.1.10', port: 8080, version: '6.1.2', clustered: true } },
+    { id: 'oss-sit-nso-secondary', name: 'Cisco-NSO-Secondary', type: 'APPLICATION' as const, owner: 'Network Automation Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'nso-sit-2.telco.internal', ip: '10.30.1.11', port: 8080, version: '6.1.2', clustered: true } },
+    { id: 'oss-sit-netact', name: 'Nokia-NetAct', type: 'APPLICATION' as const, owner: 'Network Operations', criticality: 'HIGH' as const, metadata: { hostname: 'netact-sit.telco.internal', ip: '10.30.2.10', port: 443, version: '22.2', vendor: 'Nokia' } },
+    { id: 'oss-sit-inventory', name: 'Resource-Inventory-Service', type: 'SERVICE' as const, owner: 'Inventory Team', criticality: 'HIGH' as const, metadata: { hostname: 'inventory-sit.telco.internal', ip: '10.30.3.10', port: 8081, version: '3.4.0' } },
+    { id: 'oss-sit-topology', name: 'Network-Topology-Service', type: 'SERVICE' as const, owner: 'Network Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'topology-sit.telco.internal', ip: '10.30.3.11', port: 8082, version: '2.1.0' } },
+    { id: 'oss-sit-provisioning', name: 'Service-Provisioning-Engine', type: 'SERVICE' as const, owner: 'Provisioning Team', criticality: 'CRITICAL' as const, metadata: { hostname: 'provision-sit.telco.internal', ip: '10.30.4.10', port: 8083, version: '4.2.0' } },
+    { id: 'oss-sit-ansible', name: 'Ansible-Automation-Platform', type: 'APPLICATION' as const, owner: 'Platform Engineering', criticality: 'MEDIUM' as const, metadata: { hostname: 'ansible-sit.telco.internal', ip: '10.30.5.10', port: 443, version: '2.4', vendor: 'Red Hat' } },
+    { id: 'oss-sit-neo4j', name: 'Neo4j-Topology-Graph', type: 'DATABASE' as const, owner: 'DBA Team', criticality: 'HIGH' as const, metadata: { hostname: 'neo4j-sit.telco.internal', ip: '10.30.6.10', port: 7687, version: '5.9.0', mode: 'cluster' } },
+    { id: 'oss-sit-postgres', name: 'PostgreSQL-Inventory', type: 'DATABASE' as const, owner: 'DBA Team', criticality: 'HIGH' as const, metadata: { hostname: 'pg-oss-sit.telco.internal', ip: '10.30.6.11', port: 5432, database: 'resource_inventory', version: '15.3' } },
+    { id: 'oss-sit-timescale', name: 'TimescaleDB-Metrics', type: 'DATABASE' as const, owner: 'DBA Team', criticality: 'MEDIUM' as const, metadata: { hostname: 'timescale-sit.telco.internal', ip: '10.30.6.12', port: 5432, database: 'network_metrics', version: '2.11.0' } },
+    { id: 'oss-sit-kafka', name: 'Kafka-Events', type: 'MESSAGE_QUEUE' as const, owner: 'Platform Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'kafka-oss-sit.telco.internal', ip: '10.30.7.10', port: 9092, version: '3.5.0', brokers: 3 } },
+    { id: 'oss-sit-network-sim', name: 'Network-Simulator', type: 'EXTERNAL' as const, owner: 'Network Testing Team', criticality: 'LOW' as const, metadata: { endpoint: 'http://network-sim.telco.internal:8888', vendor: 'EVE-NG' } },
+  ];
+
+  for (const node of ossModSitNodes) {
+    await prisma.node.create({
+      data: {
+        ...node,
+        environmentId: ossModSitEnv.id,
+        lastSeenAt: new Date(),
+        metadata: node.metadata,
+      },
+    });
+  }
+  console.log(`✓ Created ${ossModSitNodes.length} nodes for OSS-MOD SIT`);
+
+  // Add database metadata for OSS-MOD SIT databases
+  await Promise.all([
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'oss-sit-neo4j',
+        engine: 'Neo4j',
+        version: '5.9.0',
+        host: 'neo4j-sit.telco.internal',
+        port: 7687,
+      },
+    }),
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'oss-sit-postgres',
+        engine: 'PostgreSQL',
+        version: '15.3',
+        host: 'pg-oss-sit.telco.internal',
+        port: 5432,
+      },
+    }),
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'oss-sit-timescale',
+        engine: 'TimescaleDB',
+        version: '2.11.0',
+        host: 'timescale-sit.telco.internal',
+        port: 5432,
+      },
+    }),
+  ]);
+  console.log(`✓ Created 3 database metadata entries for OSS-MOD SIT`);
+
+  const ossModSitEdges = [
+    // NSO cluster
+    { source: 'oss-sit-nso', target: 'oss-sit-nso-secondary', protocol: 'REST' as const, port: 8080, confidence: 1.0 },
+    // NSO to NetAct integration
+    { source: 'oss-sit-nso', target: 'oss-sit-netact', protocol: 'REST' as const, port: 443, confidence: 0.94 },
+    // NSO to provisioning
+    { source: 'oss-sit-nso', target: 'oss-sit-provisioning', protocol: 'REST' as const, port: 8083, confidence: 0.96 },
+    // Provisioning to inventory
+    { source: 'oss-sit-provisioning', target: 'oss-sit-inventory', protocol: 'REST' as const, port: 8081, confidence: 0.97 },
+    // Inventory to topology
+    { source: 'oss-sit-inventory', target: 'oss-sit-topology', protocol: 'REST' as const, port: 8082, confidence: 0.95 },
+    // Topology to graph DB
+    { source: 'oss-sit-topology', target: 'oss-sit-neo4j', protocol: 'JDBC' as const, port: 7687, confidence: 0.99 },
+    // Inventory to PostgreSQL
+    { source: 'oss-sit-inventory', target: 'oss-sit-postgres', protocol: 'JDBC' as const, port: 5432, confidence: 0.99 },
+    // NSO uses Ansible
+    { source: 'oss-sit-nso', target: 'oss-sit-ansible', protocol: 'REST' as const, port: 443, confidence: 0.88 },
+    // Event streaming
+    { source: 'oss-sit-provisioning', target: 'oss-sit-kafka', protocol: 'EVENT' as const, port: 9092, confidence: 0.95 },
+    { source: 'oss-sit-inventory', target: 'oss-sit-kafka', protocol: 'EVENT' as const, port: 9092, confidence: 0.94 },
+    // Metrics to TimescaleDB
+    { source: 'oss-sit-netact', target: 'oss-sit-timescale', protocol: 'JDBC' as const, port: 5432, confidence: 0.96 },
+    // Network simulation
+    { source: 'oss-sit-nso', target: 'oss-sit-network-sim', protocol: 'REST' as const, port: 8888, confidence: 0.75 },
+  ];
+
+  let ossModSitEdgeIndex = 0;
+  for (const edge of ossModSitEdges) {
+    await prisma.edge.create({
+      data: {
+        id: `oss-sit-edge-${ossModSitEdgeIndex}`,
+        environmentId: ossModSitEnv.id,
+        sourceNodeId: edge.source,
+        targetNodeId: edge.target,
+        protocol: edge.protocol,
+        port: edge.port,
+        confidenceScore: edge.confidence,
+        lastObservedAt: new Date(),
+      },
+    });
+    ossModSitEdgeIndex++;
+  }
+  console.log(`✓ Created ${ossModSitEdges.length} edges for OSS-MOD SIT`);
+
+  // ============================================
+  // Data & Analytics DEV Environment - Data Platform Focus
+  // ============================================
+  const dapDevEnv = await prisma.environment.create({
+    data: {
+      id: 'dap-dev-001',
+      name: 'DAP DEV',
+      type: 'DEV',
+      description: 'Development environment for Data & Analytics Platform - Data lake, streaming, and ML experimentation',
+      stageId: 'stage-dev',
+      projectId: dataAnalyticsProject.id,
+    },
+  });
+  console.log(`✓ Created environment: ${dapDevEnv.name}`);
+
+  // DAP DEV Nodes - Data and analytics focused
+  const dapDevNodes = [
+    { id: 'dap-dev-airflow', name: 'Apache-Airflow', type: 'APPLICATION' as const, owner: 'Data Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'airflow-dev.telco.internal', ip: '10.50.1.10', port: 8080, version: '2.7.0', executor: 'KubernetesExecutor' } },
+    { id: 'dap-dev-spark', name: 'Spark-Cluster', type: 'APPLICATION' as const, owner: 'Data Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'spark-dev.telco.internal', ip: '10.50.1.11', port: 7077, version: '3.5.0', mode: 'kubernetes' } },
+    { id: 'dap-dev-kafka', name: 'Kafka-Streaming', type: 'MESSAGE_QUEUE' as const, owner: 'Platform Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'kafka-dap-dev.telco.internal', ip: '10.50.2.10', port: 9092, version: '3.6.0', brokers: 3 } },
+    { id: 'dap-dev-flink', name: 'Apache-Flink', type: 'APPLICATION' as const, owner: 'Data Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'flink-dev.telco.internal', ip: '10.50.1.12', port: 8081, version: '1.18.0', jobManagerMode: 'kubernetes' } },
+    { id: 'dap-dev-metabase', name: 'Metabase-BI', type: 'APPLICATION' as const, owner: 'BI Team', criticality: 'MEDIUM' as const, metadata: { hostname: 'metabase-dev.telco.internal', ip: '10.50.3.10', port: 3000, version: '0.47.0' } },
+    { id: 'dap-dev-mlflow', name: 'MLflow-Server', type: 'APPLICATION' as const, owner: 'ML Team', criticality: 'MEDIUM' as const, metadata: { hostname: 'mlflow-dev.telco.internal', ip: '10.50.3.11', port: 5000, version: '2.8.0' } },
+    { id: 'dap-dev-minio', name: 'MinIO-Object-Storage', type: 'DATABASE' as const, owner: 'Platform Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'minio-dev.telco.internal', ip: '10.50.4.10', port: 9000, version: '2024-01', mode: 'distributed', nodes: 4 } },
+    { id: 'dap-dev-trino', name: 'Trino-Query-Engine', type: 'APPLICATION' as const, owner: 'Data Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'trino-dev.telco.internal', ip: '10.50.1.13', port: 8080, version: '435', workers: 3 } },
+    { id: 'dap-dev-hive', name: 'Hive-Metastore', type: 'SERVICE' as const, owner: 'Data Engineering', criticality: 'HIGH' as const, metadata: { hostname: 'hive-meta-dev.telco.internal', ip: '10.50.5.10', port: 9083, version: '3.1.3' } },
+    { id: 'dap-dev-postgres-meta', name: 'PostgreSQL-Metadata', type: 'DATABASE' as const, owner: 'DBA Team', criticality: 'HIGH' as const, metadata: { hostname: 'pg-dap-dev.telco.internal', ip: '10.50.6.10', port: 5432, database: 'dap_metadata', version: '15.4' } },
+    { id: 'dap-dev-redis', name: 'Redis-Cache', type: 'DATABASE' as const, owner: 'Platform Engineering', criticality: 'MEDIUM' as const, metadata: { hostname: 'redis-dap-dev.telco.internal', ip: '10.50.6.11', port: 6379, version: '7.2.0' } },
+    { id: 'dap-dev-clickhouse', name: 'ClickHouse-OLAP', type: 'DATABASE' as const, owner: 'DBA Team', criticality: 'HIGH' as const, metadata: { hostname: 'clickhouse-dev.telco.internal', ip: '10.50.6.12', port: 8123, version: '24.1', cluster: 'dap_cluster', shards: 2, replicas: 2 } },
+  ];
+
+  for (const node of dapDevNodes) {
+    await prisma.node.create({
+      data: {
+        ...node,
+        environmentId: dapDevEnv.id,
+        lastSeenAt: new Date(),
+        metadata: node.metadata,
+      },
+    });
+  }
+  console.log(`✓ Created ${dapDevNodes.length} nodes for DAP DEV`);
+
+  // Add database metadata for DAP DEV databases
+  await Promise.all([
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'dap-dev-postgres-meta',
+        engine: 'PostgreSQL',
+        version: '15.4',
+        host: 'pg-dap-dev.telco.internal',
+        port: 5432,
+      },
+    }),
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'dap-dev-clickhouse',
+        engine: 'ClickHouse',
+        version: '24.1',
+        host: 'clickhouse-dev.telco.internal',
+        port: 8123,
+      },
+    }),
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'dap-dev-minio',
+        engine: 'MinIO',
+        version: '2024-01',
+        host: 'minio-dev.telco.internal',
+        port: 9000,
+      },
+    }),
+    prisma.databaseMetadata.create({
+      data: {
+        nodeId: 'dap-dev-redis',
+        engine: 'Redis',
+        version: '7.2.0',
+        host: 'redis-dap-dev.telco.internal',
+        port: 6379,
+      },
+    }),
+  ]);
+  console.log(`✓ Created 4 database metadata entries for DAP DEV`);
+
+  const dapDevEdges = [
+    // Airflow orchestration
+    { source: 'dap-dev-airflow', target: 'dap-dev-spark', protocol: 'REST' as const, port: 7077, confidence: 0.96 },
+    { source: 'dap-dev-airflow', target: 'dap-dev-flink', protocol: 'REST' as const, port: 8081, confidence: 0.94 },
+    { source: 'dap-dev-airflow', target: 'dap-dev-trino', protocol: 'REST' as const, port: 8080, confidence: 0.95 },
+    // Spark and Flink to storage
+    { source: 'dap-dev-spark', target: 'dap-dev-minio', protocol: 'REST' as const, port: 9000, confidence: 0.98 },
+    { source: 'dap-dev-flink', target: 'dap-dev-minio', protocol: 'REST' as const, port: 9000, confidence: 0.97 },
+    { source: 'dap-dev-spark', target: 'dap-dev-hive', protocol: 'REST' as const, port: 9083, confidence: 0.96 },
+    // Streaming
+    { source: 'dap-dev-flink', target: 'dap-dev-kafka', protocol: 'EVENT' as const, port: 9092, confidence: 0.98 },
+    { source: 'dap-dev-spark', target: 'dap-dev-kafka', protocol: 'EVENT' as const, port: 9092, confidence: 0.95 },
+    // Trino to data sources
+    { source: 'dap-dev-trino', target: 'dap-dev-hive', protocol: 'REST' as const, port: 9083, confidence: 0.99 },
+    { source: 'dap-dev-trino', target: 'dap-dev-clickhouse', protocol: 'JDBC' as const, port: 8123, confidence: 0.97 },
+    { source: 'dap-dev-trino', target: 'dap-dev-postgres-meta', protocol: 'JDBC' as const, port: 5432, confidence: 0.98 },
+    // Hive metastore to PostgreSQL
+    { source: 'dap-dev-hive', target: 'dap-dev-postgres-meta', protocol: 'JDBC' as const, port: 5432, confidence: 0.99 },
+    // BI to Trino
+    { source: 'dap-dev-metabase', target: 'dap-dev-trino', protocol: 'JDBC' as const, port: 8080, confidence: 0.92 },
+    { source: 'dap-dev-metabase', target: 'dap-dev-clickhouse', protocol: 'JDBC' as const, port: 8123, confidence: 0.90 },
+    // MLflow to storage
+    { source: 'dap-dev-mlflow', target: 'dap-dev-minio', protocol: 'REST' as const, port: 9000, confidence: 0.95 },
+    { source: 'dap-dev-mlflow', target: 'dap-dev-postgres-meta', protocol: 'JDBC' as const, port: 5432, confidence: 0.97 },
+    // Cache layer
+    { source: 'dap-dev-metabase', target: 'dap-dev-redis', protocol: 'JDBC' as const, port: 6379, confidence: 0.93 },
+    { source: 'dap-dev-trino', target: 'dap-dev-redis', protocol: 'JDBC' as const, port: 6379, confidence: 0.88 },
+  ];
+
+  let dapDevEdgeIndex = 0;
+  for (const edge of dapDevEdges) {
+    await prisma.edge.create({
+      data: {
+        id: `dap-dev-edge-${dapDevEdgeIndex}`,
+        environmentId: dapDevEnv.id,
+        sourceNodeId: edge.source,
+        targetNodeId: edge.target,
+        protocol: edge.protocol,
+        port: edge.port,
+        confidenceScore: edge.confidence,
+        lastObservedAt: new Date(),
+      },
+    });
+    dapDevEdgeIndex++;
+  }
+  console.log(`✓ Created ${dapDevEdges.length} edges for DAP DEV`);
 
   // ============================================
   // ENVIRONMENT LINKS - Promotion paths
@@ -1298,6 +1834,7 @@ async function main() {
 
   console.log('\n✅ Environment seed completed!');
   console.log('\n📊 Summary:');
+  console.log(`   Projects: 4`);
   console.log(`   Stages: 6`);
   console.log(`   Flow Templates: 2`);
   console.log(`   People: 5`);
@@ -1305,11 +1842,17 @@ async function main() {
   console.log(`   Connectors: 3`);
   console.log(`   Environment Links: 5`);
   console.log(`   RACI Mappings: 5`);
-  console.log(`   DEV: minimal`);
-  console.log(`   SIT: ${sitNodes.length} nodes, ${sitEdges.length} edges, ${databases.length} databases`);
-  console.log(`   UAT: ${uatNodes.length} nodes, ${uatEdges.length} edges`);
-  console.log(`   NFT: ${nftNodes.length} nodes, ${nftEdges.length} edges`);
-  console.log(`   PREPROD: minimal`);
+  console.log(`   Environments: 7 total`);
+  console.log(`     BSS-TX DEV: ${devNodes.length} nodes, ${devEdges.length} edges`);
+  console.log(`     BSS-TX SIT: ${sitNodes.length} nodes, ${sitEdges.length} edges, ${databases.length} databases`);
+  console.log(`     BSS-TX UAT: ${uatNodes.length} nodes, ${uatEdges.length} edges`);
+  console.log(`     OSS-MOD NFT: ${nftNodes.length} nodes, ${nftEdges.length} edges`);
+  console.log(`     OSS-MOD SIT: ${ossModSitNodes.length} nodes, ${ossModSitEdges.length} edges`);
+  console.log(`     DAP DEV: ${dapDevNodes.length} nodes, ${dapDevEdges.length} edges`);
+  console.log(`     SEC-CMP PREPROD: ${preprodNodes.length} nodes, ${preprodEdges.length} edges`);
+
+  // Seed 5-layer canonical model data (for topology5 API)
+  await seedCanonical5LayerData();
 
   // Seed cost data
   await seedCostData();

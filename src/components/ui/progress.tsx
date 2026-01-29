@@ -1,7 +1,7 @@
 'use client';
 
-// TelEnvIQ - Progress Component
-// Used for compliance gauges
+// Nexorium Core - Progress Component
+// Premium dark theme with gradient fills
 
 import * as React from 'react';
 import * as ProgressPrimitive from '@radix-ui/react-progress';
@@ -19,14 +19,14 @@ const Progress = React.forwardRef<
   <ProgressPrimitive.Root
     ref={ref}
     className={cn(
-      'relative h-2 w-full overflow-hidden rounded-full bg-slate-100',
+      'relative h-2 w-full overflow-hidden rounded-full bg-white/[0.06]',
       className
     )}
     {...props}
   >
     <ProgressPrimitive.Indicator
       className={cn(
-        'h-full w-full flex-1 bg-indigo-500 transition-all',
+        'h-full w-full flex-1 bg-gradient-to-r from-[#5B5FEF] to-[#7C3AED] transition-all duration-500',
         indicatorClassName
       )}
       style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
@@ -57,11 +57,19 @@ const CircularProgress = ({
   const circumference = radius * 2 * Math.PI;
   const offset = circumference - (value / 100) * circumference;
 
+  // Determine color based on value
+  const getStrokeColor = () => {
+    if (value >= 80) return 'text-emerald-500';
+    if (value >= 60) return 'text-amber-500';
+    return 'text-red-500';
+  };
+
   return (
     <div className={cn('relative inline-flex items-center justify-center', className)}>
       <svg width={size} height={size} className="-rotate-90">
+        {/* Background circle */}
         <circle
-          className="text-slate-100"
+          className="text-white/[0.06]"
           strokeWidth={strokeWidth}
           stroke="currentColor"
           fill="transparent"
@@ -69,8 +77,9 @@ const CircularProgress = ({
           cx={size / 2}
           cy={size / 2}
         />
+        {/* Progress circle */}
         <circle
-          className={cn('text-indigo-500 transition-all duration-300', indicatorClassName)}
+          className={cn('transition-all duration-500', indicatorClassName || getStrokeColor())}
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -83,7 +92,7 @@ const CircularProgress = ({
         />
       </svg>
       {label !== undefined && (
-        <span className="absolute text-sm font-semibold text-slate-700">
+        <span className="absolute text-sm font-semibold text-white">
           {label}
         </span>
       )}

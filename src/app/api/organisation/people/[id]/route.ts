@@ -1,4 +1,4 @@
-// TelEnvIQ - Person Detail API
+// Nexorium Core - Person Detail API
 // GET /api/organisation/people/[id] - Get person by ID
 // PUT /api/organisation/people/[id] - Update person
 // DELETE /api/organisation/people/[id] - Delete person
@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { PersonStatus } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdatePersonSchema = z.object({
   displayName: z.string().min(1).max(255).optional(),
@@ -22,6 +24,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const person = await prisma.person.findUnique({
@@ -56,6 +61,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -104,6 +112,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 

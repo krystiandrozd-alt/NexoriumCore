@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Topology Graph Component
+// Nexorium Core - Topology Graph Component
 // Main graph visualization using React Flow with swimlane support
 
 import { useCallback, useMemo, useState, useEffect } from 'react';
@@ -18,6 +18,17 @@ import {
   type EdgeTypes,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+
+// Deterministic hash function for consistent node positioning
+function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
 
 import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
@@ -134,11 +145,14 @@ export default function TopologyGraph({
       // Distribute nodes horizontally within lane
       const xOffset = (index % 6) * 180 + 100;
 
+      // Deterministic vertical jitter based on node ID
+      const jitter = (hashString(node.id) % 40) - 20;
+
       return {
         ...node,
         position: {
           x: xOffset,
-          y: newY + (Math.random() * 40 - 20), // Small vertical jitter
+          y: newY + jitter,
         },
       };
     }) as Node[];

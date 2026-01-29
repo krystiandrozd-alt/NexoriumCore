@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Custom Node Component for React Flow
+// Nexorium Core - Custom Node Component for React Flow
 // Enhanced with telco layer badges, violation indicators, and enrichment markers
 
 import { memo } from 'react';

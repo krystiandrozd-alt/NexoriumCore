@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Inspector Panel (Premium)
+// Nexorium Core - Inspector Panel (Premium)
 // Left-side collapsible panel showing selected node/edge details
 
 import { memo, useState, useCallback } from 'react';

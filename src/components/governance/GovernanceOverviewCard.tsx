@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Governance Overview Card Component
+// Nexorium Core - Governance Overview Card Component
 // Summary card for governance dashboard
 
 import { LucideIcon } from 'lucide-react';

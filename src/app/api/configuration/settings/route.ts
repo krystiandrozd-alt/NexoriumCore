@@ -1,4 +1,4 @@
-// TelEnvIQ - Platform Settings API
+// Nexorium Core - Platform Settings API
 // GET /api/configuration/settings - List all platform settings
 // PUT /api/configuration/settings - Update multiple settings
 
@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { SettingScope } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateSettingsSchema = z.object({
   settings: z.array(
@@ -17,6 +19,9 @@ const UpdateSettingsSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_CONFIGURATION);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const scope = searchParams.get('scope') as SettingScope | null;
@@ -38,6 +43,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_CONFIGURATION);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = UpdateSettingsSchema.safeParse(body);
@@ -70,6 +78,9 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_CONFIGURATION);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
 

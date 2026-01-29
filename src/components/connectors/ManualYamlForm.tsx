@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Manual YAML Import Form
+// Nexorium Core - Manual YAML Import Form
 // Form for importing topology from YAML/JSON
 
 import { useState } from 'react';

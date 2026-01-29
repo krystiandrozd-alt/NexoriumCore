@@ -1,10 +1,12 @@
-// TelEnvIQ - Hosting Domains API
+// Nexorium Core - Hosting Domains API
 // GET /api/hosting-domains - List all hosting domains
 // POST /api/hosting-domains - Create new hosting domain
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { listHostingDomains, createHostingDomain } from '@/lib/services/hosting-domain';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateHostingDomainSchema = z.object({
   name: z.string().min(1).max(255),
@@ -17,6 +19,9 @@ const CreateHostingDomainSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const hostingType = searchParams.get('hostingType') as 'CLOUD' | 'ON_PREM' | 'HYBRID' | 'THIRD_PARTY' | 'EDGE' | null;
@@ -42,6 +47,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateHostingDomainSchema.safeParse(body);

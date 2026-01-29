@@ -1,4 +1,4 @@
-// TelEnvIQ - Single Cost Model API
+// Nexorium Core - Single Cost Model API
 // GET /api/cost-models/[id] - Get cost model with items
 // PUT /api/cost-models/[id] - Update cost model
 // DELETE /api/cost-models/[id] - Delete cost model
@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getCostModel, updateCostModel, deleteCostModel } from '@/lib/services/cost-engine';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateCostModelSchema = z.object({
   name: z.string().min(1).max(255).optional(),
@@ -21,6 +23,9 @@ interface RouteParams {
 }
 
 export async function GET(request: NextRequest, context: RouteParams) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await context.params;
     const costModel = await getCostModel(id);
@@ -43,6 +48,9 @@ export async function GET(request: NextRequest, context: RouteParams) {
 }
 
 export async function PUT(request: NextRequest, context: RouteParams) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await context.params;
     const body = await request.json();
@@ -67,6 +75,9 @@ export async function PUT(request: NextRequest, context: RouteParams) {
 }
 
 export async function DELETE(request: NextRequest, context: RouteParams) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await context.params;
     await deleteCostModel(id);

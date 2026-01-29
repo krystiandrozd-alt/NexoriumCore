@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Connectors Page
+// Nexorium Core - Connectors Page
 // Connector definitions and management
 
 import { useState, useEffect } from 'react';

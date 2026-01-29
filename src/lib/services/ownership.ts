@@ -1,4 +1,4 @@
-// TelEnvIQ - Environment Ownership Service
+// Nexorium Core - Environment Ownership Service
 // Project and ownership tracking for environments
 
 import prisma from '@/lib/db';

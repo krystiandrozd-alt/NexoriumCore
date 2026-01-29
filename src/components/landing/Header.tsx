@@ -1,18 +1,16 @@
 'use client';
 
-// TelEnv IQ - Premium Landing Header (Sticky Navigation)
+// Nexorium Core - Landing Header
 
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Hexagon, Menu, X } from 'lucide-react';
 
 const navigation = [
-  { name: 'Platform', href: '#platform' },
-  { name: 'Governance', href: '#governance' },
-  { name: 'Intelligence', href: '#intelligence' },
-  { name: 'Pricing', href: '#pricing' },
-  { name: 'Resources', href: '#resources' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Capabilities', href: '#capabilities' },
+  { name: 'How It Works', href: '#how-it-works' },
+  { name: 'Why Nexorium', href: '#differentiation' },
 ];
 
 export default function Header() {
@@ -28,10 +26,13 @@ export default function Header() {
   }, []);
 
   return (
-    <header
+    <motion.header
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#0B1220]/95 backdrop-blur-xl border-b border-white/5'
+          ? 'bg-[#0B1220]/95 backdrop-blur-xl border-b border-white/[0.05]'
           : 'bg-transparent'
       }`}
     >
@@ -39,11 +40,14 @@ export default function Header() {
         {/* Logo */}
         <div className="flex lg:flex-1">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#5B5FEF] to-[#7C3AED] flex items-center justify-center shadow-lg shadow-[#5B5FEF]/20 group-hover:shadow-[#5B5FEF]/40 transition-shadow">
-              <span className="text-white font-bold text-sm tracking-tight">TE</span>
+            <div className="relative">
+              <div className="absolute inset-0 bg-[#5B5FEF] rounded-xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
+              <div className="relative h-10 w-10 rounded-xl bg-gradient-to-br from-[#5B5FEF] to-[#7C3AED] flex items-center justify-center shadow-lg shadow-[#5B5FEF]/20">
+                <Hexagon className="h-5 w-5 text-white" />
+              </div>
             </div>
             <span className="text-xl font-semibold text-white tracking-tight">
-              TelEnv<span className="text-[#5B5FEF]">IQ</span>
+              Nexorium<span className="text-[#5B5FEF]"> Core</span>
             </span>
           </Link>
         </div>
@@ -70,9 +74,10 @@ export default function Header() {
             <a
               key={item.name}
               href={item.href}
-              className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
+              className="relative text-sm font-medium text-slate-400 hover:text-white transition-colors group"
             >
               {item.name}
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#5B5FEF] group-hover:w-full transition-all duration-300" />
             </a>
           ))}
         </div>
@@ -83,13 +88,13 @@ export default function Header() {
             href="/dashboard"
             className="text-sm font-medium text-slate-400 hover:text-white transition-colors px-4 py-2"
           >
-            Dashboard
+            View Demo
           </Link>
           <Link
             href="#contact"
-            className="inline-flex items-center justify-center rounded-lg bg-[#5B5FEF] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#4B4FDF] transition-colors shadow-lg shadow-[#5B5FEF]/20"
+            className="inline-flex items-center justify-center rounded-lg bg-[#5B5FEF] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#4B4FDF] transition-colors shadow-lg shadow-[#5B5FEF]/20 hover:shadow-[#5B5FEF]/40"
           >
-            Request Executive Briefing
+            Request Access
           </Link>
         </div>
       </nav>
@@ -116,18 +121,18 @@ export default function Header() {
               href="/dashboard"
               className="block text-base font-medium text-slate-400 hover:text-white transition-colors py-2"
             >
-              Dashboard
+              View Demo
             </Link>
             <Link
               href="#contact"
               className="block w-full text-center rounded-lg bg-[#5B5FEF] px-5 py-3 text-base font-medium text-white hover:bg-[#4B4FDF] transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Request Executive Briefing
+              Request Access
             </Link>
           </div>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

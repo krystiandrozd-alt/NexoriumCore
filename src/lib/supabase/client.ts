@@ -1,4 +1,4 @@
-// TelEnvIQ - Supabase Browser Client
+// Nexorium Core - Supabase Browser Client
 // Use this client for browser-side authentication
 
 import { createBrowserClient } from '@supabase/ssr';

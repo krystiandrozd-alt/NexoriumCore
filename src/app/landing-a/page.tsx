@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnv IQ - Landing Version A: Glass Architecture Hero
+// Nexorium Core - Landing Version A: Glass Architecture Hero
 // Style: Modern glassmorphism over deep navy + violet mesh gradient
 // Tone: Calm, controlled, architectural
 
@@ -168,7 +168,7 @@ export default function LandingVersionA() {
               </h1>
 
               <p className="mt-8 text-xl text-slate-400 leading-relaxed max-w-xl">
-                TelEnv IQ delivers structural truth across non-production environments —
+                Nexorium Core delivers structural truth across non-production environments —
                 versions, topology, drift, governance alignment, and flow modelling —
                 in one deterministic control surface.
               </p>
@@ -302,7 +302,7 @@ export default function LandingVersionA() {
           <GlassSection className="p-12 text-center">
             <h2 className="text-2xl font-semibold text-white">Not a CMDB. Not CI/CD. Not Scheduling.</h2>
             <p className="mt-4 text-slate-400 max-w-2xl mx-auto">
-              TelEnv IQ is the Technical Environment Readiness & Governance Layer —
+              Nexorium Core is the Technical Environment Readiness & Governance Layer —
               purpose-built for modelling, snapshotting, and aligning non-production landscapes.
             </p>
           </GlassSection>

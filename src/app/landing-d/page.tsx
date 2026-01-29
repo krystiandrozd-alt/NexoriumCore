@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnv IQ - Landing Version D: Diagram-First Experience
+// Nexorium Core - Landing Version D: Diagram-First Experience
 // Style: Clean enterprise with white-glass hybrid look (dark mode dominant)
 // Tone: Portfolio-level intelligence, system-of-systems feel
 

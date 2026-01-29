@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Blast Radius Page
+// Nexorium Core - Blast Radius Page
 // Calculate impact scope of component changes
 
 import { useState } from 'react';

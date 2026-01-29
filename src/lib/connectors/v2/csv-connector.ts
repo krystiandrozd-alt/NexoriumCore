@@ -1,4 +1,4 @@
-// TelEnvIQ - CSV Import Connector
+// Nexorium Core - CSV Import Connector
 // Simple CSV import for hosts, components, and connections
 
 import * as fs from 'fs';

@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Network Zone Swimlanes
+// Nexorium Core - Network Zone Swimlanes
 // Generate swimlane configuration for network zone view
 
 import type { SwimLane, NetworkZone, NetworkZoneType } from '@/types';

@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Premium Graph View (Flagship)
+// Nexorium Core - Graph View (Flagship)
 // React Flow graph with premium dark theme, overlays, and keyboard support
 
 import { useCallback, useMemo, useRef, useEffect, useState } from 'react';

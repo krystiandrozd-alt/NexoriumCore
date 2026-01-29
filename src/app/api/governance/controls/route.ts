@@ -1,4 +1,4 @@
-// TelEnvIQ - Policy Controls API
+// Nexorium Core - Policy Controls API
 // GET /api/governance/controls - List all policy controls
 // POST /api/governance/controls - Create a new policy control
 
@@ -8,8 +8,13 @@ import {
   createPolicyControl,
 } from '@/lib/services/governance/compliance';
 import { PolicyControlCategory } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category') as PolicyControlCategory | null;
@@ -31,6 +36,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
 

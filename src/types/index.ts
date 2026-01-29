@@ -1,4 +1,7 @@
-// TelEnvIQ Type Definitions
+// Nexorium Core Type Definitions
+
+// Project Status
+export type ProjectStatus = 'ACTIVE' | 'ARCHIVED' | 'PLANNING';
 
 // Existing Enums
 export type EnvironmentType = 'DEV' | 'SIT' | 'UAT' | 'NFT' | 'PREPROD' | 'PROD_RO';
@@ -50,6 +53,23 @@ export type CapabilityType = 'CPQ' | 'CRM' | 'BILLING' | 'SOM' | 'INVENTORY' | '
 export type ConnectionOrigin = 'INGESTED' | 'MANUAL';
 export type ConnectionConfidence = 'HIGH' | 'MED' | 'LOW';
 
+// Project Type
+export interface Project {
+  id: string;
+  name: string;
+  code?: string | null;
+  description?: string | null;
+  status: ProjectStatus;
+  ownerTeam?: string | null;
+  ownerEmail?: string | null;
+  businessUnit?: string | null;
+  costCenter?: string | null;
+  createdBy?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  environments?: Environment[];
+}
+
 // Domain Types
 export interface Environment {
   id: string;
@@ -58,6 +78,8 @@ export interface Environment {
   description?: string | null;
   createdAt: Date;
   updatedAt: Date;
+  projectId?: string | null;
+  project?: Project | null;
   nodes?: Node[];
   edges?: Edge[];
   ownership?: EnvironmentOwnership | null;

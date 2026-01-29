@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Table View
+// Nexorium Core - Environment Table View
 // Engineer-trust tabular view using TanStack Table
 
 import { useMemo, useState } from 'react';

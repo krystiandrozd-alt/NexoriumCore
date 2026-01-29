@@ -1,10 +1,12 @@
-// TelEnvIQ - Connectors API
+// Nexorium Core - Connectors API
 // POST /api/connectors - Run discovery via connector
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createConnector } from '@/lib/connectors';
 import { applyDiscoveryResults } from '@/lib/services/environment';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const KubernetesConfigSchema = z.object({
   namespace: z.string().optional(),
@@ -34,6 +36,9 @@ const ConnectorRequestSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_CREDENTIALS);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = ConnectorRequestSchema.safeParse(body);

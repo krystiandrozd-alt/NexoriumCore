@@ -1,10 +1,12 @@
-// TelEnvIQ - Test Data Refresh API
+// Nexorium Core - Test Data Refresh API
 // GET /api/datasets/[id]/refresh - Get refresh history
 // POST /api/datasets/[id]/refresh - Record new refresh
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { recordRefresh, getRefreshHistory } from '@/lib/services/testdata';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const RecordRefreshSchema = z.object({
   refreshDate: z.string().datetime().optional(),
@@ -18,6 +20,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const history = await getRefreshHistory(id);
@@ -35,6 +40,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

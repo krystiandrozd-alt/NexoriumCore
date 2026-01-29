@@ -1,10 +1,15 @@
-// TelEnvIQ - Enrichments API
+// Nexorium Core - Enrichments API
 // GET /api/enrichments - Search enrichments
 
 import { NextRequest, NextResponse } from 'next/server';
 import { searchEnrichments } from '@/lib/services/governance/enrichment';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const environmentId = searchParams.get('environmentId');

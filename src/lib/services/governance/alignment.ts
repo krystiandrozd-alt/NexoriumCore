@@ -1,4 +1,4 @@
-// TelEnvIQ - Alignment Service
+// Nexorium Core - Alignment Service
 // Core business logic for environment comparison and drift detection
 
 import prisma from '@/lib/db';

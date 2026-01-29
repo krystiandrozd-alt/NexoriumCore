@@ -1,4 +1,4 @@
-// TelEnvIQ - RACI Mapping Detail API
+// Nexorium Core - RACI Mapping Detail API
 // GET /api/organisation/raci/[id] - Get RACI mapping by ID
 // PUT /api/organisation/raci/[id] - Update RACI mapping
 // DELETE /api/organisation/raci/[id] - Delete RACI mapping
@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { RACIRole } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateRACISchema = z.object({
   raciRole: z.nativeEnum(RACIRole).optional(),
@@ -17,6 +19,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const mapping = await prisma.rACIMapping.findUnique({
@@ -52,6 +57,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -113,6 +121,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     await prisma.rACIMapping.delete({ where: { id } });

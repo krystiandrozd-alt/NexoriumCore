@@ -1,4 +1,4 @@
-// TelEnvIQ - Authentication E2E Tests
+// Nexorium Core - Authentication E2E Tests
 // Tests for login, logout, and route protection
 
 import { test, expect } from '@playwright/test';

@@ -1,4 +1,4 @@
-// TelEnvIQ - Flow Links API
+// Nexorium Core - Flow Links API
 // GET /api/flow-links - List all environment links
 // POST /api/flow-links - Create new environment link
 
@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { EnvironmentLinkType } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateFlowLinkSchema = z.object({
   upstreamEnvironmentId: z.string().uuid(),
@@ -16,6 +18,9 @@ const CreateFlowLinkSchema = z.object({
 });
 
 export async function GET() {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const links = await prisma.environmentLink.findMany({
       include: {
@@ -39,6 +44,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateFlowLinkSchema.safeParse(body);

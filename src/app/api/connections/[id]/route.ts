@@ -1,10 +1,12 @@
-// TelEnvIQ - Connection API
+// Nexorium Core - Connection API
 // GET /api/connections/[id] - Get connection details
 // PATCH /api/connections/[id] - Update origin/confidence with audit trail
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const PatchConnectionSchema = z.object({
   origin: z.enum(['INGESTED', 'MANUAL']).optional(),
@@ -17,6 +19,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 
@@ -62,6 +67,9 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

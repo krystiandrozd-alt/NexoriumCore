@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Architecture View (5-Layer Model)
+// Nexorium Core - Environment Architecture View (5-Layer Model)
 // Architecture-aware visualization with layer/capability editing
 
 import { useState, useEffect, useCallback } from 'react';

@@ -26,7 +26,15 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
+
+# shell config files (personal)
+.bashrc
+.zshrc
+
+# yFiles evaluation (large third-party library)
+yFiles-for-HTML-Complete-*/
 
 # vercel
 .vercel

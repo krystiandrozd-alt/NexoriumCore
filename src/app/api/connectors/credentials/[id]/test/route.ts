@@ -1,8 +1,10 @@
-// TelEnvIQ - Connector Credential Test API
+// Nexorium Core - Connector Credential Test API
 // POST /api/connectors/credentials/[id]/test - Test credential connectivity
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getDecryptedConfig, recordTestResult } from '@/lib/services/security/credentials';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 // Simple connectivity tests based on connector type
 async function performConnectivityTest(
@@ -35,6 +37,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_CREDENTIALS);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 

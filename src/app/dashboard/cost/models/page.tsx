@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Cost Model Manager
+// Nexorium Core - Cost Model Manager
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';

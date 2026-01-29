@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Reports Page
+// Nexorium Core - Reports Page
 // Available reports and report generation
 
 import Link from 'next/link';

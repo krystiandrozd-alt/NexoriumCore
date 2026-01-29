@@ -1,4 +1,4 @@
-// TelEnvIQ - Snapshot Service
+// Nexorium Core - Snapshot Service
 // Environment snapshot and drift detection
 
 import prisma from '@/lib/db';

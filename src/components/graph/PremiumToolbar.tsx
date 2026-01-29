@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Premium Toolbar (Flagship)
+// Nexorium Core - Toolbar (Flagship)
 // Top toolbar with overlays, snapshot comparison, search, and view controls
 
 import { memo, useState, useRef, useEffect, useCallback } from 'react';

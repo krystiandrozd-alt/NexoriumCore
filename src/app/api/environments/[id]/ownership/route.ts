@@ -1,10 +1,12 @@
-// TelEnvIQ - Environment Ownership API
+// Nexorium Core - Environment Ownership API
 // GET /api/environments/[id]/ownership - Get environment ownership
 // PUT /api/environments/[id]/ownership - Upsert environment ownership
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getEnvironmentOwnership, upsertEnvironmentOwnership } from '@/lib/services/ownership';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpsertOwnershipSchema = z.object({
   projectName: z.string().min(1).max(255),
@@ -22,6 +24,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const ownership = await getEnvironmentOwnership(id);
@@ -47,6 +52,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -59,8 +67,8 @@ export async function PUT(
       );
     }
 
-    const updatedBy = request.headers.get('x-user-name') || undefined;
-    const ownership = await upsertEnvironmentOwnership(id, validation.data, updatedBy);
+    // Use authenticated user instead of header
+    const ownership = await upsertEnvironmentOwnership(id, validation.data, auth.user!.name);
 
     return NextResponse.json({ success: true, data: ownership });
   } catch (error) {

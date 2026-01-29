@@ -1,4 +1,4 @@
-// TelEnvIQ - Governance Rules API
+// Nexorium Core - Governance Rules API
 // GET /api/governance/rules - List all governance rules
 // POST /api/governance/rules - Create new governance rule
 
@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { GovernanceRuleType, GovernanceRuleSeverity, StageKey, Prisma } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateRuleSchema = z.object({
   name: z.string().min(1).max(255),
@@ -18,6 +20,9 @@ const CreateRuleSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const isActive = searchParams.get('isActive');
@@ -46,6 +51,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateRuleSchema.safeParse(body);

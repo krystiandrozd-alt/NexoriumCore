@@ -1,10 +1,12 @@
-// TelEnvIQ - Dataset Approval API
+// Nexorium Core - Dataset Approval API
 // POST /api/datasets/[id]/approval - Request or grant approval
 // PUT /api/datasets/[id]/approval - Update approval status
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { requestApproval, grantApproval, revokeApproval } from '@/lib/services/governance/classification';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const RequestApprovalSchema = z.object({
   justification: z.string().min(1),
@@ -19,6 +21,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -48,6 +53,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

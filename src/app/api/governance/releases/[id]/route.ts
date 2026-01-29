@@ -1,4 +1,4 @@
-// TelEnvIQ - Release Detail API
+// Nexorium Core - Release Detail API
 // GET /api/governance/releases/[id] - Get release by ID
 // PUT /api/governance/releases/[id] - Update release
 // DELETE /api/governance/releases/[id] - Delete release
@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { ReleaseStatus } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateReleaseSchema = z.object({
   name: z.string().min(1).max(255).optional(),
@@ -20,6 +22,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const release = await prisma.release.findUnique({
@@ -67,6 +72,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -110,6 +118,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 

@@ -1,4 +1,4 @@
-// TelEnvIQ - Mock Connector
+// Nexorium Core - Mock Connector
 // Generates realistic telco environment data for testing and demos
 
 import { BaseConnectorV2 } from './base-connector';

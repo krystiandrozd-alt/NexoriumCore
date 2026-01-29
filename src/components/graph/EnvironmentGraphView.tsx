@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Graph View (MVP)
+// Nexorium Core - Environment Graph View (MVP)
 // React Flow + Dagre layout with autosave persistence
 
 import { useCallback, useMemo, useRef, useEffect, useState } from 'react';

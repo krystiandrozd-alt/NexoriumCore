@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Custom Edge for 5-Layer Model
+// Nexorium Core - Custom Edge for 5-Layer Model
 // Displays connection with protocol, confidence indicator
 
 import { memo } from 'react';

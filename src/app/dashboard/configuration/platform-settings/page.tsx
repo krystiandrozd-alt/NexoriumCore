@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Platform Settings Page
+// Nexorium Core - Platform Settings Page
 // Global and scoped platform configuration
 
 import { useState, useEffect } from 'react';

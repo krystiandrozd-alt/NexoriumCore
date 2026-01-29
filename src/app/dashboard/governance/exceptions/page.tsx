@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Exceptions Page
+// Nexorium Core - Exceptions Page
 // Policy exceptions timeline and management
 
 import { useEffect, useState } from 'react';

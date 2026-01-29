@@ -1,4 +1,4 @@
-// TelEnvIQ - Telco Classification Service
+// Nexorium Core - Telco Classification Service
 // Telco layer and subsystem inference and management
 
 import prisma from '@/lib/db';

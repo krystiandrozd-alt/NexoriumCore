@@ -1,3 +1,3 @@
-// TelEnvIQ - Insight Module Exports
+// Nexorium Core - Insight Module Exports
 
 export * from './reports';

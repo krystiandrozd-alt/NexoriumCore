@@ -1,4 +1,4 @@
-// TelEnvIQ - Overview Dashboard Type Definitions
+// Nexorium Core - Overview Dashboard Type Definitions
 
 import type { EnvironmentType, StageKey, ViolationSeverity, ActivityActionType } from './index';
 

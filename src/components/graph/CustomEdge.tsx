@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Custom Edge Component for React Flow
+// Nexorium Core - Custom Edge Component for React Flow
 
 import { memo } from 'react';
 import {

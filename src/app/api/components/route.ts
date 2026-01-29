@@ -1,10 +1,15 @@
-// TelEnvIQ - Components List API
+// Nexorium Core - Components List API
 // GET /api/components - Get all components (catalog)
 
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const layer = searchParams.get('layer');

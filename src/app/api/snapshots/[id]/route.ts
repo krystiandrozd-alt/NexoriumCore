@@ -1,14 +1,20 @@
-// TelEnvIQ - Single Snapshot API
+// Nexorium Core - Single Snapshot API
 // GET /api/snapshots/[id] - Get snapshot details
-// DELETE /api/snapshots/[id] - Delete snapshot
+// NOTE: DELETE endpoint removed - snapshots are immutable per CLAUDE.md architectural invariant
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSnapshot, deleteSnapshot } from '@/lib/services/snapshot';
+import { getSnapshot } from '@/lib/services/snapshot';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Require authentication and VIEW_ENVIRONMENT permission
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const snapshot = await getSnapshot(id);
@@ -30,19 +36,5 @@ export async function GET(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
-    await deleteSnapshot(id);
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Failed to delete snapshot:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to delete snapshot' },
-      { status: 500 }
-    );
-  }
-}
+// DELETE endpoint intentionally removed - snapshots are immutable
+// Per CLAUDE.md: "Snapshots are immutable once created"

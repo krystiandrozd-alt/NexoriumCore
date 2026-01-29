@@ -1,4 +1,4 @@
-// TelEnvIQ - Blueprints API
+// Nexorium Core - Blueprints API
 // GET /api/governance/blueprints - List all blueprints
 // POST /api/governance/blueprints - Create new blueprint
 
@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { BlueprintStatus, Prisma } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateBlueprintSchema = z.object({
   name: z.string().min(1).max(255),
@@ -15,6 +17,9 @@ const CreateBlueprintSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const targetStageId = searchParams.get('targetStageId');
@@ -38,6 +43,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateBlueprintSchema.safeParse(body);

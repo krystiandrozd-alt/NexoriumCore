@@ -1,7 +1,7 @@
-# CLAUDE.md — TelEnv IQ (Enterprise-Structured MVP)
+# CLAUDE.md — Nexorium Core (Enterprise-Structured MVP)
 
 <project_context>
-TelEnv IQ is a non-production environment intelligence and governance platform for telco/IT landscapes. The core focus of the product is regarding Telco test environments.
+Nexorium Core is the architectural control layer for non-production environments. It provides structural visibility, governance enforcement, and cross-environment awareness for enterprise technology landscapes.
 
 It models:
 - BSS/OSS systems
@@ -24,7 +24,7 @@ Production may be connected in READ-ONLY mode only.
 
 
 <north_star>
-TelEnv IQ is the Technical Environment Readiness & Governance Layer for non-production landscapes.
+Nexorium Core is the architectural control layer for non-production environments.
 
 It answers:
 - What exactly is this environment composed of?
@@ -37,6 +37,32 @@ It answers:
 
 If a feature does not strengthen environment truth, governance alignment, impact visibility, or accountability, it is out of scope.
 </north_star>
+
+
+<brand_positioning>
+Brand name: Nexorium Core
+
+Brand personality:
+- Authoritative
+- Architectural
+- Structural
+- Composed
+- Enterprise-grade
+- Precise
+- Calm confidence
+- Minimal
+
+Tone guidelines:
+- No buzzwords
+- No "intelligence"
+- No "insight"
+- No "360"
+- No hype language
+- Use clear, direct, declarative statements
+
+The brand should feel like:
+"The control plane for non-production architecture."
+</brand_positioning>
 
 
 <enterprise_pillars>
@@ -54,7 +80,7 @@ Navigation must reflect these pillars explicitly.
 
 
 <domain_expectations>
-TelEnv IQ must assume enterprise telco/IT complexity.
+Nexorium Core must assume enterprise telco/IT complexity.
 
 Design decisions must reflect:
 
@@ -315,4 +341,3 @@ Database:
   /organisation
   /web
 </maintenance_guidelines>
-

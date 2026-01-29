@@ -1,10 +1,15 @@
-// TelEnvIQ - Expiring Exceptions API
+// Nexorium Core - Expiring Exceptions API
 // GET /api/governance/exceptions/expiring - Get expiring exceptions
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getExpiringExceptions } from '@/lib/services/governance/exceptions';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const days = parseInt(searchParams.get('days') || '7');

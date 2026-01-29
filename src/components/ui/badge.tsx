@@ -1,26 +1,29 @@
-// TelEnvIQ - Badge Component
+// Nexorium Core - Badge Component
+// Premium dark theme with subtle glow effects
 
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
+  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0B1220]',
   {
     variants: {
       variant: {
         default:
-          'border-transparent bg-indigo-100 text-indigo-800',
+          'border-[#5B5FEF]/30 bg-[#5B5FEF]/15 text-[#C7D2FE]',
         secondary:
-          'border-transparent bg-slate-100 text-slate-800',
+          'border-white/10 bg-white/[0.06] text-slate-300',
         destructive:
-          'border-transparent bg-red-100 text-red-800',
+          'border-red-500/30 bg-red-500/15 text-red-300',
         warning:
-          'border-transparent bg-amber-100 text-amber-800',
+          'border-amber-500/30 bg-amber-500/15 text-amber-300',
         success:
-          'border-transparent bg-green-100 text-green-800',
+          'border-emerald-500/30 bg-emerald-500/15 text-emerald-300',
         outline:
-          'text-slate-700 border-slate-300',
+          'text-slate-400 border-white/10 bg-transparent',
+        info:
+          'border-cyan-500/30 bg-cyan-500/15 text-cyan-300',
       },
     },
     defaultVariants: {

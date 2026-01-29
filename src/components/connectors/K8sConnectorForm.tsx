@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Kubernetes Connector Form
+// Nexorium Core - Kubernetes Connector Form
 // Configuration form for Kubernetes cluster discovery
 
 import { useState } from 'react';

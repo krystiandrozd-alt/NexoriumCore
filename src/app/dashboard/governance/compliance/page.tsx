@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Compliance Matrix Page
+// Nexorium Core - Compliance Matrix Page
 // Environment x Controls compliance view
 
 import { useEffect, useState } from 'react';

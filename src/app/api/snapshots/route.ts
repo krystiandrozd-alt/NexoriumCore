@@ -1,16 +1,22 @@
-// TelEnvIQ - Snapshots API
+// Nexorium Core - Snapshots API
 // GET /api/snapshots?environmentId=xxx - List snapshots for environment
 // POST /api/snapshots - Create new snapshot
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createSnapshot, listSnapshots } from '@/lib/services/snapshot';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateSnapshotSchema = z.object({
   environmentId: z.string().uuid(),
 });
 
 export async function GET(request: NextRequest) {
+  // Require authentication and VIEW_ENVIRONMENT permission
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const environmentId = searchParams.get('environmentId');
@@ -34,6 +40,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Require authentication and EDIT_ENVIRONMENT permission to create snapshots
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateSnapshotSchema.safeParse(body);

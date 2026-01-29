@@ -1,4 +1,4 @@
-// TelEnvIQ - Cost Utility Unit Tests
+// Nexorium Core - Cost Utility Unit Tests
 // Tests for currency formatting and cost display functions
 
 import { describe, it, expect } from 'vitest';

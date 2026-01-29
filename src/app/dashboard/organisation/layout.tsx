@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Organisation Pillar Layout
+// Nexorium Core - Organisation Pillar Layout
 // Accountability Layer - People, RACI, ownership
 
 import { PillarNav, PillarNavItem } from '@/components/navigation';

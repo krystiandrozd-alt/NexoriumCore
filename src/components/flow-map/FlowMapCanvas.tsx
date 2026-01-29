@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Flow Map Canvas
+// Nexorium Core - Flow Map Canvas
 // Main React Flow canvas for portfolio change intelligence visualization
 
 import { memo, useCallback, useMemo, useRef, useEffect, useState } from 'react';

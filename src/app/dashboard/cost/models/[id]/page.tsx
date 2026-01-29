@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Cost Model Detail / Edit Page
+// Nexorium Core - Cost Model Detail / Edit Page
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';

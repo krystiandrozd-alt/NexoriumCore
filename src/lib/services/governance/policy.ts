@@ -1,4 +1,4 @@
-// TelEnvIQ - Policy Service
+// Nexorium Core - Policy Service
 // Policy validation engine for governance and compliance
 
 import prisma from '@/lib/db';

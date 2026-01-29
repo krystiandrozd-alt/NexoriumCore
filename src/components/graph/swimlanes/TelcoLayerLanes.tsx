@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Telco Layer Swimlanes
+// Nexorium Core - Telco Layer Swimlanes
 // Generate swimlane configuration for BSS/OSS/Network view
 
 import type { SwimLane, TelcoLayer } from '@/types';

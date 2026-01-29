@@ -1,10 +1,12 @@
-// TelEnvIQ - Network Zone Connections API
+// Nexorium Core - Network Zone Connections API
 // GET /api/network-zones/[id]/connections - Get zone connections
 // POST /api/network-zones/[id]/connections - Create zone connection
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getZoneConnections, createZoneConnection } from '@/lib/services/network-zone';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateConnectionSchema = z.object({
   targetZoneId: z.string().uuid(),
@@ -18,6 +20,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const connections = await getZoneConnections(id);
@@ -35,6 +40,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

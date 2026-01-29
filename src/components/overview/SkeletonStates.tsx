@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Skeleton Loading States
+// Nexorium Core - Skeleton Loading States
 // Loading placeholders for overview components
 
 import { cn } from '@/lib/utils';

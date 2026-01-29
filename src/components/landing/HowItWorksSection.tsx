@@ -1,274 +1,122 @@
 'use client';
 
-// TelEnv IQ - Premium Feature Sections (Zig-Zag Layout) + How It Works
+// Nexorium Core - How It Works Section (4-Step Process)
 
-import {
-  Layers,
-  Shield,
-  Network,
-  Plug,
-  Box,
-  Settings,
-  Eye,
-} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Plug, Boxes, Camera, Shield } from 'lucide-react';
 
-// Zig-zag feature sections data
-const features = [
-  {
-    badge: 'Traceability',
-    title: 'From Hardware to Data — Connected.',
-    description:
-      'Trace dependencies across every layer: from virtual machines and containers through APIs and services to databases and data pipelines. Understand exactly how components connect, what depends on what, and where boundaries exist.',
-    points: [
-      'Infrastructure-to-application mapping',
-      'API dependency tracking',
-      'Data lineage visualization',
-      'Version correlation across layers',
-    ],
-    icon: Layers,
-    visual: 'layers',
-  },
-  {
-    badge: 'Governance',
-    title: 'Governance Without Bureaucracy.',
-    description:
-      'Embed policy checks, RACI clarity, exception management, and drift evaluation directly into your environment model. No separate governance documentation that falls out of sync. Governance that is actionable, not theoretical.',
-    points: [
-      'Embedded ownership and RACI',
-      'Policy alignment checks',
-      'Exception tracking with audit trail',
-      'Real-time drift evaluation',
-    ],
-    icon: Shield,
-    visual: 'governance',
-  },
-  {
-    badge: 'Portfolio Scale',
-    title: 'Clarity at Portfolio Scale.',
-    description:
-      'Understand cross-project dependencies and environment-level health across your entire non-production landscape. See how changes in one area ripple across environments. Prevent collisions before they happen.',
-    points: [
-      'Cross-project dependency detection',
-      'Environment health scoring',
-      'Change impact prediction',
-      'Portfolio-wide risk visibility',
-    ],
-    icon: Network,
-    visual: 'portfolio',
-  },
-];
-
-// How it works steps
 const steps = [
   {
-    number: '1',
-    title: 'Connect Your Environment Sources',
-    description: 'Link your infrastructure, cloud providers, container orchestrators, and configuration management tools.',
+    number: '01',
+    title: 'Ingest',
+    subtitle: 'API-based connectors',
+    description:
+      'Connect to your infrastructure, cloud providers, and configuration management systems through API-based connectors. Data flows into a canonical internal model.',
     icon: Plug,
+    gradient: 'from-cyan-500 to-cyan-400',
   },
   {
-    number: '2',
-    title: 'Build a Structured Cross-Layer Model',
-    description: 'Automatically map relationships from infrastructure through applications to data.',
-    icon: Box,
+    number: '02',
+    title: 'Model',
+    subtitle: 'Structured representation',
+    description:
+      'Build a structured model of hosts, components, deployed versions, and interfaces. Every relationship is explicit, every connection is traced.',
+    icon: Boxes,
+    gradient: 'from-[#5B5FEF] to-[#7C3AED]',
   },
   {
-    number: '3',
-    title: 'Apply Governance & Ownership Logic',
-    description: 'Define policies, assign ownership, and establish alignment criteria.',
-    icon: Settings,
+    number: '03',
+    title: 'Snapshot',
+    subtitle: 'Immutable state capture',
+    description:
+      'Capture immutable snapshots of environment state. Compare snapshots over time. Track drift with full provenance and audit trail.',
+    icon: Camera,
+    gradient: 'from-violet-500 to-purple-400',
   },
   {
-    number: '4',
-    title: 'Operate with Continuous Insight',
-    description: 'Monitor health, detect drift, and anticipate risk in real-time.',
-    icon: Eye,
+    number: '04',
+    title: 'Govern',
+    subtitle: 'Alignment & readiness',
+    description:
+      'Apply governance alignment checks, readiness validation, and risk visibility. Know if your environment is structurally ready before promotion.',
+    icon: Shield,
+    gradient: 'from-emerald-500 to-teal-400',
   },
 ];
-
-// Visual placeholder component for feature sections
-function FeatureVisual({ type }: { type: string }) {
-  return (
-    <div className="relative h-[300px] lg:h-[400px] rounded-xl border border-white/10 bg-[#0f1629]/60 backdrop-blur-sm overflow-hidden">
-      {/* Gradient glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#5B5FEF]/10 via-transparent to-[#06B6D4]/10" />
-
-      {/* Grid pattern */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
-          backgroundSize: '24px 24px',
-        }}
-      />
-
-      {/* Content based on type */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        {type === 'layers' && (
-          <div className="space-y-3 w-full max-w-[280px]">
-            {['Application', 'API', 'Data', 'Infrastructure'].map((layer, i) => (
-              <div
-                key={layer}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 border border-white/10"
-                style={{ marginLeft: `${i * 16}px` }}
-              >
-                <div className={`w-2 h-2 rounded-full ${
-                  i === 0 ? 'bg-cyan-400' :
-                  i === 1 ? 'bg-[#5B5FEF]' :
-                  i === 2 ? 'bg-emerald-400' :
-                  'bg-slate-400'
-                }`} />
-                <span className="text-sm text-white/70">{layer} Layer</span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {type === 'governance' && (
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 mb-4">
-              <Shield className="w-10 h-10 text-emerald-400" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-center gap-2">
-                <span className="px-2 py-1 rounded text-xs bg-emerald-500/20 text-emerald-400">Compliant</span>
-                <span className="px-2 py-1 rounded text-xs bg-amber-500/20 text-amber-400">3 Exceptions</span>
-              </div>
-              <p className="text-sm text-slate-500">Last audit: 12 hours ago</p>
-            </div>
-          </div>
-        )}
-
-        {type === 'portfolio' && (
-          <div className="relative w-full h-full flex items-center justify-center">
-            <div className="relative">
-              {/* Central hub */}
-              <div className="w-16 h-16 rounded-xl bg-[#5B5FEF]/20 border border-[#5B5FEF]/30 flex items-center justify-center">
-                <Network className="w-8 h-8 text-[#5B5FEF]" />
-              </div>
-              {/* Orbiting nodes */}
-              {[0, 60, 120, 180, 240, 300].map((angle, i) => (
-                <div
-                  key={i}
-                  className="absolute w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center"
-                  style={{
-                    transform: `rotate(${angle}deg) translateX(80px) rotate(-${angle}deg)`,
-                    top: '50%',
-                    left: '50%',
-                    marginTop: '-16px',
-                    marginLeft: '-16px',
-                  }}
-                >
-                  <div className={`w-2 h-2 rounded-full ${
-                    i % 3 === 0 ? 'bg-emerald-400' :
-                    i % 3 === 1 ? 'bg-amber-400' :
-                    'bg-cyan-400'
-                  }`} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 export default function HowItWorksSection() {
   return (
-    <>
-      {/* Zig-Zag Feature Sections */}
-      <section id="intelligence" className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[#0B1220]" />
+    <section id="how-it-works" className="relative py-24 lg:py-32 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#0B1220]" />
 
-        {/* Gradient accents */}
-        <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-[#5B5FEF]/5 rounded-full blur-[128px]" />
-        <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-[#06B6D4]/5 rounded-full blur-[128px]" />
+      {/* Gradient accents */}
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#5B5FEF]/5 rounded-full blur-[150px]" />
 
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className={`grid lg:grid-cols-2 gap-12 lg:gap-16 items-center ${
-                index !== 0 ? 'mt-24 lg:mt-32' : ''
-              }`}
-            >
-              {/* Content - alternating sides */}
-              <div className={index % 2 === 1 ? 'lg:order-2' : ''}>
-                <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#5B5FEF]/10 text-[#5B5FEF] border border-[#5B5FEF]/20 mb-6">
-                  {feature.badge}
-                </div>
+      {/* Top line */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-                <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-white">
-                  {feature.title}
-                </h3>
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mx-auto max-w-3xl text-center mb-16 lg:mb-20"
+        >
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white">
+            How It Works
+          </h2>
+          <p className="mt-6 text-lg text-slate-400">
+            Four steps from ingestion to governance. No agents, no complexity, no guesswork.
+          </p>
+        </motion.div>
 
-                <p className="mt-6 text-lg text-slate-400 leading-relaxed">
-                  {feature.description}
-                </p>
+        {/* Steps - Horizontal Layout */}
+        <div className="relative">
+          {/* Connection line */}
+          <div className="hidden lg:block absolute top-[60px] left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-white/5 via-white/20 to-white/5" />
 
-                <ul className="mt-8 space-y-3">
-                  {feature.points.map((point, pointIndex) => (
-                    <li key={pointIndex} className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#5B5FEF]/20 flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#5B5FEF]" />
-                      </div>
-                      <span className="text-sm text-slate-300">{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Visual */}
-              <div className={index % 2 === 1 ? 'lg:order-1' : ''}>
-                <FeatureVisual type={feature.visual} />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[#F5F7FA]" />
-
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center mb-16 lg:mb-20">
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-[#0B1220]">
-              How It Works
-            </h2>
-            <p className="mt-6 text-lg text-slate-600">
-              Four steps from connection to continuous insight.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
             {steps.map((step, index) => (
-              <div key={index} className="relative">
-                {/* Connector line */}
-                {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-10 left-full w-full h-px bg-gradient-to-r from-slate-300 to-transparent z-0" />
-                )}
-
-                <div className="relative">
-                  {/* Number badge */}
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#0B1220] text-white text-lg font-semibold mb-6">
-                    {step.number}
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="relative"
+              >
+                {/* Step card */}
+                <div className="relative rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] p-8 h-full hover:bg-white/[0.05] hover:border-white/[0.12] transition-all duration-300">
+                  {/* Number + Icon */}
+                  <div className="flex items-start justify-between mb-6">
+                    <div
+                      className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${step.gradient} shadow-lg`}
+                    >
+                      <step.icon className="h-7 w-7 text-white" />
+                    </div>
+                    <span className="text-3xl font-bold text-white/10">{step.number}</span>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-[#0B1220] mb-3">
-                    {step.title}
-                  </h3>
-
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    {step.description}
-                  </p>
+                  {/* Content */}
+                  <h3 className="text-xl font-semibold text-white mb-1">{step.title}</h3>
+                  <p className="text-sm text-[#5B5FEF] font-medium mb-4">{step.subtitle}</p>
+                  <p className="text-sm text-slate-400 leading-relaxed">{step.description}</p>
                 </div>
-              </div>
+
+                {/* Connector arrow for large screens */}
+                {index < steps.length - 1 && (
+                  <div className="hidden lg:flex absolute -right-3 top-[60px] w-6 h-6 items-center justify-center z-10">
+                    <div className="w-2 h-2 rounded-full bg-[#5B5FEF]" />
+                  </div>
+                )}
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

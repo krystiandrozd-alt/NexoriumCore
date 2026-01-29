@@ -1,4 +1,4 @@
-// TelEnvIQ - Cost Utility Functions
+// Nexorium Core - Cost Utility Functions
 
 /**
  * Format a number as currency

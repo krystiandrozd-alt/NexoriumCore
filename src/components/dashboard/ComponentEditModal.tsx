@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Component Edit Modal
+// Nexorium Core - Component Edit Modal
 // Edit layer and capability type with audit trail
 
 import { useState, useEffect } from 'react';

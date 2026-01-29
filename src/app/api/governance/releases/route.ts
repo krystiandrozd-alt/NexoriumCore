@@ -1,4 +1,4 @@
-// TelEnvIQ - Releases API
+// Nexorium Core - Releases API
 // GET /api/governance/releases - List all releases
 // POST /api/governance/releases - Create new release
 
@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { ReleaseStatus } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateReleaseSchema = z.object({
   name: z.string().min(1).max(255),
@@ -16,6 +18,9 @@ const CreateReleaseSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') as ReleaseStatus | null;
@@ -49,6 +54,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateReleaseSchema.safeParse(body);

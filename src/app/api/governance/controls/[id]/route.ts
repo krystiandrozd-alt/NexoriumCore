@@ -1,4 +1,4 @@
-// TelEnvIQ - Single Policy Control API
+// Nexorium Core - Single Policy Control API
 // GET /api/governance/controls/[id] - Get a single policy control
 // PUT /api/governance/controls/[id] - Update a policy control
 // DELETE /api/governance/controls/[id] - Delete a policy control
@@ -9,12 +9,17 @@ import {
   updatePolicyControl,
   deletePolicyControl,
 } from '@/lib/services/governance/compliance';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
 export async function GET(_request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const control = await getPolicyControl(id);
@@ -37,6 +42,9 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -65,6 +73,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     await deletePolicyControl(id);

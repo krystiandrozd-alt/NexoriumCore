@@ -1,4 +1,4 @@
-// TelEnvIQ - Hosting Domain Service
+// Nexorium Core - Hosting Domain Service
 // Cloud/on-prem hosting abstraction management
 
 import prisma from '@/lib/db';

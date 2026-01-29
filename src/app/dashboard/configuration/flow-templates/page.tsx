@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Flow Templates Page
+// Nexorium Core - Flow Templates Page
 // Pipeline flow template management
 
 import { useState, useEffect } from 'react';

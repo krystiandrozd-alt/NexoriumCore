@@ -1,32 +1,33 @@
 'use client';
 
-// TelEnv IQ - Premium Footer
+// Nexorium Core - Footer
 
 import Link from 'next/link';
+import { Hexagon } from 'lucide-react';
 
 const navigation = {
   platform: [
-    { name: 'Overview', href: '#platform' },
-    { name: 'Visibility', href: '#intelligence' },
-    { name: 'Governance', href: '#governance' },
-    { name: 'How It Works', href: '#intelligence' },
+    { name: 'Environment Graph', href: '/dashboard/environments' },
+    { name: 'Flow Map', href: '/dashboard/environments/flow-map' },
+    { name: 'Governance', href: '/dashboard/governance' },
+    { name: 'Impact Analysis', href: '/dashboard/impact' },
   ],
-  solutions: [
-    { name: 'Enterprise', href: '#pricing' },
-    { name: 'Growth Teams', href: '#pricing' },
-    { name: 'Strategic', href: '#pricing' },
+  capabilities: [
+    { name: 'Drift Detection', href: '#capabilities' },
+    { name: 'Version Tracking', href: '#capabilities' },
+    { name: 'Snapshot Engine', href: '#capabilities' },
+    { name: 'RACI Mapping', href: '#capabilities' },
   ],
   resources: [
     { name: 'Documentation', href: '#' },
     { name: 'API Reference', href: '#' },
+    { name: 'Architecture Guide', href: '#' },
     { name: 'Support', href: '#' },
-    { name: 'Status', href: '#' },
   ],
   company: [
     { name: 'About', href: '#' },
-    { name: 'Blog', href: '#' },
-    { name: 'Careers', href: '#' },
     { name: 'Contact', href: '#contact' },
+    { name: 'Security', href: '#' },
   ],
   legal: [
     { name: 'Privacy Policy', href: '#' },
@@ -37,7 +38,10 @@ const navigation = {
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#070a12] border-t border-white/5" aria-labelledby="footer-heading">
+    <footer
+      className="relative bg-[#070a12] border-t border-white/5"
+      aria-labelledby="footer-heading"
+    >
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
@@ -46,16 +50,19 @@ export default function Footer() {
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           {/* Brand column */}
           <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#5B5FEF] to-[#7C3AED] flex items-center justify-center">
-                <span className="text-white font-bold text-sm tracking-tight">TE</span>
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-[#5B5FEF] rounded-xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
+                <div className="relative h-10 w-10 rounded-xl bg-gradient-to-br from-[#5B5FEF] to-[#7C3AED] flex items-center justify-center">
+                  <Hexagon className="h-5 w-5 text-white" />
+                </div>
               </div>
               <span className="text-xl font-semibold text-white tracking-tight">
-                TelEnv<span className="text-[#5B5FEF]">IQ</span>
+                Nexorium<span className="text-[#5B5FEF]"> Core</span>
               </span>
             </Link>
             <p className="text-sm leading-relaxed text-slate-500 max-w-xs">
-              End-to-end visibility and governance for non-production environments.
+              The architectural control layer for non-production environments.
             </p>
             <div className="flex space-x-5">
               <a
@@ -80,15 +87,6 @@ export default function Footer() {
                   />
                 </svg>
               </a>
-              <a
-                href="#"
-                className="text-slate-600 hover:text-slate-400 transition-colors"
-                aria-label="Twitter"
-              >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-              </a>
             </div>
           </div>
 
@@ -102,22 +100,22 @@ export default function Footer() {
                 <ul role="list" className="mt-4 space-y-3">
                   {navigation.platform.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className="text-sm text-slate-500 hover:text-slate-300 transition-colors"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-white">
-                  Solutions
+                  Capabilities
                 </h3>
                 <ul role="list" className="mt-4 space-y-3">
-                  {navigation.solutions.map((item) => (
+                  {navigation.capabilities.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}
@@ -173,7 +171,7 @@ export default function Footer() {
         <div className="mt-16 pt-8 border-t border-white/5">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <p className="text-xs text-slate-600">
-              &copy; {new Date().getFullYear()} TelEnv IQ. All rights reserved.
+              &copy; {new Date().getFullYear()} Nexorium Core. All rights reserved.
             </p>
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               {navigation.legal.map((item) => (

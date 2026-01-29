@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Flow Map Node Components
+// Nexorium Core - Flow Map Node Components
 // Premium glassmorphism nodes with animations for portfolio visualization
 
 import { memo } from 'react';

@@ -1,4 +1,4 @@
-// TelEnvIQ - Approvals Service
+// Nexorium Core - Approvals Service
 // Lightweight approval workflow management
 
 import prisma from '@/lib/db';

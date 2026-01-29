@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Ownership Panel
+// Nexorium Core - Environment Ownership Panel
 // Display and edit environment ownership information
 
 import { useEffect, useState } from 'react';

@@ -1,10 +1,12 @@
-// TelEnvIQ - Test Data Sets API
+// Nexorium Core - Test Data Sets API
 // GET /api/datasets?environmentId=xxx - List test data sets
 // POST /api/datasets - Create new test data set
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getTestDataSets, createTestDataSet, getDatasetsNeedingRefresh } from '@/lib/services/testdata';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateDataSetSchema = z.object({
   databaseId: z.string().uuid(),
@@ -16,6 +18,9 @@ const CreateDataSetSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const environmentId = searchParams.get('environmentId');
@@ -49,6 +54,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateDataSetSchema.safeParse(body);

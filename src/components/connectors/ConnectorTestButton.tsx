@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Connector Test Button
+// Nexorium Core - Connector Test Button
 // Button to test connector connectivity
 
 import { useState } from 'react';

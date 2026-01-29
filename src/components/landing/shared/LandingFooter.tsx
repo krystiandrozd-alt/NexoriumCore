@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnv IQ - Shared Landing Footer
+// Nexorium Core - Shared Landing Footer
 
 import { Map } from 'lucide-react';
 import Link from 'next/link';
@@ -26,7 +26,7 @@ export default function LandingFooter({ variant = 'glass' }: LandingFooterProps)
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#5B5FEF] to-[#7C3AED] flex items-center justify-center">
               <Map className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="text-base font-medium text-white">TelEnv IQ</span>
+            <span className="text-base font-medium text-white">Nexorium Core</span>
           </div>
 
           <p className="text-sm text-slate-500">
@@ -38,7 +38,7 @@ export default function LandingFooter({ variant = 'glass' }: LandingFooterProps)
               Platform
             </Link>
             <span className="text-slate-700">|</span>
-            <span>2026 TelEnv IQ</span>
+            <span>2026 Nexorium Core</span>
           </div>
         </div>
       </div>

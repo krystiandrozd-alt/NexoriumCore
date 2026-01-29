@@ -1,4 +1,4 @@
-// TelEnvIQ - Coupling Detection Service
+// Nexorium Core - Coupling Detection Service
 // Project/environment coupling detection and risk assessment
 
 import prisma from '@/lib/db';

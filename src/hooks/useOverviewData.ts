@@ -1,4 +1,4 @@
-// TelEnvIQ - Overview Data Hook
+// Nexorium Core - Overview Data Hook
 // Custom hook for fetching overview dashboard data
 
 'use client';

@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - People Page
+// Nexorium Core - People Page
 // People registry
 
 import { useState, useEffect } from 'react';

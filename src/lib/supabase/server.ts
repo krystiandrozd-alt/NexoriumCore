@@ -1,4 +1,4 @@
-// TelEnvIQ - Supabase Server Client
+// Nexorium Core - Supabase Server Client
 // Use this client for server-side authentication with cookies
 
 import { createServerClient } from '@supabase/ssr';

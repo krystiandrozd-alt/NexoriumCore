@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Quick Navigation Component
+// Nexorium Core - Quick Navigation Component
 // 2x3 grid of navigation shortcuts to pillar sections
 
 import Link from 'next/link';

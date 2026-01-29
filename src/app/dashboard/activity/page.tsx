@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Activity Log Dashboard
+// Nexorium Core - Activity Log Dashboard
 // View activity logs across all environments
 
 import { useState, useEffect } from 'react';

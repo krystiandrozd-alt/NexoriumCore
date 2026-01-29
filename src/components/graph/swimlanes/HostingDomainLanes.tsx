@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Hosting Domain Swimlanes
+// Nexorium Core - Hosting Domain Swimlanes
 // Generate swimlane configuration for Cloud/On-Prem view
 
 import type { SwimLane, HostingDomain, HostingType } from '@/types';

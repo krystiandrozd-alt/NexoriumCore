@@ -1,4 +1,4 @@
-// TelEnvIQ - Connector V2 Types
+// Nexorium Core - Connector V2 Types
 // Types for the 5-layer canonical data model connectors
 
 import type {

@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Blueprints Page
+// Nexorium Core - Blueprints Page
 // Expected state definitions for environments
 
 import { useState, useEffect } from 'react';

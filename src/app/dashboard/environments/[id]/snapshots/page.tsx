@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Snapshots Page
+// Nexorium Core - Environment Snapshots Page
 // Snapshot timeline for the environment
 
 import { useState, useEffect } from 'react';

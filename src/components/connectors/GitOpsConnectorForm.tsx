@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - GitOps Connector Form
+// Nexorium Core - GitOps Connector Form
 // Configuration form for GitOps repository discovery
 
 import { useState } from 'react';

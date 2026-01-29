@@ -1,4 +1,4 @@
-// TelEnvIQ - Single Test Data Set API
+// Nexorium Core - Single Test Data Set API
 // GET /api/datasets/[id] - Get dataset details
 // PUT /api/datasets/[id] - Update dataset
 // DELETE /api/datasets/[id] - Delete dataset
@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getTestDataSet, updateTestDataSet, deleteTestDataSet } from '@/lib/services/testdata';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateDataSetSchema = z.object({
   sourceType: z.enum(['PROD_CLONE', 'MASKED', 'SYNTHETIC', 'STATIC']).optional(),
@@ -19,6 +21,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const dataset = await getTestDataSet(id);
@@ -44,6 +49,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -71,6 +79,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     await deleteTestDataSet(id);

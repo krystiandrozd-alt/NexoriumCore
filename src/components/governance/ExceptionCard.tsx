@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Exception Card Component
+// Nexorium Core - Exception Card Component
 // Display a single exception item
 
 import { Clock, CheckCircle, XCircle, Calendar, AlertTriangle } from 'lucide-react';

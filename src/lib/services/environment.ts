@@ -1,4 +1,4 @@
-// TelEnvIQ - Environment Service
+// Nexorium Core - Environment Service
 // Core business logic for environment management
 
 import prisma from '@/lib/db';
@@ -10,6 +10,8 @@ export async function getEnvironments() {
   return prisma.environment.findMany({
     orderBy: { updatedAt: 'desc' },
     include: {
+      stage: true,
+      project: true,
       _count: {
         select: {
           nodes: true,
@@ -51,12 +53,26 @@ export async function createEnvironment(data: {
   name: string;
   type: EnvironmentType;
   description?: string;
-}): Promise<Environment> {
+  stageId?: string;
+  projectId?: string;
+}) {
   return prisma.environment.create({
     data: {
       name: data.name,
       type: data.type,
       description: data.description,
+      stageId: data.stageId,
+      projectId: data.projectId,
+    },
+    include: {
+      stage: true,
+      project: true,
+      _count: {
+        select: {
+          nodes: true,
+          edges: true,
+        },
+      },
     },
   });
 }

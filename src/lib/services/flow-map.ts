@@ -1,4 +1,4 @@
-// TelEnvIQ - Flow Map Service
+// Nexorium Core - Flow Map Service
 // Core business logic for flow map computation and stage management
 
 import prisma from '@/lib/db';

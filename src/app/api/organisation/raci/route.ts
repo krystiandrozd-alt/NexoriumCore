@@ -1,4 +1,4 @@
-// TelEnvIQ - RACI Mappings API
+// Nexorium Core - RACI Mappings API
 // GET /api/organisation/raci - List all RACI mappings
 // POST /api/organisation/raci - Create new RACI mapping
 
@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { RACIRole, AssetEntityType } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateRACISchema = z.object({
   personId: z.string().uuid(),
@@ -16,6 +18,9 @@ const CreateRACISchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const personId = searchParams.get('personId');
@@ -51,6 +56,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateRACISchema.safeParse(body);

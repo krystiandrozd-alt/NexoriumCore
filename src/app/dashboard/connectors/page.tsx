@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Connectors Dashboard (V2)
+// Nexorium Core - Connectors Dashboard (V2)
 // Connector management and ingestion runs
 
 import { useState, useEffect } from 'react';

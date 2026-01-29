@@ -1,4 +1,4 @@
-// TelEnvIQ - Dataset Compliance API
+// Nexorium Core - Dataset Compliance API
 // GET /api/datasets/[id]/compliance - Get dataset compliance info
 // PUT /api/datasets/[id]/compliance - Update dataset classification
 
@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { updateDataClassification, getComplianceAudits } from '@/lib/services/governance/classification';
 import prisma from '@/lib/db';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateComplianceSchema = z.object({
   dataClassification: z.enum(['PII', 'PCI', 'CONFIDENTIAL', 'NON_SENSITIVE']).optional(),
@@ -18,6 +20,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 
@@ -63,6 +68,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

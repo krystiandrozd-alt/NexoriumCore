@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environments Pillar Layout
+// Nexorium Core - Environments Pillar Layout
 // Truth Layer - Environment topology and state
 
 import { PillarNav, PillarNavItem } from '@/components/navigation';
@@ -10,8 +10,8 @@ import {
 } from 'lucide-react';
 
 const environmentsNavItems: PillarNavItem[] = [
-  { name: 'Flow Map', href: '/dashboard/environments/flow-map', icon: GitBranch },
   { name: 'Overview', href: '/dashboard/environments/overview', icon: List },
+  { name: 'Flow Map', href: '/dashboard/environments/flow-map', icon: GitBranch },
 ];
 
 export default function EnvironmentsLayout({

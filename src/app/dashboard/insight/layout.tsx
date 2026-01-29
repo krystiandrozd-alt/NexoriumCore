@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Insight Pillar Layout
+// Nexorium Core - Insight Pillar Layout
 // Reporting Layer - Dashboards and reports
 
 import { PillarNav, PillarNavItem } from '@/components/navigation';

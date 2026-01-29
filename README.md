@@ -1,44 +1,45 @@
-# TelEnvIQ
+# Nexorium Core
 
-**Telco-focused Test Environment Auto-Discovery and Test Data Intelligence Platform**
+**The architectural control layer for non-production environments.**
 
-TelEnvIQ is a production-grade SaaS MVP that provides living environment intelligence for telecom operators and complex OSS/BSS integration landscapes.
+Nexorium Core provides structural visibility, governance enforcement, and cross-environment awareness for enterprise technology landscapes.
 
 ## Overview
 
-TelEnvIQ eliminates two critical pain points in telecom test environments:
+Nexorium Core addresses two fundamental challenges in enterprise test environments:
 
-1. **Environment Topology Blindness** - No reliable, up-to-date view of SIT/UAT/NFT environments
-2. **Test Data Blindness** - Teams don't know when data was last refreshed or if masking policies are applied
+1. **Structural Ambiguity** — No reliable, authoritative view of what exists across SIT/UAT/NFT environments
+2. **Governance Gaps** — No mechanism to enforce alignment with blueprints, releases, or architectural standards
 
-## Features
+## Core Capabilities
 
-### Core Capabilities
+| Capability | Description |
+|------------|-------------|
+| **Environment Modelling** | Define and visualize system topology, integrations, and hosting context across all non-production environments. |
+| **Governance Alignment** | Enforce blueprints, track release alignment, and detect drift before it impacts delivery. |
+| **Cross-Environment Visibility** | Map relationships between DEV, SIT, UAT, and beyond — understand dependencies and flow. |
+| **Structural Accountability** | Assign ownership, track RACI, and surface orphaned assets with clarity. |
+| **Controlled Change** | Snapshot environments, compare states, and validate readiness with deterministic precision. |
 
-- **Auto-Discovery**: Continuously discover and map services, runtimes, endpoints, and integrations
-- **Evidence-Driven Topology**: Generate dynamic, confidence-scored environment graphs
-- **Test Data Lifecycle Intelligence**: Track refresh dates, masking policies, lineage, and staleness
-
-### Connectors
+## Connectors
 
 - **Kubernetes Connector**: Read-only discovery from K8s namespaces
 - **GitOps Connector**: Parse topology from manifest repositories
 - **Manual YAML Import**: Import custom topology definitions
 
-### Visualization
+## Visualization
 
-- Interactive environment topology graphs (React Flow)
-- Confidence-based edge styling
-- Staleness indicators for nodes and data
+- Interactive environment topology graphs
+- Layered architecture views (BSS → OSS → Network)
 - Filter by owner, protocol, node type
 - SVG/PNG export
 
-### Snapshot & Drift Detection
+## Snapshot & Drift Detection
 
 - Create environment snapshots
 - Compare snapshots to detect changes
 - Identify new/removed nodes and edges
-- Flag newly stale databases
+- Flag structural drift
 
 ## Tech Stack
 
@@ -59,7 +60,7 @@ TelEnvIQ eliminates two critical pain points in telecom test environments:
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd telenviq
+cd nexorium-core
 ```
 
 2. Install dependencies:
@@ -89,15 +90,15 @@ npx ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed/index.ts
 npm run dev
 ```
 
-7. Open [http://localhost:3000](http://localhost:3000) in your browser
+7. Open [http://localhost:3003](http://localhost:3003) in your browser
 
 ## Project Structure
 
 ```
-telenviq/
+nexorium-core/
 ├── prisma/
 │   ├── schema.prisma          # Database schema
-│   └── seed/                  # Seed data scripts
+│   └── seed/                   # Seed data scripts
 ├── src/
 │   ├── app/
 │   │   ├── (landing)/         # Landing page routes
@@ -173,62 +174,6 @@ telenviq/
 - **Evidence**: Audit trail for discovery
 - **EnvironmentSnapshot**: Point-in-time topology capture
 
-### Test Data Staleness
-
-- **Fresh** (<14 days): Green indicator
-- **Warning** (14-30 days): Amber indicator
-- **Stale** (>30 days): Red indicator
-
-## Manual Import Format
-
-```yaml
-version: "1.0"
-
-environment:
-  name: "My Environment"
-  description: "Description"
-
-nodes:
-  - name: "api-gateway"
-    type: "GATEWAY"
-    owner: "platform-team"
-    criticality: "CRITICAL"
-
-  - name: "order-service"
-    type: "SERVICE"
-    owner: "commerce-team"
-
-edges:
-  - source: "api-gateway"
-    target: "order-service"
-    protocol: "REST"
-    port: 8080
-    path: "/api/orders"
-
-databases:
-  - node: "orders-db"
-    engine: "PostgreSQL"
-    version: "15.2"
-    testData:
-      sourceType: "MASKED"
-      lastRefreshDate: "2024-01-15"
-      refreshMethod: "PIPELINE"
-      maskingPolicyVersion: "v2.1"
-```
-
-## Future Roadmap
-
-- AI-assisted impact analysis
-- Blast radius tracing
-- Controlled refresh orchestration
-- ITSM integration (ServiceNow, Jira)
-- Multi-cluster Kubernetes support
-- Real-time topology updates
-
 ## License
 
 MIT
-
-## Contributing
-
-Contributions are welcome! Please read our contributing guidelines before submitting a PR.

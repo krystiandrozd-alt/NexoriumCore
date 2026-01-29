@@ -1,4 +1,4 @@
-// TelEnvIQ - Swimlane Exports
+// Nexorium Core - Swimlane Exports
 
 export { default as SwimLaneContainer } from './SwimLaneContainer';
 export { default as SwimLaneBackground } from './SwimLaneBackground';

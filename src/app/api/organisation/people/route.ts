@@ -1,4 +1,4 @@
-// TelEnvIQ - People API
+// Nexorium Core - People API
 // GET /api/organisation/people - List all people
 // POST /api/organisation/people - Create new person
 
@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { PersonStatus } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreatePersonSchema = z.object({
   displayName: z.string().min(1).max(255),
@@ -18,6 +20,9 @@ const CreatePersonSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') as PersonStatus | null;
@@ -61,6 +66,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.MANAGE_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreatePersonSchema.safeParse(body);

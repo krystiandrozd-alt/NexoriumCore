@@ -1,4 +1,4 @@
-// TelEnvIQ - Test Helpers
+// Nexorium Core - Test Helpers
 // Utilities for writing deterministic, maintainable tests
 
 import { vi, type Mock } from 'vitest';

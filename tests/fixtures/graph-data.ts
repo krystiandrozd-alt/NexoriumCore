@@ -1,4 +1,4 @@
-// TelEnvIQ - Graph Data Fixtures
+// Nexorium Core - Graph Data Fixtures
 // Pre-computed graph topology data for testing graph analysis and rendering
 
 import type { Graph5LayerNode, Graph5LayerEdge, GraphAnalysisResult } from '@/types';

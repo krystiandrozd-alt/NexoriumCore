@@ -1,4 +1,4 @@
-// TelEnvIQ - Connector V2 Framework
+// Nexorium Core - Connector V2 Framework
 // 5-layer canonical data model connectors
 
 export * from './types';

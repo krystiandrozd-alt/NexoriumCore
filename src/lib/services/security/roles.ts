@@ -1,4 +1,4 @@
-// TelEnvIQ - Roles Service
+// Nexorium Core - Roles Service
 // RBAC foundation for future role-based access control
 
 import type { Environment } from '@/types';
@@ -50,6 +50,22 @@ export enum Permission {
   VIEW_AUDIT_LOGS = 'VIEW_AUDIT_LOGS',
   VERIFY_AUDIT_CHAIN = 'VERIFY_AUDIT_CHAIN',
 
+  // Governance permissions
+  VIEW_GOVERNANCE = 'VIEW_GOVERNANCE',
+  MANAGE_GOVERNANCE = 'MANAGE_GOVERNANCE',
+
+  // Organisation permissions
+  VIEW_ORGANISATION = 'VIEW_ORGANISATION',
+  MANAGE_ORGANISATION = 'MANAGE_ORGANISATION',
+
+  // Data permissions (test data, datasets)
+  VIEW_DATA = 'VIEW_DATA',
+  MANAGE_DATA = 'MANAGE_DATA',
+
+  // Configuration permissions
+  VIEW_CONFIGURATION = 'VIEW_CONFIGURATION',
+  MANAGE_CONFIGURATION = 'MANAGE_CONFIGURATION',
+
   // Admin permissions
   MANAGE_USERS = 'MANAGE_USERS',
   MANAGE_ROLES = 'MANAGE_ROLES',
@@ -65,6 +81,10 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     Permission.VIEW_VIOLATIONS,
     Permission.VIEW_CONNECTORS,
     Permission.VIEW_AUDIT_LOGS,
+    Permission.VIEW_GOVERNANCE,
+    Permission.VIEW_ORGANISATION,
+    Permission.VIEW_DATA,
+    Permission.VIEW_CONFIGURATION,
   ],
 
   [Role.EDITOR]: [
@@ -79,6 +99,13 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     Permission.VIEW_CONNECTORS,
     Permission.RUN_DISCOVERY,
     Permission.VIEW_AUDIT_LOGS,
+    Permission.VIEW_GOVERNANCE,
+    Permission.MANAGE_GOVERNANCE,
+    Permission.VIEW_ORGANISATION,
+    Permission.MANAGE_ORGANISATION,
+    Permission.VIEW_DATA,
+    Permission.MANAGE_DATA,
+    Permission.VIEW_CONFIGURATION,
   ],
 
   [Role.DATA_STEWARD]: [
@@ -94,6 +121,12 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     Permission.VIEW_CONNECTORS,
     Permission.VIEW_AUDIT_LOGS,
     Permission.VERIFY_AUDIT_CHAIN,
+    Permission.VIEW_GOVERNANCE,
+    Permission.MANAGE_GOVERNANCE,
+    Permission.VIEW_ORGANISATION,
+    Permission.VIEW_DATA,
+    Permission.MANAGE_DATA,
+    Permission.VIEW_CONFIGURATION,
   ],
 
   [Role.SECURITY_ADMIN]: [
@@ -111,6 +144,12 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     Permission.MANAGE_CREDENTIALS,
     Permission.VIEW_AUDIT_LOGS,
     Permission.VERIFY_AUDIT_CHAIN,
+    Permission.VIEW_GOVERNANCE,
+    Permission.MANAGE_GOVERNANCE,
+    Permission.VIEW_ORGANISATION,
+    Permission.VIEW_DATA,
+    Permission.VIEW_CONFIGURATION,
+    Permission.MANAGE_CONFIGURATION,
   ],
 
   [Role.ADMIN]: [

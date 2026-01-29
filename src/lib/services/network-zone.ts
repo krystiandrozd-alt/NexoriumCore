@@ -1,4 +1,4 @@
-// TelEnvIQ - Network Zone Service
+// Nexorium Core - Network Zone Service
 // Network zone and connectivity management
 
 import prisma from '@/lib/db';

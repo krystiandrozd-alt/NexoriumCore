@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Diagram Toolbar
+// Nexorium Core - Environment Diagram Toolbar
 // Premium fixed toolbar with view toggle, actions, and save status
 
 import { memo } from 'react';

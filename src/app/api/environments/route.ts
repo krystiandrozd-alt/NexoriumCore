@@ -1,4 +1,4 @@
-// TelEnvIQ - Environments API
+// Nexorium Core - Environments API
 // GET /api/environments - List all environments
 // POST /api/environments - Create new environment
 
@@ -7,9 +7,11 @@ import { z } from 'zod';
 import { getEnvironments, createEnvironment } from '@/lib/services/environment';
 
 const CreateEnvironmentSchema = z.object({
-  name: z.string().min(1).max(255),
-  type: z.enum(['SIT', 'UAT', 'NFT', 'PREPROD']),
-  description: z.string().optional(),
+  name: z.string().min(2, 'Environment name must be at least 2 characters').max(255),
+  type: z.enum(['DEV', 'SIT', 'UAT', 'NFT', 'PREPROD', 'PROD_RO']),
+  description: z.string().max(1000).optional(),
+  stageId: z.string().uuid().optional(),
+  projectId: z.string().uuid('Project is required'),
 });
 
 export async function GET() {

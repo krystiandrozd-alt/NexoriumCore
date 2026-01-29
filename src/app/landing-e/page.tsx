@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnv IQ - Landing Version E: Structured Executive Brief
+// Nexorium Core - Landing Version E: Structured Executive Brief
 // Style: High-end consulting aesthetic, very structured, muted color palette
 // Tone: Board-level, strategic, polished
 
@@ -85,7 +85,7 @@ export default function LandingVersionE() {
 
             {/* Subhead */}
             <p className="mt-8 text-xl text-slate-400 max-w-2xl leading-relaxed font-light">
-              TelEnv IQ delivers deterministic environment intelligence —
+              Nexorium Core delivers deterministic environment intelligence —
               enabling enterprises to model, snapshot, govern, and align
               complex technical landscapes with confidence.
             </p>
@@ -148,7 +148,7 @@ export default function LandingVersionE() {
             <div className="space-y-12">
               <ExecutiveCard number="III" title="The Solution">
                 <p>
-                  TelEnv IQ provides the Technical Environment Readiness & Governance Layer —
+                  Nexorium Core provides the Technical Environment Readiness & Governance Layer —
                   a canonical model of environment state with immutable snapshots,
                   deterministic diff analysis, and blueprint alignment scoring.
                 </p>
@@ -232,7 +232,7 @@ export default function LandingVersionE() {
                 Positioning
               </span>
               <h2 className="mt-4 text-3xl font-light text-white">
-                What TelEnv IQ Is Not
+                What Nexorium Core Is Not
               </h2>
               <ul className="mt-8 space-y-4">
                 <ListItem>Not a CMDB — we model environments, not assets</ListItem>
@@ -247,7 +247,7 @@ export default function LandingVersionE() {
                 Value Proposition
               </span>
               <h2 className="mt-4 text-3xl font-light text-white">
-                What TelEnv IQ Delivers
+                What Nexorium Core Delivers
               </h2>
               <ul className="mt-8 space-y-4">
                 <ListItem>Canonical environment model as single source of truth</ListItem>

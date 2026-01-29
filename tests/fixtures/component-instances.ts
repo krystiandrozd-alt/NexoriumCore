@@ -1,4 +1,4 @@
-// TelEnvIQ - Component Instance Fixtures
+// Nexorium Core - Component Instance Fixtures
 // Deterministic component instance test data
 
 import type { ComponentInstance } from '@prisma/client';

@@ -1,4 +1,4 @@
-// TelEnvIQ - Test Data Service
+// Nexorium Core - Test Data Service
 // Test data lifecycle intelligence and tracking
 
 import prisma from '@/lib/db';

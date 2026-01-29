@@ -1,4 +1,4 @@
-// TelEnvIQ - Cost Simulations API
+// Nexorium Core - Cost Simulations API
 // GET /api/cost/simulations - List all simulations
 // POST /api/cost/simulations - Run a new simulation
 // POST /api/cost/simulations?save=true - Run and save simulation
@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSimulations, runSimulation, saveSimulation } from '@/lib/services/cost-engine';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const RunSimulationSchema = z.object({
   baseCostModelId: z.string().uuid(),
@@ -22,6 +24,9 @@ const SaveSimulationSchema = RunSimulationSchema.extend({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const costModelId = searchParams.get('costModelId') || undefined;
@@ -38,6 +43,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const shouldSave = searchParams.get('save') === 'true';

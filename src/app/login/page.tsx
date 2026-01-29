@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Login Page
+// Nexorium Core - Login Page
 // Premium styled login with Supabase Auth
 
 import { useState, Suspense } from 'react';
@@ -171,7 +171,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#5B5FEF] to-[#7C3AED] flex items-center justify-center">
               <Map className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-semibold text-white">TelEnv IQ</span>
+            <span className="text-xl font-semibold text-white">Nexorium Core</span>
           </div>
 
           {/* Title */}

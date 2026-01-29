@@ -1,9 +1,11 @@
-// TelEnvIQ - Orphaned Assets API
+// Nexorium Core - Orphaned Assets API
 // GET /api/organisation/orphans - List all orphaned assets
 
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { AssetEntityType, RACIRole } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 interface OrphanedAsset {
   entityType: AssetEntityType;
@@ -14,6 +16,9 @@ interface OrphanedAsset {
 }
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ORGANISATION);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const entityType = searchParams.get('entityType') as AssetEntityType | null;

@@ -1,9 +1,11 @@
-// TelEnvIQ - Cost Computation API
+// Nexorium Core - Cost Computation API
 // POST /api/cost/compute - Compute costs for environments
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { computeEnvironmentCosts, saveEnvironmentCostAllocation } from '@/lib/services/cost-engine';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const ComputeCostSchema = z.object({
   costModelId: z.string().uuid(),
@@ -18,6 +20,9 @@ const ComputeCostSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = ComputeCostSchema.safeParse(body);

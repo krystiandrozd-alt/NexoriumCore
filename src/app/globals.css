@@ -3,16 +3,62 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
+  /* ============================================
+     NEXORIUM CORE - DARK THEME SYSTEM
+     Premium SaaS aesthetic matching landing page
+     ============================================ */
 
-  /* Telco-inspired theme */
-  --telco-primary: #4f46e5;
-  --telco-secondary: #6366f1;
-  --telco-accent: #0ea5e9;
-  --telco-success: #10b981;
-  --telco-warning: #f59e0b;
-  --telco-error: #ef4444;
+  /* Base backgrounds - Deep navy */
+  --background: #0B1220;
+  --background-secondary: #0F1729;
+  --background-tertiary: #131C2E;
+  --foreground: #F8FAFC;
+
+  /* Surface panels */
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-elevated: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --border-active: rgba(91, 95, 239, 0.5);
+
+  /* Primary brand - Indigo/Violet gradient */
+  --primary: #5B5FEF;
+  --primary-hover: #4B4FDF;
+  --primary-light: rgba(91, 95, 239, 0.15);
+  --primary-glow: rgba(91, 95, 239, 0.25);
+
+  /* Secondary - Violet */
+  --secondary: #7C3AED;
+  --secondary-light: rgba(124, 58, 237, 0.15);
+
+  /* Accent - Cyan */
+  --accent: #06B6D4;
+  --accent-light: rgba(6, 182, 212, 0.15);
+
+  /* Text hierarchy */
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-dim: #475569;
+
+  /* Semantic colors - Muted for dark theme */
+  --success: #10B981;
+  --success-light: rgba(16, 185, 129, 0.15);
+  --warning: #F59E0B;
+  --warning-light: rgba(245, 158, 11, 0.15);
+  --danger: #EF4444;
+  --danger-light: rgba(239, 68, 68, 0.15);
+
+  /* Legacy telco colors - kept for compatibility */
+  --telco-primary: #5B5FEF;
+  --telco-secondary: #7C3AED;
+  --telco-accent: #06B6D4;
+  --telco-success: #10B981;
+  --telco-warning: #F59E0B;
+  --telco-error: #EF4444;
 
   /* Zone colors */
   --zone-production: #fef3c7;
@@ -87,11 +133,18 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  min-height: 100vh;
 }
 
 @layer base {
   * {
-    @apply border-slate-200;
+    @apply border-white/[0.08];
+  }
+
+  /* Base body and html styling */
+  html {
+    background: var(--background);
+    color-scheme: dark;
   }
 }
 
@@ -101,7 +154,7 @@ body {
   }
 }
 
-/* React Flow customizations */
+/* React Flow customizations - Dark Theme */
 .react-flow__node {
   cursor: pointer;
 }
@@ -111,93 +164,229 @@ body {
 }
 
 .react-flow__controls {
-  @apply bg-white border border-slate-200 rounded-lg shadow-sm;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
 }
 
 .react-flow__controls-button {
-  @apply border-b border-slate-200 hover:bg-slate-50;
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  fill: var(--text-secondary);
+  transition: all 0.15s ease;
+}
+
+.react-flow__controls-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  fill: var(--text-primary);
 }
 
 .react-flow__controls-button:last-child {
-  @apply border-b-0;
+  border-bottom: 0;
 }
 
 .react-flow__minimap {
-  @apply bg-white border border-slate-200 rounded-lg;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Dark Theme */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-slate-100 rounded-full;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 rounded-full hover:bg-slate-400;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  transition: background 0.15s ease;
 }
 
-/* Card hover effects */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Card hover effects - Dark Theme */
 .card-hover {
-  @apply transition-all duration-200 hover:shadow-md hover:border-indigo-200;
+  @apply transition-all duration-200;
+  border-color: var(--border);
 }
 
-/* Gradient text */
+.card-hover:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-hover);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradient text - Primary brand */
 .gradient-text {
-  @apply text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500;
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-[#5B5FEF] to-[#7C3AED];
 }
 
-/* Focus ring styles */
+/* Focus ring styles - Dark Theme */
 .focus-ring {
-  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5B5FEF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B1220];
+}
+
+/* ============================================
+   DASHBOARD DARK THEME UTILITIES
+   ============================================ */
+
+/* Dashboard background with subtle gradient mesh */
+.dashboard-bg {
+  background: var(--background);
+  position: relative;
+}
+
+.dashboard-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(91, 95, 239, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(124, 58, 237, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Dark sidebar */
+.sidebar-dark {
+  background: var(--background-secondary);
+  border-right: 1px solid var(--border);
+}
+
+/* Dark header */
+.header-dark {
+  background: rgba(11, 18, 32, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Navigation item styles */
+.nav-item {
+  @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200;
+  color: var(--text-secondary);
+}
+
+.nav-item:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.nav-item.active {
+  background: var(--primary-light);
+  color: #C7D2FE;
+  border-left: 3px solid var(--primary);
+}
+
+.nav-item .icon {
+  transition: transform 0.2s ease;
+}
+
+.nav-item:hover .icon {
+  transform: scale(1.05);
+}
+
+/* Glass card for dashboard */
+.glass-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+
+.glass-card:hover {
+  background: var(--surface-elevated);
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Button primary - Gradient */
+.btn-primary-gradient {
+  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-white transition-all duration-200;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  box-shadow: 0 4px 20px rgba(91, 95, 239, 0.25);
+}
+
+.btn-primary-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(91, 95, 239, 0.35);
+}
+
+/* Button secondary - Ghost dark */
+.btn-secondary-dark {
+  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.btn-secondary-dark:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
 }
 
 /* ============================================
    TELCO ENTERPRISE THEME EXTENSIONS
    ============================================ */
 
-/* Soft indigo gradients */
+/* Brand gradients - Dark theme */
 .gradient-telco {
-  @apply bg-gradient-to-br from-indigo-500 to-blue-600;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
 }
 
 .gradient-telco-soft {
-  @apply bg-gradient-to-br from-indigo-50 via-blue-50 to-sky-50;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary-light) 100%);
 }
 
 .gradient-telco-header {
-  @apply bg-gradient-to-r from-indigo-600 via-blue-600 to-sky-500;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
 }
 
 .gradient-sidebar {
-  @apply bg-gradient-to-b from-slate-50 to-white;
+  background: linear-gradient(180deg, var(--background-secondary) 0%, var(--background) 100%);
 }
 
-/* Enterprise panel shadows */
+/* Enterprise panel shadows - Dark theme */
 .shadow-enterprise-sm {
-  box-shadow: var(--shadow-enterprise-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--border);
 }
 
 .shadow-enterprise {
-  box-shadow: var(--shadow-enterprise);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border);
 }
 
 .shadow-enterprise-lg {
-  box-shadow: var(--shadow-enterprise-lg);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border);
 }
 
-/* Enterprise card styles */
+/* Enterprise card styles - Dark theme */
 .card-enterprise {
-  @apply bg-white border border-slate-200 rounded-xl;
-  box-shadow: var(--shadow-enterprise);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .card-enterprise:hover {
-  @apply border-indigo-200;
-  box-shadow: var(--shadow-enterprise-lg);
+  border-color: var(--border-active);
+  background: var(--surface-elevated);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--primary-light);
 }
 
 /* Node-grid SVG pattern for graph backgrounds */
@@ -1194,4 +1383,343 @@ body {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ============================================
+   PAGE TRANSITIONS & MICRO-ANIMATIONS
+   Premium SaaS experience
+   ============================================ */
+
+/* Page transition wrapper */
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: page-fade-in 0.3s ease-out;
+}
+
+/* Staggered fade-in for grid items */
+.stagger-fade > * {
+  opacity: 0;
+  animation: fade-in-up 0.4s ease-out forwards;
+}
+
+.stagger-fade > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-fade > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-fade > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-fade > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-fade > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-fade > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-fade > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-fade > *:nth-child(8) { animation-delay: 350ms; }
+
+/* Icon hover animation */
+.icon-hover {
+  transition: transform 0.2s ease;
+}
+
+.icon-hover:hover {
+  transform: scale(1.08);
+}
+
+/* Glow effect on hover */
+.glow-hover {
+  transition: box-shadow 0.2s ease;
+}
+
+.glow-hover:hover {
+  box-shadow: 0 0 20px rgba(91, 95, 239, 0.3);
+}
+
+/* Indigo glow pulse */
+@keyframes indigo-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(91, 95, 239, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(91, 95, 239, 0.2);
+  }
+}
+
+.indigo-glow {
+  animation: indigo-glow 2s ease-in-out infinite;
+}
+
+/* Slide in from right (for panels) */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+/* Slide in from left (for navigation) */
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-left {
+  animation: slide-in-left 0.3s ease-out;
+}
+
+/* Scale in (for modals, tooltips) */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scale-in {
+  animation: scale-in 0.2s ease-out;
+}
+
+/* Number counter animation class */
+.number-animate {
+  font-variant-numeric: tabular-nums;
+  transition: all 0.3s ease-out;
+}
+
+/* Active indicator bar */
+.active-indicator {
+  position: relative;
+}
+
+.active-indicator::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+  border-radius: 0 2px 2px 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.active-indicator.active::before {
+  opacity: 1;
+}
+
+/* Status dot with pulse */
+.status-dot {
+  @apply relative w-2 h-2 rounded-full;
+}
+
+.status-dot::after {
+  content: '';
+  @apply absolute inset-0 rounded-full;
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.status-dot.success {
+  @apply bg-emerald-500;
+}
+
+.status-dot.success::after {
+  @apply bg-emerald-500;
+}
+
+.status-dot.warning {
+  @apply bg-amber-500;
+}
+
+.status-dot.warning::after {
+  @apply bg-amber-500;
+}
+
+.status-dot.danger {
+  @apply bg-red-500;
+}
+
+.status-dot.danger::after {
+  @apply bg-red-500;
+}
+
+/* Dark theme form inputs */
+.input-dark {
+  @apply rounded-lg text-sm px-3 py-2;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  transition: all 0.15s ease;
+}
+
+.input-dark::placeholder {
+  color: var(--text-muted);
+}
+
+.input-dark:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Dark theme select */
+.select-dark {
+  @apply rounded-lg text-sm px-3 py-2 cursor-pointer;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  transition: all 0.15s ease;
+}
+
+.select-dark:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Tooltip dark theme */
+.tooltip-dark {
+  @apply px-2.5 py-1.5 rounded-lg text-xs font-medium;
+  background: var(--background-tertiary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Dropdown menu dark theme */
+.dropdown-dark {
+  @apply rounded-xl py-2;
+  background: var(--background-secondary);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-dark-item {
+  @apply px-3 py-2 text-sm cursor-pointer transition-colors;
+  color: var(--text-secondary);
+}
+
+.dropdown-dark-item:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+/* Modal dark theme */
+.modal-overlay-dark {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content-dark {
+  @apply rounded-2xl;
+  background: var(--background-secondary);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+
+/* Badge variants for dark theme */
+.badge-dark {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  background: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.badge-dark-primary {
+  background: var(--primary-light);
+  color: #C7D2FE;
+  border-color: rgba(91, 95, 239, 0.3);
+}
+
+.badge-dark-success {
+  background: var(--success-light);
+  color: #6EE7B7;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.badge-dark-warning {
+  background: var(--warning-light);
+  color: #FCD34D;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.badge-dark-danger {
+  background: var(--danger-light);
+  color: #FCA5A5;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Table dark theme */
+.table-dark {
+  @apply w-full;
+}
+
+.table-dark th {
+  @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.table-dark td {
+  @apply px-4 py-3 text-sm;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.table-dark tr:hover td {
+  background: var(--surface);
+}
+
+/* Progress bar dark theme */
+.progress-dark {
+  @apply h-2 rounded-full overflow-hidden;
+  background: var(--surface);
+}
+
+.progress-dark-fill {
+  @apply h-full rounded-full transition-all duration-500;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+/* Tab navigation dark theme */
+.tabs-dark {
+  @apply flex gap-1 p-1 rounded-lg;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.tab-dark {
+  @apply px-4 py-2 rounded-md text-sm font-medium transition-all;
+  color: var(--text-secondary);
+}
+
+.tab-dark:hover {
+  color: var(--text-primary);
+}
+
+.tab-dark.active {
+  background: var(--primary-light);
+  color: #C7D2FE;
 }

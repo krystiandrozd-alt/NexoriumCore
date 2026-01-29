@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Policy Violation List
+// Nexorium Core - Policy Violation List
 // List of policy violations with resolution actions
 
 import { useState } from 'react';

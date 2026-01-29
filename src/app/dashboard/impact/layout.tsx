@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Impact Pillar Layout
+// Nexorium Core - Impact Pillar Layout
 // Risk Layer - Dependency and impact analysis
 
 import { PillarNav, PillarNavItem } from '@/components/navigation';

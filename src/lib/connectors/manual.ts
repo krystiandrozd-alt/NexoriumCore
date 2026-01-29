@@ -1,4 +1,4 @@
-// TelEnvIQ - Manual Import Connector
+// Nexorium Core - Manual Import Connector
 // Support for manual YAML/JSON topology imports
 
 import { BaseConnector, type ConnectorConfig, type DiscoveryPayload, type DiscoveredNode, type DiscoveredEdge } from './base';
@@ -185,7 +185,7 @@ export class ManualConnector extends BaseConnector {
 export { ManualImportSchema };
 
 // Sample template for manual import
-export const MANUAL_IMPORT_TEMPLATE = `# TelEnvIQ Manual Import Template
+export const MANUAL_IMPORT_TEMPLATE = `# Nexorium Core Manual Import Template
 version: "1.0"
 
 environment:

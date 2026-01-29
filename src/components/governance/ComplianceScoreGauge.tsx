@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Compliance Score Gauge Component
+// Nexorium Core - Compliance Score Gauge Component
 // Circular progress indicator for compliance scores
 
 interface ComplianceScoreGaugeProps {

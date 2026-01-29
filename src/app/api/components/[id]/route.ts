@@ -1,10 +1,12 @@
-// TelEnvIQ - Component API
+// Nexorium Core - Component API
 // GET /api/components/[id] - Get component details
 // PATCH /api/components/[id] - Update layer/capability with audit trail
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const PatchComponentSchema = z.object({
   layer: z.enum(['BSS', 'OSS', 'INFRA', 'EXTERNAL', 'UNKNOWN']).optional(),
@@ -20,6 +22,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 
@@ -68,6 +73,9 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

@@ -1,10 +1,12 @@
-// TelEnvIQ - Flow Templates API
+// Nexorium Core - Flow Templates API
 // GET /api/flow-templates - List all flow templates
 // POST /api/flow-templates - Create new flow template
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateFlowTemplateSchema = z.object({
   name: z.string().min(1).max(100),
@@ -14,6 +16,9 @@ const CreateFlowTemplateSchema = z.object({
 });
 
 export async function GET() {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const templates = await prisma.flowTemplate.findMany({
       include: {
@@ -37,6 +42,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateFlowTemplateSchema.safeParse(body);

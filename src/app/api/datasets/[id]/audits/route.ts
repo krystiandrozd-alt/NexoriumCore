@@ -1,10 +1,12 @@
-// TelEnvIQ - Dataset Audits API
+// Nexorium Core - Dataset Audits API
 // GET /api/datasets/[id]/audits - Get compliance audits
 // POST /api/datasets/[id]/audits - Create compliance audit
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getComplianceAudits, createComplianceAudit } from '@/lib/services/governance/classification';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateAuditSchema = z.object({
   complianceFlag: z.enum(['GDPR', 'PCI_DSS', 'HIPAA', 'SOX', 'INTERNAL_POLICY', 'CCPA']),
@@ -20,6 +22,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const searchParams = request.nextUrl.searchParams;
@@ -42,6 +47,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_DATA);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

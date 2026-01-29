@@ -1,4 +1,4 @@
-// TelEnv IQ - Premium Landing Page
+// Nexorium Core - Landing Page
 
 import {
   Header,
@@ -7,7 +7,6 @@ import {
   SolutionSection,
   HowItWorksSection,
   TelcoSection,
-  FutureSection,
   CTASection,
   Footer,
 } from '@/components/landing';
@@ -17,12 +16,22 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#0B1220]">
       <Header />
       <main>
+        {/* Section 1: Hero - Architectural Tone */}
         <Hero />
+
+        {/* Section 2: The Problem - Enterprise Framing */}
         <ProblemSection />
+
+        {/* Section 3: Core Capabilities - 6 Pillars */}
         <SolutionSection />
+
+        {/* Section 4: How It Works - 4-Step Process */}
         <HowItWorksSection />
+
+        {/* Section 5: Differentiation */}
         <TelcoSection />
-        <FutureSection />
+
+        {/* Section 6: Final CTA */}
         <CTASection />
       </main>
       <Footer />

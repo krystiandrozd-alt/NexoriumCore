@@ -1,4 +1,4 @@
-// TelEnvIQ - Host Fixtures
+// Nexorium Core - Host Fixtures
 // Deterministic host test data
 
 import type { Host } from '@prisma/client';

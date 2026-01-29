@@ -1,10 +1,12 @@
-// TelEnvIQ - Network Zones API
+// Nexorium Core - Network Zones API
 // GET /api/network-zones - List all network zones
 // POST /api/network-zones - Create new network zone
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { listNetworkZones, createNetworkZone } from '@/lib/services/network-zone';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateNetworkZoneSchema = z.object({
   name: z.string().min(1).max(255),
@@ -15,6 +17,9 @@ const CreateNetworkZoneSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const type = searchParams.get('type') as 'PROD' | 'NON_PROD' | 'DMZ' | 'PARTNER' | 'INTERNET' | 'SECURE_CORE' | 'LAB' | null;
@@ -38,6 +43,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateNetworkZoneSchema.safeParse(body);

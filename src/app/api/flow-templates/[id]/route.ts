@@ -1,4 +1,4 @@
-// TelEnvIQ - Flow Template Detail API
+// Nexorium Core - Flow Template Detail API
 // GET /api/flow-templates/[id] - Get flow template by ID
 // PUT /api/flow-templates/[id] - Update flow template
 // DELETE /api/flow-templates/[id] - Delete flow template
@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { FlowTemplateStatus } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateFlowTemplateSchema = z.object({
   name: z.string().min(1).max(100).optional(),
@@ -20,6 +22,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const template = await prisma.flowTemplate.findUnique({
@@ -53,6 +58,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -117,6 +125,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 

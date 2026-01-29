@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Overview KPI Grid Component
+// Nexorium Core - Overview KPI Grid Component
 // Displays 6 key metrics in a responsive grid
 
 import { KPICard, KPICardSkeleton, type KPICardProps } from './KPICard';

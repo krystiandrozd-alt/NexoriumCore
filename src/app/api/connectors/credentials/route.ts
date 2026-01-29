@@ -1,10 +1,12 @@
-// TelEnvIQ - Connector Credentials API
+// Nexorium Core - Connector Credentials API
 // GET /api/connectors/credentials - List credentials
 // POST /api/connectors/credentials - Create credential
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { listCredentials, createCredential } from '@/lib/services/security/credentials';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateCredentialSchema = z.object({
   name: z.string().min(1).max(255),
@@ -13,6 +15,10 @@ const CreateCredentialSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  // Require authentication and VIEW_CREDENTIALS permission
+  const auth = await requirePermission(Permission.VIEW_CREDENTIALS);
+  if (auth.error) return auth.error;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const connectorType = searchParams.get('connectorType');
@@ -36,6 +42,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Require authentication and MANAGE_CREDENTIALS permission
+  const auth = await requirePermission(Permission.MANAGE_CREDENTIALS);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = CreateCredentialSchema.safeParse(body);
@@ -47,10 +57,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const createdBy = request.headers.get('x-user-name');
+    // Use authenticated user's name instead of trusting client header
     const credential = await createCredential({
       ...validation.data,
-      createdBy: createdBy || undefined,
+      createdBy: auth.user!.name,
     });
 
     // Don't return encrypted config - destructure to exclude sensitive fields

@@ -1,4 +1,4 @@
-// TelEnvIQ - Network Context Fixtures
+// Nexorium Core - Network Context Fixtures
 // Deterministic network context test data
 
 import type { NetworkContext } from '@prisma/client';

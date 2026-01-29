@@ -1,10 +1,12 @@
-// TelEnvIQ - Environment Activity Logs API
+// Nexorium Core - Environment Activity Logs API
 // GET /api/environments/[id]/activity-logs - Get activity logs
 // POST /api/environments/[id]/activity-logs - Create activity log entry
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getActivityLogs, createAuditLog } from '@/lib/services/governance/audit';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CreateActivityLogSchema = z.object({
   action: z.enum([
@@ -26,6 +28,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const searchParams = request.nextUrl.searchParams;
@@ -59,6 +64,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -71,9 +79,12 @@ export async function POST(
       );
     }
 
+    // Override actor with authenticated user
     const log = await createAuditLog({
       environmentId: id,
       ...validation.data,
+      actorId: auth.user!.id,
+      actorName: auth.user!.name,
     });
 
     return NextResponse.json({ success: true, data: log }, { status: 201 });

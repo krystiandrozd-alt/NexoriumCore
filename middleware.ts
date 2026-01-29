@@ -1,4 +1,4 @@
-// TelEnvIQ - Next.js Middleware
+// Nexorium Core - Next.js Middleware
 // Protects routes and handles session refresh
 
 import { type NextRequest, NextResponse } from 'next/server';

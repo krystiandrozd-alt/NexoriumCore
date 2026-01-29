@@ -1,4 +1,4 @@
-// TelEnvIQ - E2E Smoke Tests
+// Nexorium Core - E2E Smoke Tests
 // Critical user journey tests for core functionality
 
 import { test, expect } from '@playwright/test';
@@ -12,7 +12,7 @@ test.describe('Navigation', () => {
     await page.goto('/');
 
     // Check for main heading or brand
-    await expect(page).toHaveTitle(/TelEnv/i);
+    await expect(page).toHaveTitle(/Nexorium/i);
   });
 
   test('should navigate to dashboard', async ({ page }) => {

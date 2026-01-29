@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnv IQ - Landing Version C: Technical Control Surface
+// Nexorium Core - Landing Version C: Technical Control Surface
 // Style: Technical aesthetic, subtle grid background, fine-line accents, system-like typography
 // Tone: Architectural intelligence, technical depth
 
@@ -183,7 +183,7 @@ export default function LandingVersionC() {
               </h1>
 
               <p className="mt-8 text-lg text-slate-400 leading-relaxed max-w-lg font-light">
-                TelEnv IQ provides architectural visibility across non-production environments.
+                Nexorium Core provides architectural visibility across non-production environments.
                 Canonical topology. Version truth. Deterministic governance.
               </p>
 

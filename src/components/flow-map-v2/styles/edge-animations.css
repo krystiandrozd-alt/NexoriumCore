@@ -1,0 +1,159 @@
+/* Nexorium Core - Flow Map Edge Animations */
+/* Subtle, enterprise-grade animations for edge types */
+
+/* ============================================
+   DASH ANIMATION (for data-sync edges)
+   ============================================ */
+
+@keyframes dash-flow {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.edge-dash-animation {
+  animation: dash-flow 1s linear infinite;
+}
+
+/* ============================================
+   FLOW ANIMATION (for promotion edges)
+   ============================================ */
+
+@keyframes flow-pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.edge-flow-dot {
+  animation: flow-pulse 2s ease-in-out infinite;
+}
+
+/* ============================================
+   PULSE ANIMATION (for warning/blocked edges)
+   ============================================ */
+
+@keyframes edge-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.edge-animated-pulse {
+  animation: edge-pulse 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   GLOW EFFECTS
+   ============================================ */
+
+@keyframes subtle-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+}
+
+.edge-glow {
+  animation: subtle-glow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   SELECTION HIGHLIGHT
+   ============================================ */
+
+.edge-selected {
+  filter: drop-shadow(0 0 4px var(--edge-color, #8b5cf6));
+}
+
+/* ============================================
+   HOVER EFFECTS
+   ============================================ */
+
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke-width: 3;
+  cursor: pointer;
+}
+
+.react-flow__edge:hover .react-flow__edge-text-bg {
+  fill: rgba(30, 41, 59, 0.95);
+}
+
+/* ============================================
+   REDUCE MOTION PREFERENCE
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .edge-dash-animation,
+  .edge-flow-dot,
+  .edge-animated-pulse,
+  .edge-glow {
+    animation: none !important;
+  }
+
+  .edge-flow-particles {
+    display: none;
+  }
+}
+
+/* Manual reduce motion toggle class */
+.reduce-motion .edge-dash-animation,
+.reduce-motion .edge-flow-dot,
+.reduce-motion .edge-animated-pulse,
+.reduce-motion .edge-glow,
+.reduce-motion .edge-flow-particles {
+  animation: none !important;
+}
+
+.reduce-motion .edge-flow-particles {
+  display: none;
+}
+
+/* ============================================
+   EDGE LABEL TRANSITIONS
+   ============================================ */
+
+.react-flow__edge-textbg,
+.react-flow__edge-text {
+  transition: all 0.2s ease;
+}
+
+/* ============================================
+   CONNECTION LINE (while dragging)
+   ============================================ */
+
+.react-flow__connection-line {
+  stroke: #8b5cf6;
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+  animation: dash-flow 0.5s linear infinite;
+}
+
+/* ============================================
+   EDGE MARKERS
+   ============================================ */
+
+.react-flow__edge-path {
+  transition: stroke 0.2s, stroke-width 0.2s;
+}
+
+/* ============================================
+   CUSTOM MARKER STYLES
+   ============================================ */
+
+.marker-integration { fill: #8b5cf6; }
+.marker-data-sync { fill: #06b6d4; }
+.marker-promotion { fill: #22c55e; }
+.marker-reference { fill: #94a3b8; }
+.marker-blocked { fill: #ef4444; }

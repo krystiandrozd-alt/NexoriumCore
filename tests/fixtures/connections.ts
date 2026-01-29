@@ -1,4 +1,4 @@
-// TelEnvIQ - Connection Fixtures
+// Nexorium Core - Connection Fixtures
 // Deterministic connection test data
 
 import type { Connection } from '@prisma/client';

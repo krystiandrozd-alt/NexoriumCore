@@ -1,4 +1,4 @@
-# TelEnvIQ - CI Pipeline
+# Nexorium Core - CI Pipeline
 # Runs on every PR and push to main
 # All checks must pass before merge
 
@@ -95,7 +95,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: telenviq_test
+          POSTGRES_DB: nexorium_core_test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -126,22 +126,22 @@ jobs:
       - name: Run database migrations
         run: npx prisma migrate deploy
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/telenviq_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/nexorium_core_test
 
       - name: Seed test data
         run: npm run seed || true
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/telenviq_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/nexorium_core_test
 
       - name: Build application
         run: npm run build
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/telenviq_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/nexorium_core_test
 
       - name: Run E2E tests
         run: npm run test:e2e
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/telenviq_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/nexorium_core_test
           CI: true
 
       - name: Upload Playwright report

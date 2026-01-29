@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Connector Status Badge
+// Nexorium Core - Connector Status Badge
 // Display connector test status
 
 import { memo } from 'react';

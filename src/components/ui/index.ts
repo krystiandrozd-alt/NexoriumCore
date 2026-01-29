@@ -1,4 +1,4 @@
-// TelEnvIQ - UI Components Index
+// Nexorium Core - UI Components Index
 
 export * from './button';
 export * from './card';

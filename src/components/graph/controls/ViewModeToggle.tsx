@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - View Mode Toggle Component
+// Nexorium Core - View Mode Toggle Component
 // Toggle between different graph view modes
 
 import { memo } from 'react';

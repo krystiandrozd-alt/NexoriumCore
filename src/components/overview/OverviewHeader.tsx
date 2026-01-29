@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Overview Header Component
+// Nexorium Core - Overview Header Component
 // Top bar with title, filters, and quick actions
 
 import { useState, useRef, useEffect } from 'react';

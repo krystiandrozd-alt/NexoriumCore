@@ -1,10 +1,12 @@
-// TelEnvIQ - Node Telco Classification API
+// Nexorium Core - Node Telco Classification API
 // GET /api/nodes/[id]/telco-classification - Get telco classification
 // PUT /api/nodes/[id]/telco-classification - Update telco classification
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getNodeTelcoClassification, updateTelcoClassification } from '@/lib/services/telco-classification';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateTelcoClassificationSchema = z.object({
   telcoLayer: z.enum(['BSS', 'OSS', 'NETWORK', 'SHARED', 'EXTERNAL']).optional(),
@@ -22,6 +24,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const classification = await getNodeTelcoClassification(id);
@@ -47,6 +52,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Policy Violation Overlay Component
+// Nexorium Core - Policy Violation Overlay Component
 // Visual indicators for policy violations on nodes
 
 import { memo } from 'react';

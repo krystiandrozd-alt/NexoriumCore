@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Entry Point Selector
+// Nexorium Core - Entry Point Selector
 // Select or override entry/exit points for an environment
 
 import { useState, useEffect } from 'react';

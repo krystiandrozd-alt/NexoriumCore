@@ -1,4 +1,4 @@
-// TelEnvIQ - Cost & Budget Seed Data
+// Nexorium Core - Cost & Budget Seed Data
 // Run with: npx prisma db seed
 
 import { PrismaClient } from '@prisma/client';

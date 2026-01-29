@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Connector Configuration Modal
+// Nexorium Core - Connector Configuration Modal
 // Modal for configuring and managing connectors
 
 import { useState } from 'react';

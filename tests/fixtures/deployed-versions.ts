@@ -1,4 +1,4 @@
-// TelEnvIQ - Deployed Version Fixtures
+// Nexorium Core - Deployed Version Fixtures
 // Deterministic deployed version test data
 
 import type { DeployedVersion } from '@prisma/client';

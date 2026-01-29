@@ -9,9 +9,37 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Dark theme base colors
         background: 'var(--background)',
+        'background-secondary': 'var(--background-secondary)',
+        'background-tertiary': 'var(--background-tertiary)',
         foreground: 'var(--foreground)',
-        // Telco theme colors
+        // Surface colors
+        surface: 'var(--surface)',
+        'surface-elevated': 'var(--surface-elevated)',
+        'surface-hover': 'var(--surface-hover)',
+        // Border colors
+        border: 'var(--border)',
+        'border-hover': 'var(--border-hover)',
+        'border-active': 'var(--border-active)',
+        // Primary brand
+        primary: {
+          DEFAULT: 'var(--primary)',
+          hover: 'var(--primary-hover)',
+          light: 'var(--primary-light)',
+          glow: 'var(--primary-glow)',
+        },
+        // Secondary
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          light: 'var(--secondary-light)',
+        },
+        // Accent
+        accent: {
+          DEFAULT: 'var(--accent)',
+          light: 'var(--accent-light)',
+        },
+        // Telco theme colors (legacy support)
         telco: {
           primary: 'var(--telco-primary)',
           secondary: 'var(--telco-secondary)',
@@ -96,25 +124,61 @@ const config: Config = {
         mono: ['var(--font-geist-mono)', 'Menlo', 'monospace'],
       },
       boxShadow: {
-        'enterprise-sm': 'var(--shadow-enterprise-sm)',
-        enterprise: 'var(--shadow-enterprise)',
-        'enterprise-lg': 'var(--shadow-enterprise-lg)',
+        'enterprise-sm': '0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--border)',
+        enterprise: '0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border)',
+        'enterprise-lg': '0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border)',
+        'glow-primary': '0 0 20px rgba(91, 95, 239, 0.3)',
+        'glow-primary-lg': '0 0 40px rgba(91, 95, 239, 0.4)',
+        card: '0 4px 16px rgba(0, 0, 0, 0.3)',
+        'card-hover': '0 12px 40px rgba(0, 0, 0, 0.4)',
+      },
+      backgroundImage: {
+        'gradient-primary': 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
+        'gradient-mesh': 'radial-gradient(ellipse at 20% 0%, rgba(91, 95, 239, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(124, 58, 237, 0.06) 0%, transparent 50%)',
+      },
+      borderRadius: {
+        '2xl': '16px',
+        '3xl': '24px',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
+        'fade-in-up': 'fade-in-up 0.4s ease-out forwards',
         'slide-up': 'slideUp 0.5s ease-out',
+        'slide-in-left': 'slide-in-left 0.3s ease-out',
+        'slide-in-right': 'slide-in-right 0.3s ease-out',
+        'scale-in': 'scale-in 0.2s ease-out',
         'violation-pulse': 'violationPulse 2s ease-in-out infinite',
         'violation-ring': 'violationRing 1.5s ease-in-out infinite',
         'dash-flow': 'dashFlow 1s linear infinite',
+        'glow-pulse': 'indigo-glow 2s ease-in-out infinite',
+        shimmer: 'shimmer 1.5s infinite',
+        'pulse-subtle': 'pulse-subtle 2s ease-in-out infinite',
+        'ping-slow': 'ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite',
       },
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
         slideUp: {
           '0%': { opacity: '0', transform: 'translateY(10px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'slide-in-left': {
+          '0%': { opacity: '0', transform: 'translateX(-20px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        'slide-in-right': {
+          '0%': { opacity: '0', transform: 'translateX(20px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        'scale-in': {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
         },
         violationPulse: {
           '0%, 100%': { boxShadow: '0 0 0 0 rgba(239, 68, 68, 0.4)' },
@@ -127,6 +191,26 @@ const config: Config = {
         dashFlow: {
           to: { strokeDashoffset: '-12' },
         },
+        'indigo-glow': {
+          '0%, 100%': { boxShadow: '0 0 0 0 rgba(91, 95, 239, 0.4)' },
+          '50%': { boxShadow: '0 0 20px 4px rgba(91, 95, 239, 0.2)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+        'pulse-subtle': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.85' },
+        },
+        'ping-slow': {
+          '75%, 100%': { transform: 'scale(1.05)', opacity: '0' },
+        },
+      },
+      transitionDuration: {
+        '150': '150ms',
+        '200': '200ms',
+        '250': '250ms',
       },
     },
   },

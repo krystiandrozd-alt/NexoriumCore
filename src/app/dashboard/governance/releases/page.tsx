@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Releases Page
+// Nexorium Core - Releases Page
 // Target groupings for deployment
 
 import { useState, useEffect } from 'react';

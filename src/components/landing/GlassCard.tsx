@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnv IQ - Reusable Glass Card Component
+// Nexorium Core - Reusable Glass Card Component
 
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';

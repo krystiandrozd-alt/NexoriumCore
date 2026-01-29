@@ -1,15 +1,20 @@
-// TelEnvIQ - Environment Topology API
+// Nexorium Core - Environment Topology API
 // GET /api/environments/[id]/topology - Get topology data for graph visualization
 
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { generateNodePosition, daysSince, getStalenessLevel } from '@/lib/utils';
 import type { GraphNode, GraphEdge, GraphFilters } from '@/types';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const searchParams = request.nextUrl.searchParams;

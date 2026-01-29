@@ -1,4 +1,4 @@
-// TelEnvIQ - Impact Analysis Service
+// Nexorium Core - Impact Analysis Service
 // Core business logic for dependency paths, blast radius, and stability analysis
 
 import prisma from '@/lib/db';

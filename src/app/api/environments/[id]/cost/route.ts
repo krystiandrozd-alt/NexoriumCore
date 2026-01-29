@@ -1,4 +1,4 @@
-// TelEnvIQ - Environment Cost API
+// Nexorium Core - Environment Cost API
 // GET /api/environments/[id]/cost - Get cost data for an environment
 // PUT /api/environments/[id]/cost - Update cost override
 
@@ -12,12 +12,17 @@ import {
   computeEnvironmentCosts,
 } from '@/lib/services/cost-engine';
 import prisma from '@/lib/db';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
 export async function GET(request: NextRequest, context: RouteParams) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await context.params;
     const { searchParams } = new URL(request.url);
@@ -78,6 +83,9 @@ const UpdateCostOverrideSchema = z.object({
 });
 
 export async function PUT(request: NextRequest, context: RouteParams) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await context.params;
     const body = await request.json();
@@ -102,6 +110,9 @@ export async function PUT(request: NextRequest, context: RouteParams) {
 }
 
 export async function DELETE(request: NextRequest, context: RouteParams) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await context.params;
     const { searchParams } = new URL(request.url);

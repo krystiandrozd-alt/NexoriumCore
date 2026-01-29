@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnv IQ - Pricing Section + FAQ
+// Nexorium Core - Pricing Section + FAQ
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -55,29 +55,29 @@ const tiers = [
 
 const faqs = [
   {
-    question: 'Does TelEnv IQ modify infrastructure directly?',
+    question: 'Does Nexorium Core modify infrastructure directly?',
     answer:
-      'No. TelEnv IQ is a visibility and governance layer. It observes and maps your environments but does not make changes to infrastructure, deploy code, or modify configurations. All changes to your systems remain under your control through your existing tools and processes.',
+      'No. Nexorium Core is a visibility and governance layer. It observes and maps your environments but does not make changes to infrastructure, deploy code, or modify configurations. All changes to your systems remain under your control through your existing tools and processes.',
   },
   {
     question: 'Is this limited to specific industries?',
     answer:
-      'No. While TelEnv IQ handles the complexity common in telecommunications and large enterprise environments, it is designed for any organization managing complex non-production landscapes. Financial services, healthcare, retail, and technology companies all benefit from cross-layer environment visibility.',
+      'No. While Nexorium Core handles the complexity common in telecommunications and large enterprise environments, it is designed for any organization managing complex non-production landscapes. Financial services, healthcare, retail, and technology companies all benefit from cross-layer environment visibility.',
   },
   {
     question: 'How is governance enforced?',
     answer:
-      'Governance in TelEnv IQ is embedded directly into the environment model. This includes ownership definitions, policy alignment checks, exception tracking, and drift evaluation. Governance rules are configured to match your organizational policies and are continuously evaluated against the actual state of your environments.',
+      'Governance in Nexorium Core is embedded directly into the environment model. This includes ownership definitions, policy alignment checks, exception tracking, and drift evaluation. Governance rules are configured to match your organizational policies and are continuously evaluated against the actual state of your environments.',
   },
   {
     question: 'Can it integrate with existing DevOps and infrastructure tooling?',
     answer:
-      'Yes. TelEnv IQ integrates with common infrastructure tools including Kubernetes, Terraform, cloud providers (AWS, Azure, GCP), configuration management systems, and CI/CD pipelines. Data is ingested through connectors rather than agents, minimizing operational overhead.',
+      'Yes. Nexorium Core integrates with common infrastructure tools including Kubernetes, Terraform, cloud providers (AWS, Azure, GCP), configuration management systems, and CI/CD pipelines. Data is ingested through connectors rather than agents, minimizing operational overhead.',
   },
   {
     question: 'Does it support multi-team environments?',
     answer:
-      'Yes. TelEnv IQ is built for organizations where multiple teams share and depend on non-production environments. The platform includes ownership attribution, RACI mapping, and cross-project dependency tracking to coordinate work across teams.',
+      'Yes. Nexorium Core is built for organizations where multiple teams share and depend on non-production environments. The platform includes ownership attribution, RACI mapping, and cross-project dependency tracking to coordinate work across teams.',
   },
 ];
 

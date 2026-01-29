@@ -1,4 +1,4 @@
-// TelEnvIQ - Graph Analysis Utility
+// Nexorium Core - Graph Analysis Utility
 // Deterministic computation of entry/exit nodes without inference engine
 
 import type { GraphAnalysisResult } from '@/types';
@@ -202,34 +202,47 @@ export function groupNodesByLayer<T extends { id: string; layer: string }>(
 
 /**
  * Compute positions for nodes using layer-based auto-layout.
- * BSS at top (row 1), then INFRA, then OSS (row 3).
- * EXTERNAL on left/right column, UNKNOWN at bottom.
+ * Aligns nodes with domain swimlanes:
+ * - CSS (Customer Service Systems) - Y: 0-180
+ * - BSS (Business Support Systems) - Y: 180-360
+ * - OSS (Operations Support Systems) - Y: 360-540
+ * - NETWORK / INFRA - Y: 540-720
+ * - EXTERNAL - Y: 720-900
  */
 export function computeLayerPositions(
   nodes: Array<{ id: string; layer: string }>,
   edges: GraphEdge[],
   options: {
     width?: number;
-    height?: number;
+    laneHeight?: number;
     nodeWidth?: number;
     nodeHeight?: number;
     horizontalGap?: number;
-    verticalGap?: number;
+    startX?: number;
   } = {}
 ): Map<string, { x: number; y: number }> {
   const {
-    width = 1200,
+    width = 1400,
+    laneHeight = 180,
     nodeWidth = 180,
     nodeHeight = 80,
-    horizontalGap = 40,
-    verticalGap = 120,
+    horizontalGap = 60,
+    startX = 250, // Start after lane header
   } = options;
 
   const positions = new Map<string, { x: number; y: number }>();
 
-  // Layer order (top to bottom)
-  const layerOrder = ['BSS', 'INFRA', 'OSS', 'UNKNOWN'];
-  const externalLayer = 'EXTERNAL';
+  // Map architecture layers to domain swimlane indices
+  // Domain swimlanes: CSS=0, BSS=1, OSS=2, NETWORK=3, EXTERNAL=4
+  const layerToSwimlanIndex: Record<string, number> = {
+    CSS: 0,
+    BSS: 1,
+    OSS: 2,
+    NETWORK: 3,
+    INFRA: 3, // INFRA maps to NETWORK swimlane
+    EXTERNAL: 4,
+    UNKNOWN: 2, // Default to OSS lane
+  };
 
   // Group nodes by layer
   const layerGroups = groupNodesByLayer(nodes);
@@ -239,44 +252,37 @@ export function computeLayerPositions(
   const topoIndex = new Map<string, number>();
   topoOrder.forEach((id, idx) => topoIndex.set(id, idx));
 
-  // Position each layer
-  let currentY = 50; // Start with some padding
-
-  // Position non-external layers
-  for (const layer of layerOrder) {
-    const layerNodes = layerGroups.get(layer) || [];
+  // Position each layer group
+  const layerEntries = Array.from(layerGroups.entries());
+  for (const [layer, layerNodes] of layerEntries) {
     if (layerNodes.length === 0) continue;
 
+    // Get swimlane index for this layer
+    const swimlaneIndex = layerToSwimlanIndex[layer] ?? 2;
+
+    // Calculate Y position: center of swimlane - half node height
+    const laneY = swimlaneIndex * laneHeight;
+    const nodeY = laneY + (laneHeight - nodeHeight) / 2;
+
     // Sort by topological order for horizontal positioning
-    layerNodes.sort((a, b) => (topoIndex.get(a.id) || 0) - (topoIndex.get(b.id) || 0));
+    layerNodes.sort((a: { id: string; layer: string }, b: { id: string; layer: string }) =>
+      (topoIndex.get(a.id) || 0) - (topoIndex.get(b.id) || 0)
+    );
 
     // Calculate horizontal positions
-    const totalWidth = layerNodes.length * nodeWidth + (layerNodes.length - 1) * horizontalGap;
-    let startX = (width - totalWidth) / 2;
-    if (startX < 50) startX = 50;
+    const availableWidth = width - startX - 50;
+    const totalNodesWidth = layerNodes.length * nodeWidth + (layerNodes.length - 1) * horizontalGap;
+
+    // Center nodes horizontally within available space, or start from startX
+    let currentX = startX;
+    if (totalNodesWidth < availableWidth) {
+      currentX = startX + (availableWidth - totalNodesWidth) / 2;
+    }
 
     for (let i = 0; i < layerNodes.length; i++) {
       positions.set(layerNodes[i].id, {
-        x: startX + i * (nodeWidth + horizontalGap),
-        y: currentY,
-      });
-    }
-
-    currentY += nodeHeight + verticalGap;
-  }
-
-  // Position external nodes on the left
-  const externalNodes = layerGroups.get(externalLayer) || [];
-  if (externalNodes.length > 0) {
-    const externalX = 20;
-    const totalExternalHeight = externalNodes.length * nodeHeight + (externalNodes.length - 1) * verticalGap / 2;
-    let externalStartY = (currentY - totalExternalHeight) / 2;
-    if (externalStartY < 50) externalStartY = 50;
-
-    for (let i = 0; i < externalNodes.length; i++) {
-      positions.set(externalNodes[i].id, {
-        x: externalX,
-        y: externalStartY + i * (nodeHeight + verticalGap / 2),
+        x: currentX + i * (nodeWidth + horizontalGap),
+        y: nodeY,
       });
     }
   }

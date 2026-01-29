@@ -1,4 +1,4 @@
-// TelEnvIQ - Single Environment API
+// Nexorium Core - Single Environment API
 // GET /api/environments/[id] - Get environment with topology
 // PUT /api/environments/[id] - Update environment
 // PATCH /api/environments/[id] - Update entry/exit overrides
@@ -8,6 +8,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { getEnvironment, updateEnvironment, deleteEnvironment } from '@/lib/services/environment';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateEnvironmentSchema = z.object({
   name: z.string().min(1).max(255).optional(),
@@ -24,6 +26,10 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Require authentication and VIEW_ENVIRONMENT permission
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const environment = await getEnvironment(id);
@@ -49,8 +55,25 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Require authentication and EDIT_ENVIRONMENT permission
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
+
+    // Check if environment is PROD_RO (read-only)
+    const existing = await prisma.environment.findUnique({
+      where: { id },
+      select: { type: true },
+    });
+    if (existing?.type === 'PROD_RO') {
+      return NextResponse.json(
+        { success: false, error: 'Cannot modify production read-only environment' },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const validation = UpdateEnvironmentSchema.safeParse(body);
 
@@ -76,8 +99,25 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Require authentication and DELETE_ENVIRONMENT permission
+  const auth = await requirePermission(Permission.DELETE_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
+
+    // Check if environment is PROD_RO (read-only) - cannot delete production
+    const existing = await prisma.environment.findUnique({
+      where: { id },
+      select: { type: true },
+    });
+    if (existing?.type === 'PROD_RO') {
+      return NextResponse.json(
+        { success: false, error: 'Cannot delete production read-only environment' },
+        { status: 403 }
+      );
+    }
+
     await deleteEnvironment(id);
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -94,6 +134,10 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Require authentication and EDIT_ENVIRONMENT permission
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -110,6 +154,7 @@ export async function PATCH(
     const currentEnv = await prisma.environment.findUnique({
       where: { id },
       select: {
+        type: true,
         entryComponentInstanceId: true,
         exitComponentInstanceId: true,
       },
@@ -119,6 +164,14 @@ export async function PATCH(
       return NextResponse.json(
         { success: false, error: 'Environment not found' },
         { status: 404 }
+      );
+    }
+
+    // Check if environment is PROD_RO (read-only)
+    if (currentEnv.type === 'PROD_RO') {
+      return NextResponse.json(
+        { success: false, error: 'Cannot modify production read-only environment' },
+        { status: 403 }
       );
     }
 
@@ -144,7 +197,7 @@ export async function PATCH(
         oldValue: currentEnv.entryComponentInstanceId,
         newValue: validation.data.entryComponentInstanceId,
         action: 'MANUAL_OVERRIDE',
-        editedBy: 'user', // TODO: get from auth context
+        editedBy: auth.user!.name,
         reason: 'Entry point override set via API',
       });
     }
@@ -158,7 +211,7 @@ export async function PATCH(
         oldValue: currentEnv.exitComponentInstanceId,
         newValue: validation.data.exitComponentInstanceId,
         action: 'MANUAL_OVERRIDE',
-        editedBy: 'user', // TODO: get from auth context
+        editedBy: auth.user!.name,
         reason: 'Exit point override set via API',
       });
     }

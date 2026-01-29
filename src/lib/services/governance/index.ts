@@ -1,4 +1,4 @@
-// TelEnvIQ - Governance Module Exports
+// Nexorium Core - Governance Module Exports
 
 export * from './audit';
 export * from './enrichment';

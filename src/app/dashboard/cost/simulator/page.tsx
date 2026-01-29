@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - What-if Cost Simulator
+// Nexorium Core - What-if Cost Simulator
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';

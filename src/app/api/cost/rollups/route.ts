@@ -1,9 +1,11 @@
-// TelEnvIQ - Cost Rollups API
+// Nexorium Core - Cost Rollups API
 // POST /api/cost/rollups - Get aggregated cost rollups
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getCostRollups } from '@/lib/services/cost-engine';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const RollupsSchema = z.object({
   costModelId: z.string().uuid(),
@@ -14,6 +16,9 @@ const RollupsSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const validation = RollupsSchema.safeParse(body);

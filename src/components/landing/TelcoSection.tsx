@@ -1,95 +1,141 @@
 'use client';
 
-// TelEnv IQ - Social Proof Section
+// Nexorium Core - Differentiation Section
+// "Not a CMDB. Not CI/CD. Not Test Scheduling."
 
-import { Quote } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Database, GitBranch, Calendar, CheckCircle, X } from 'lucide-react';
+import GlassCard from './GlassCard';
 
-// Enterprise logo placeholders - using generic shapes for now
-const logos = [
-  { name: 'Enterprise Corp', width: 'w-28' },
-  { name: 'Global Systems', width: 'w-32' },
-  { name: 'Tech Industries', width: 'w-24' },
-  { name: 'Scale Solutions', width: 'w-30' },
-  { name: 'Digital Group', width: 'w-28' },
-  { name: 'Innovation Labs', width: 'w-26' },
+const comparisons = [
+  {
+    tool: 'CMDB',
+    icon: Database,
+    notFor: 'Asset inventory and IT service management',
+    nexorium: 'Environment structure, topology, and version truth',
+  },
+  {
+    tool: 'CI/CD Pipeline',
+    icon: GitBranch,
+    notFor: 'Build automation and deployment execution',
+    nexorium: 'Pre-promotion readiness and alignment validation',
+  },
+  {
+    tool: 'Test Scheduling',
+    icon: Calendar,
+    notFor: 'Test execution and booking coordination',
+    nexorium: 'Environment structural readiness before booking',
+  },
+];
+
+const focusPoints = [
+  'Technical readiness verification',
+  'Structural truth across environments',
+  'Deterministic environment modelling',
+  'Governance alignment validation',
+  'Impact visibility and risk detection',
 ];
 
 export default function TelcoSection() {
   return (
-    <section id="resources" className="relative py-24 lg:py-32 overflow-hidden">
+    <section id="differentiation" className="relative py-24 lg:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-[#0B1220]" />
 
       {/* Gradient accents */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#5B5FEF]/5 rounded-full blur-[128px]" />
 
+      {/* Top line */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-white">
-            Built for Organizations Operating at Scale.
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mx-auto max-w-3xl text-center"
+        >
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white">
+            Not a CMDB. Not CI/CD.{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5B5FEF] to-[#7C3AED]">
+              Not Test Scheduling.
+            </span>
           </h2>
-          <p className="mt-6 text-lg text-slate-400">
-            Trusted by enterprises managing complex non-production landscapes across multiple teams and environments.
+          <p className="mt-6 text-lg text-slate-400 leading-relaxed">
+            Nexorium Core sits before environment booking and promotion — ensuring environments
+            are structurally ready before they are used.
           </p>
+        </motion.div>
+
+        {/* Comparison Cards */}
+        <div className="mt-16 lg:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {comparisons.map((item, index) => (
+            <GlassCard key={index} delay={index * 0.1} className="p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10">
+                  <item.icon className="h-5 w-5 text-slate-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">{item.tool}</h3>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <X className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-slate-500">Not for:</p>
+                    <p className="text-sm text-slate-300">{item.notFor}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-[#5B5FEF]">Nexorium Core:</p>
+                    <p className="text-sm text-slate-300">{item.nexorium}</p>
+                  </div>
+                </div>
+              </div>
+            </GlassCard>
+          ))}
         </div>
 
-        {/* Logo grid */}
-        <div className="mt-16 lg:mt-20">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
-            {logos.map((logo, index) => (
-              <div
-                key={index}
-                className={`${logo.width} h-12 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center`}
-              >
-                <span className="text-sm text-slate-500 font-medium">{logo.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Testimonial */}
-        <div className="mt-16 lg:mt-24 mx-auto max-w-4xl">
-          <div className="relative rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-8 lg:p-12">
-            {/* Quote icon */}
-            <div className="absolute -top-4 left-8">
-              <div className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#5B5FEF]">
-                <Quote className="w-4 h-4 text-white" />
-              </div>
+        {/* Focus Points */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-16 lg:mt-20"
+        >
+          <GlassCard hover={false} className="p-8 lg:p-12">
+            <div className="text-center mb-8">
+              <h3 className="text-xl font-semibold text-white">Nexorium Core focuses on:</h3>
             </div>
 
-            <blockquote className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light">
-              TelEnv IQ gave us complete visibility across our non-production landscape for the first time. We finally understand what is deployed where, who owns what, and how changes in one environment affect others.
-            </blockquote>
-
-            <div className="mt-8 flex items-center gap-4">
-              {/* Avatar placeholder */}
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#5B5FEF] to-[#7C3AED] flex items-center justify-center">
-                <span className="text-white font-semibold text-sm">JD</span>
-              </div>
-              <div>
-                <p className="text-white font-medium">Director of Platform Engineering</p>
-                <p className="text-sm text-slate-500">Enterprise Technology Organization</p>
-              </div>
+            <div className="flex flex-wrap justify-center gap-4">
+              {focusPoints.map((point, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#5B5FEF]/10 border border-[#5B5FEF]/20"
+                >
+                  <CheckCircle className="h-4 w-4 text-[#5B5FEF]" />
+                  <span className="text-sm text-slate-300">{point}</span>
+                </div>
+              ))}
             </div>
-          </div>
-        </div>
 
-        {/* Stats */}
-        <div className="mt-16 lg:mt-24">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { value: '50+', label: 'Environments managed' },
-              { value: '500+', label: 'Systems tracked' },
-              { value: '99.9%', label: 'Data freshness' },
-              { value: '<5min', label: 'To detect drift' },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl lg:text-4xl font-semibold text-white">{stat.value}</div>
-                <div className="mt-2 text-sm text-slate-500">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+            <div className="mt-8 pt-8 border-t border-white/[0.05] text-center">
+              <p className="text-slate-400 leading-relaxed max-w-2xl mx-auto">
+                Nexorium Core is the <span className="text-white font-medium">Technical Environment
+                Readiness & Governance Layer</span> for non-production landscapes. It answers what
+                exists, what version is deployed, and whether the environment is ready — before
+                anyone books it, tests against it, or promotes through it.
+              </p>
+            </div>
+          </GlassCard>
+        </motion.div>
       </div>
     </section>
   );

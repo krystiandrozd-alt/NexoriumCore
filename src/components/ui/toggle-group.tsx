@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Toggle Group Component
+// Nexorium Core - Toggle Group Component
 // Used for view mode switches
 
 import * as React from 'react';

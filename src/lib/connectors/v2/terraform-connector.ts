@@ -1,4 +1,4 @@
-// TelEnvIQ - Terraform State Connector
+// Nexorium Core - Terraform State Connector
 // Reads Terraform state files to extract infrastructure information
 
 import * as fs from 'fs';

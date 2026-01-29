@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Gateway Bridge Overlay Component
+// Nexorium Core - Gateway Bridge Overlay Component
 // Visual representation of zone connection bridges
 
 import { memo } from 'react';

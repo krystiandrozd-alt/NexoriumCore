@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Orphaned Assets Page
+// Nexorium Core - Orphaned Assets Page
 // Assets without ownership
 
 import { useState, useEffect } from 'react';

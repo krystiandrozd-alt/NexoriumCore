@@ -1,4 +1,4 @@
-// TelEnvIQ - Config Repository Connector
+// Nexorium Core - Config Repository Connector
 // Reads YAML/JSON topology manifests from a configured folder
 
 import * as fs from 'fs';

@@ -1,4 +1,4 @@
-// TelEnvIQ - 5-Layer Model Topology API
+// Nexorium Core - 5-Layer Model Topology API
 // GET /api/environments/[id]/topology5 - Get topology data using 5-layer canonical model
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -10,11 +10,16 @@ import {
   computeLayerPositions,
 } from '@/lib/utils/graph-analysis';
 import type { Graph5LayerNode, Graph5LayerEdge, GraphAnalysisResult, ArchitectureLayer } from '@/types';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const searchParams = request.nextUrl.searchParams;

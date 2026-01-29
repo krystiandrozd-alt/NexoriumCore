@@ -1,4 +1,4 @@
-// TelEnvIQ - Organisation Service
+// Nexorium Core - Organisation Service
 // Core business logic for people, RACI mappings, and orphaned asset detection
 
 import prisma from '@/lib/db';

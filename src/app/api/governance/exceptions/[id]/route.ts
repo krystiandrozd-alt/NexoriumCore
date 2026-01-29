@@ -1,4 +1,4 @@
-// TelEnvIQ - Single Exception API
+// Nexorium Core - Single Exception API
 // GET /api/governance/exceptions/[id] - Get a single exception
 // PUT /api/governance/exceptions/[id] - Update an exception
 
@@ -7,12 +7,17 @@ import {
   getException,
   updateException,
 } from '@/lib/services/governance/exceptions';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
 export async function GET(_request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const exception = await getException(id);
@@ -35,6 +40,9 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

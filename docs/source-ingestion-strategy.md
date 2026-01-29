@@ -2,7 +2,7 @@
 
 ## Overview
 
-TelEnvIQ uses a **connector-based ingestion architecture** to populate its canonical data model. This document outlines what sources are supported for MVP, what is explicitly out of scope, and how the system avoids source-specific customization.
+Nexorium Core uses a **connector-based ingestion architecture** to populate its canonical data model. This document outlines what sources are supported for MVP, what is explicitly out of scope, and how the system avoids source-specific customization.
 
 ## Canonical Data Model (5-Layer Model)
 

@@ -1,9 +1,11 @@
-// TelEnvIQ - Snapshot Comparison API
+// Nexorium Core - Snapshot Comparison API
 // POST /api/snapshots/[id]/compare - Compare with another snapshot
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { compareSnapshots } from '@/lib/services/snapshot';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const CompareSchema = z.object({
   compareWith: z.string().uuid(),
@@ -13,6 +15,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();

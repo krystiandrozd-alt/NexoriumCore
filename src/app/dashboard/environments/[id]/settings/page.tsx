@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Settings Page
+// Nexorium Core - Environment Settings Page
 // Configuration settings for the environment
 
 import { useState, useEffect } from 'react';

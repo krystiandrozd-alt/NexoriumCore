@@ -1,4 +1,4 @@
-// TelEnvIQ - Endpoint Fixtures
+// Nexorium Core - Endpoint Fixtures
 // Deterministic endpoint test data
 
 import type { Endpoint } from '@prisma/client';

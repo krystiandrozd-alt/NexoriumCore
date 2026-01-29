@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Note Node Component for React Flow
+// Nexorium Core - Note Node Component for React Flow
 // Editable sticky note nodes for diagram annotations
 
 import { memo, useState, useRef, useEffect, useCallback } from 'react';

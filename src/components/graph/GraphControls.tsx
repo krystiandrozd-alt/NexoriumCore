@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Graph Controls Component
+// Nexorium Core - Graph Controls Component
 // Filter and display options for topology graph with enterprise features
 
 import { Select } from '@/components/ui/select';

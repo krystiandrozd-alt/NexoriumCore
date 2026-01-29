@@ -1,6 +1,7 @@
-// TelEnvIQ - Dashboard Components Exports
+// Nexorium Core - Dashboard Components Exports
 
 export { default as DataGovernancePanel } from './DataGovernancePanel';
 export { default as EnvironmentOwnershipPanel } from './EnvironmentOwnershipPanel';
 export { default as ActivityLogPanel } from './ActivityLogPanel';
 export { default as PolicyViolationList } from './PolicyViolationList';
+export { default as DashboardFullscreenWrapper } from './DashboardFullscreenWrapper';

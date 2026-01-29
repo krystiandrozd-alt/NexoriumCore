@@ -1,4 +1,4 @@
-// TelEnvIQ - NoteNode Component Unit Tests
+// Nexorium Core - NoteNode Component Unit Tests
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';

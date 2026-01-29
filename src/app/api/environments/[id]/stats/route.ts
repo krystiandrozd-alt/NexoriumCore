@@ -1,14 +1,19 @@
-// TelEnvIQ - Environment Statistics API
+// Nexorium Core - Environment Statistics API
 // GET /api/environments/[id]/stats - Get environment statistics
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getEnvironmentStats, getEnvironmentOwners } from '@/lib/services/environment';
 import { getDataFreshnessSummary } from '@/lib/services/testdata';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 

@@ -1,4 +1,4 @@
-// TelEnvIQ - Connector Registry
+// Nexorium Core - Connector Registry
 // Central export for all auto-discovery connectors
 
 export * from './base';

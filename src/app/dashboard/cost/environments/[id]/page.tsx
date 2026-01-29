@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Cost Detail Page
+// Nexorium Core - Environment Cost Detail Page
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';

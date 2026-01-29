@@ -1,4 +1,4 @@
-// TelEnvIQ - Large Graph Data Fixtures (30-node performance test)
+// Nexorium Core - Large Graph Data Fixtures (30-node performance test)
 // Comprehensive test data for validating canvas performance with realistic telco topology
 
 import type { Graph5LayerNode, Graph5LayerEdge, GraphAnalysisResult } from '@/types';

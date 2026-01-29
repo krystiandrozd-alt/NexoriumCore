@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Global Filters Component
+// Nexorium Core - Global Filters Component
 // Filter controls for overview dashboard
 
 import { useState, useRef, useEffect } from 'react';

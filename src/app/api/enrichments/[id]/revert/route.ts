@@ -1,13 +1,18 @@
-// TelEnvIQ - Enrichment Revert API
+// Nexorium Core - Enrichment Revert API
 // POST /api/enrichments/[id]/revert - Revert enrichment
 
 import { NextRequest, NextResponse } from 'next/server';
 import { revertEnrichment } from '@/lib/services/governance/enrichment';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const revertedBy = request.headers.get('x-user-name') || 'system';

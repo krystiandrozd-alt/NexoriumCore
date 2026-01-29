@@ -1,4 +1,4 @@
-// TelEnvIQ - Data Classification Service
+// Nexorium Core - Data Classification Service
 // Data classification and governance management
 
 import prisma from '@/lib/db';

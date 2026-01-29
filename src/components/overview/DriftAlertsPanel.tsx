@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Drift Alerts Panel Component
+// Nexorium Core - Drift Alerts Panel Component
 // Displays drift and policy violation alerts sorted by severity
 
 import Link from 'next/link';

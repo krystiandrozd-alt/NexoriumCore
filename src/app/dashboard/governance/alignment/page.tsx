@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Alignment Page
+// Nexorium Core - Alignment Page
 // Environment alignment comparisons
 
 import Link from 'next/link';

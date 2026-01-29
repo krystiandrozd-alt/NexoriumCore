@@ -1,4 +1,4 @@
-// TelEnvIQ - Dagre Layout Utility
+// Nexorium Core - Dagre Layout Utility
 // Layered north→south auto-layout using Dagre algorithm
 
 import dagre from 'dagre';

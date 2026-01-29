@@ -1,4 +1,4 @@
-// TelEnvIQ - Connector Detail API
+// Nexorium Core - Connector Detail API
 // GET /api/configuration/connectors/[id] - Get connector by ID
 // PUT /api/configuration/connectors/[id] - Update connector
 // DELETE /api/configuration/connectors/[id] - Delete connector
@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { ConnectorStatus, Prisma } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateConnectorSchema = z.object({
   name: z.string().min(1).max(255).optional(),
@@ -21,6 +23,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_CONFIGURATION);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const connector = await prisma.connector.findUnique({
@@ -53,6 +58,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_CONFIGURATION);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -98,6 +106,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_CONFIGURATION);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 

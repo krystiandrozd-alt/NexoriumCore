@@ -1,4 +1,4 @@
-// TelEnvIQ - Connector Components Exports
+// Nexorium Core - Connector Components Exports
 
 export { default as ConnectorConfigModal } from './ConnectorConfigModal';
 export { default as K8sConnectorForm } from './K8sConnectorForm';

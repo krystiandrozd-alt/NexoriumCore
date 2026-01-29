@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Environment Systems Page
+// Nexorium Core - Environment Systems Page
 // List of systems/components in the environment
 
 import { useState, useEffect } from 'react';

@@ -1,4 +1,4 @@
-// TelEnvIQ - Release Service
+// Nexorium Core - Release Service
 // Core business logic for release management
 
 import prisma from '@/lib/db';

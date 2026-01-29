@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Integration Rules Page
+// Nexorium Core - Integration Rules Page
 // Field mapping and transformation rules
 
 import { Card, CardContent } from '@/components/ui/card';

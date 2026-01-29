@@ -1,4 +1,4 @@
-// TelEnvIQ - Governance Rule Detail API
+// Nexorium Core - Governance Rule Detail API
 // GET /api/governance/rules/[id] - Get rule by ID
 // PUT /api/governance/rules/[id] - Update rule
 // DELETE /api/governance/rules/[id] - Delete rule
@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { GovernanceRuleSeverity, Prisma } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateRuleSchema = z.object({
   name: z.string().min(1).max(255).optional(),
@@ -20,6 +22,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const rule = await prisma.governanceRule.findUnique({
@@ -61,6 +66,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -102,6 +110,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.MANAGE_GOVERNANCE);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
 

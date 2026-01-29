@@ -1,4 +1,4 @@
-// TelEnvIQ - Services Index
+// Nexorium Core - Services Index
 // Central export for all service modules
 
 // Core services

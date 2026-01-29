@@ -1,4 +1,4 @@
-// TelEnvIQ - Blueprint Service
+// Nexorium Core - Blueprint Service
 // Core business logic for blueprint management and comparison
 
 import prisma from '@/lib/db';

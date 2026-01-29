@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Governance Overview Page
+// Nexorium Core - Governance Overview Page
 // Dashboard with scores, risks, and pending actions
 
 import { useEffect, useState } from 'react';

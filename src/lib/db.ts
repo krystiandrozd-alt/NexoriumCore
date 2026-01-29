@@ -1,4 +1,4 @@
-// TelEnvIQ - Database Client
+// Nexorium Core - Database Client
 // Prisma client singleton for Next.js
 
 import { PrismaClient } from '@prisma/client';

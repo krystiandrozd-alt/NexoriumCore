@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Swimlane Container Component
+// Nexorium Core - Swimlane Container Component
 // Wrapper for swimlane-based graph layouts
 
 import { memo, useMemo } from 'react';

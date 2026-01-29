@@ -1,4 +1,4 @@
-// TelEnvIQ - Flow Link Detail API
+// Nexorium Core - Flow Link Detail API
 // GET /api/flow-links/[id] - Get flow link by ID
 // PUT /api/flow-links/[id] - Update flow link
 // DELETE /api/flow-links/[id] - Delete flow link
@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { EnvironmentLinkType } from '@prisma/client';
+import { requirePermission } from '@/lib/auth/api-auth';
+import { Permission } from '@/lib/services/security/roles';
 
 const UpdateFlowLinkSchema = z.object({
   linkType: z.nativeEnum(EnvironmentLinkType).optional(),
@@ -18,6 +20,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.VIEW_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const link = await prisma.environmentLink.findUnique({
@@ -49,6 +54,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -84,6 +92,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requirePermission(Permission.EDIT_ENVIRONMENT);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     await prisma.environmentLink.delete({ where: { id } });

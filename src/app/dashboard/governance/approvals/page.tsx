@@ -1,6 +1,6 @@
 'use client';
 
-// TelEnvIQ - Approvals Inbox Page
+// Nexorium Core - Approvals Inbox Page
 // Pending approvals management
 
 import { useEffect, useState } from 'react';

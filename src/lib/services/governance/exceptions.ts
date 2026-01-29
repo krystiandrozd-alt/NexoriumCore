@@ -1,4 +1,4 @@
-// TelEnvIQ - Exceptions Service
+// Nexorium Core - Exceptions Service
 // Policy exception lifecycle management
 
 import prisma from '@/lib/db';
