@@ -1,0 +1,108 @@
+name: Deploy database schema to Neon
+
+# Applies the Prisma migrations (and optionally the seed data) to the Neon database.
+# Manual, deliberate: it needs the confirmation phrase and the NEON_DIRECT_URL repository secret.
+#
+# NEON_DIRECT_URL is the *direct* (unpooled) connection string of the neondb database with the
+# Prisma schema parameter appended, for example:
+#   postgresql://<user>:<password>@ep-xxx.<region>.aws.neon.tech/neondb?sslmode=require&schema=nexorium_core
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Type DEPLOY_NEON to run the Prisma migrations against the Neon neondb database'
+        required: true
+        type: string
+      seed:
+        description: 'Run the seed script afterwards (wipes and re-creates the demo data in the application tables)'
+        required: true
+        type: boolean
+        default: true
+      allow_existing:
+        description: 'Proceed even if the nexorium_core schema already contains tables'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-db:
+    if: ${{ inputs.confirmation == 'DEPLOY_NEON' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Prisma reads DATABASE_URL and DIRECT_URL from prisma/schema.prisma; the CLI only needs the direct one.
+      DATABASE_URL: ${{ secrets.NEON_DIRECT_URL }}
+      DIRECT_URL: ${{ secrets.NEON_DIRECT_URL }}
+      ALLOW_EXISTING: ${{ inputs.allow_existing }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Preflight checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${DIRECT_URL:-}" || { echo "::error::Set the repository secret NEON_DIRECT_URL first."; exit 1; }
+          case "$DIRECT_URL" in
+            *-pooler*) echo "::error::NEON_DIRECT_URL must be the direct (unpooled) connection string, not the -pooler host."; exit 1 ;;
+          esac
+          case "$DIRECT_URL" in
+            *schema=nexorium_core*) ;;
+            *) echo "::error::NEON_DIRECT_URL must include the Prisma parameter schema=nexorium_core."; exit 1 ;;
+          esac
+          command -v psql >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client; }
+
+          # psql does not understand Prisma's schema= parameter; strip it for the checks below.
+          PSQL_URL="$(node -e 'const u = new URL(process.env.DIRECT_URL); u.searchParams.delete("schema"); console.log(u.toString())')"
+          echo "::add-mask::$PSQL_URL"
+          echo "PSQL_URL=$PSQL_URL" >> "$GITHUB_ENV"
+
+          dbname="$(psql "$PSQL_URL" -X -A -t -q -c "SELECT current_database()")"
+          [ "$dbname" = "neondb" ] || { echo "::error::Expected database neondb, got '$dbname'."; exit 1; }
+
+          tables="$(psql "$PSQL_URL" -X -A -t -q -c "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'nexorium_core' AND table_type = 'BASE TABLE'")"
+          echo "Tables currently in schema nexorium_core: $tables"
+          if [ "$tables" != "0" ] && [ "$ALLOW_EXISTING" != "true" ]; then
+            echo "::error::Schema nexorium_core already contains $tables tables. Re-run with allow_existing=true to apply migrations to it."
+            exit 1
+          fi
+
+      - name: Apply Prisma migrations
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The project's own dependencies cannot be installed on a runner (local yFiles tarball),
+          # so the Prisma CLI is fetched directly, pinned to the version in package-lock.json.
+          npx --yes prisma@5.22.0 migrate deploy --schema prisma/schema.prisma
+
+      - name: Seed demo data
+        if: ${{ inputs.seed }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d)"
+          cp -R prisma "$work/prisma"
+          cd "$work"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --silent prisma@5.22.0 @prisma/client@5.22.0 ts-node@10.9.2 typescript@5 @types/node@20
+          npx prisma generate --schema prisma/schema.prisma
+          npx ts-node --transpile-only --compiler-options '{"module":"CommonJS"}' prisma/seed/index.ts
+
+      - name: Report
+        shell: bash
+        run: |
+          set -euo pipefail
+          psql "$PSQL_URL" -X -v ON_ERROR_STOP=1 \
+            -c "SELECT migration_name, finished_at FROM nexorium_core._prisma_migrations ORDER BY finished_at;" \
+            -c "SELECT count(*) AS tables_in_nexorium_core FROM information_schema.tables WHERE table_schema = 'nexorium_core' AND table_type = 'BASE TABLE';" \
+            -c "SELECT (SELECT count(*) FROM nexorium_core.projects) AS projects, (SELECT count(*) FROM nexorium_core.environments) AS environments;"

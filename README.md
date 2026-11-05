@@ -45,14 +45,14 @@ Nexorium Core addresses two fundamental challenges in enterprise test environmen
 
 - **Frontend**: Next.js 16 (App Router), TypeScript, React, TailwindCSS, React Flow
 - **Backend**: Next.js API routes, Node.js
-- **Database**: PostgreSQL with Prisma ORM
+- **Database**: PostgreSQL on Neon, Prisma ORM (schema `nexorium_core`)
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 20.9+
-- PostgreSQL 14+
+- A Neon project (or any PostgreSQL 14+ for local development)
 - npm or yarn
 
 ### Installation
@@ -71,13 +71,13 @@ npm install
 3. Set up environment variables:
 ```bash
 cp .env.example .env
-# Edit .env with your database connection string and the Neon Auth settings (see Authentication below)
+# Edit .env: database connection strings (see Database below) and Neon Auth settings (see Authentication below)
 ```
 
 4. Generate Prisma client and run migrations:
 ```bash
 npx prisma generate
-npx prisma db push
+npx prisma migrate deploy   # local database; for Neon use the workflow described under Database
 ```
 
 5. Seed the database (optional):
@@ -91,6 +91,29 @@ npm run dev
 ```
 
 7. Open [http://localhost:3003](http://localhost:3003) in your browser
+
+## Database
+
+The application data lives in PostgreSQL on [Neon](https://neon.com): database `neondb`, schema `nexorium_core` (Neon Auth keeps its own tables in the `neon_auth` schema of the same database). Prisma migrations in `prisma/migrations` are the only way the schema changes.
+
+Connection strings, both from the Neon Console (project → branch → **Connect**, database `neondb`):
+
+| Variable | Host | Used by |
+|---|---|---|
+| `DATABASE_URL` | pooled (`…-pooler.…`) | the running app |
+| `DIRECT_URL` | direct (no `-pooler`) | Prisma CLI: migrations, seed |
+
+Both end with `?sslmode=require&schema=nexorium_core`; `DATABASE_URL` may add `connect_timeout=15` to cover Neon's scale-to-zero wake-up.
+
+### Applying migrations to Neon
+
+Migrations are applied by the manual GitHub Actions workflow **Deploy database schema to Neon** (`.github/workflows/deploy-db-to-neon.yml`):
+
+1. Add the repository secret `NEON_DIRECT_URL`: the direct connection string including `?sslmode=require&schema=nexorium_core`.
+2. Actions → **Deploy database schema to Neon** → **Run workflow**, type `DEPLOY_NEON`, leave **seed** on to load the demo data.
+3. The run refuses the pooled host, any database other than `neondb`, and a schema that already has tables unless **allow_existing** is set.
+
+The workflow runs `prisma migrate deploy` and then the seed script. For local development, point `DATABASE_URL` and `DIRECT_URL` at a local PostgreSQL and run `npx prisma migrate deploy` yourself.
 
 ## Authentication
 
