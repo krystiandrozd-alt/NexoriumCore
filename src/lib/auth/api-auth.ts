@@ -2,7 +2,7 @@
 // Provides authentication and authorization for API routes
 
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { getAuth } from '@/lib/auth/server';
 import { Role, Permission, hasPermission, type UserContext } from '@/lib/services/security/roles';
 
 export interface AuthenticatedUser {
@@ -18,7 +18,7 @@ export interface AuthResult {
 }
 
 /**
- * Get the authenticated user from the Supabase session.
+ * Get the authenticated user from the Neon Auth session.
  * Returns the user or an error response if not authenticated.
  * In development mode, returns a mock user to bypass auth.
  */
@@ -35,10 +35,9 @@ export async function getAuthenticatedUser(): Promise<AuthResult> {
   }
 
   try {
-    const supabase = await createClient();
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const { data: session, error } = await getAuth().getSession();
 
-    if (error || !user) {
+    if (error || !session?.user) {
       return {
         user: null,
         error: NextResponse.json(
@@ -48,11 +47,11 @@ export async function getAuthenticatedUser(): Promise<AuthResult> {
       };
     }
 
-    // Extract user info - in production, roles would come from DB or JWT claims
+    const { user } = session;
     const authenticatedUser: AuthenticatedUser = {
       id: user.id,
       email: user.email || '',
-      name: user.user_metadata?.name || user.email?.split('@')[0] || 'Unknown',
+      name: user.name || user.email?.split('@')[0] || 'Unknown',
       // Default role - in production, fetch from database based on user ID
       roles: [Role.EDITOR],
     };

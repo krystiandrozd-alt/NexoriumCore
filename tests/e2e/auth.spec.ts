@@ -66,12 +66,12 @@ test.describe('Authentication', () => {
     await expect(page).toHaveURL(/\/login/);
   });
 
-  test('public landing page is accessible without authentication', async ({
+  test('root path leads to the dashboard, which requires sign-in', async ({
     page,
   }) => {
+    // `/` redirects to /dashboard (src/app/page.tsx); without a session that ends on login
     await page.goto('/');
-    // Should not redirect to login
-    await expect(page).not.toHaveURL(/\/login/);
+    await expect(page).toHaveURL(/\/login\?redirect=%2Fdashboard/);
   });
 
   test('login page is accessible without authentication', async ({ page }) => {
@@ -90,8 +90,8 @@ test.describe('Authentication', () => {
     // Click sign in
     await page.click('button[type="submit"]');
 
-    // Should show an error message
-    await expect(page.locator('text=Invalid login credentials')).toBeVisible({
+    // Should show an error message (wording comes from Neon Auth)
+    await expect(page.getByRole('alert')).toBeVisible({
       timeout: 10000,
     });
 

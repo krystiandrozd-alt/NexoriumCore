@@ -71,7 +71,7 @@ npm install
 3. Set up environment variables:
 ```bash
 cp .env.example .env
-# Edit .env with your database connection string
+# Edit .env with your database connection string and the Neon Auth settings (see Authentication below)
 ```
 
 4. Generate Prisma client and run migrations:
@@ -91,6 +91,22 @@ npm run dev
 ```
 
 7. Open [http://localhost:3003](http://localhost:3003) in your browser
+
+## Authentication
+
+Sign-in is handled by [Neon Auth](https://neon.com/docs/auth/overview) through the `@neon/auth` SDK. The app exposes `/api/auth/*`, which proxies to Neon Auth and keeps the session in an encrypted cookie; `proxy.ts` requires a valid session on the application routes.
+
+- **Methods:** email/password and GitHub.
+- **Invite-only:** there is no sign-up page and `/api/auth/sign-up/*` returns 404. Create users in the Neon Console (project → branch → **Auth**). Note that a GitHub sign-in may still create an account on first use unless sign-ups are restricted on the Neon side.
+
+Setup:
+
+1. In the Neon Console, open the project and branch, go to **Settings → Auth** and enable Auth. Copy the **Auth URL** (ends in `/<database>/auth`) into `NEON_AUTH_BASE_URL`.
+2. Generate a cookie secret with `openssl rand -base64 32` and put it in `NEON_AUTH_COOKIE_SECRET`.
+3. For GitHub: under **OAuth providers**, add GitHub with your own OAuth app credentials. In the GitHub OAuth app, set the authorization callback URL to `{NEON_AUTH_BASE_URL}/callback/github` (copy the exact value from the Neon dialog).
+4. Add every origin the app runs on (for example `http://localhost:3003`) to the trusted domains in the Neon Auth settings, otherwise the OAuth round trip is rejected.
+
+API routes bypass authentication when `NODE_ENV=development` and act as an admin user (see `src/lib/auth/api-auth.ts`).
 
 ## Project Structure
 
