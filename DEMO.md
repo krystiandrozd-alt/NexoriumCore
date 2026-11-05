@@ -15,8 +15,9 @@ Compared with `main`, this branch:
 - Node.js 20 or later (tested with Node.js 22)
 - Git
 - One of:
-  - **Docker Desktop**, for a local PostgreSQL database (option A), or
-  - a **Supabase** project, for the database and real sign-in (option B)
+  - **Docker Desktop**, for a local PostgreSQL database (option A),
+  - a **Supabase** project, for the database and real sign-in (option B), or
+  - a **Neon** project, for a cloud PostgreSQL database without Docker (option C)
 
 ## Option A: Docker (no accounts needed)
 
@@ -52,6 +53,14 @@ Open http://localhost:3003. The app opens without signing in.
    - `NEXORIUM_DEMO_MODE=false`
 3. In Supabase, add a user under Authentication with an email and password.
 4. Run `npm run demo:db`, then `npm run dev`, open http://localhost:3003 and sign in with that user.
+
+## Option C: Neon (cloud database, no Docker)
+
+1. Create a project on neon.com (the free plan is enough).
+2. Run `npm ci` and `npm run demo:setup` as in option A, then open `.env` and set both `DATABASE_URL` and `DIRECT_URL` to your project's connection string from the Neon Console. Use the direct connection string (host name without `-pooler`) for both; that is enough for a demo. Keep `NEXORIUM_DEMO_MODE=true`.
+3. Run `npm run demo:db`, then `npm run dev`, and open http://localhost:3003.
+
+The tables go into the `public` schema of the Neon database. To keep them in a separate schema, add `&schema=nexorium_core` to the end of both URLs.
 
 ## Where to start
 
