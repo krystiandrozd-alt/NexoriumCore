@@ -333,7 +333,7 @@ export function generateOrthogonalPath(
   targetY: number,
   sourcePosition: 'left' | 'right' | 'top' | 'bottom',
   targetPosition: 'left' | 'right' | 'top' | 'bottom',
-  offset: number = 40
+  _offset: number = 40
 ): string {
   const isHorizontalSource = sourcePosition === 'left' || sourcePosition === 'right';
   const isHorizontalTarget = targetPosition === 'left' || targetPosition === 'right';

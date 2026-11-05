@@ -3,6 +3,7 @@
 // Nexorium Core - Exception Card Component
 // Display a single exception item
 
+import { useState } from 'react';
 import { Clock, CheckCircle, XCircle, Calendar, AlertTriangle } from 'lucide-react';
 import type { ExceptionItem, ExceptionStatus } from '@/types';
 
@@ -52,14 +53,15 @@ export function ExceptionCard({
   onRevoke,
   compact = false,
 }: ExceptionCardProps) {
+  const [now] = useState(() => Date.now());
   const status = statusConfig[exception.status];
   const isExpiringSoon =
     exception.status === 'ACTIVE' &&
     exception.expiresAt &&
-    new Date(exception.expiresAt) < new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+    new Date(exception.expiresAt) < new Date(now + 14 * 24 * 60 * 60 * 1000);
 
   const daysUntilExpiry = exception.expiresAt
-    ? Math.ceil((new Date(exception.expiresAt).getTime() - Date.now()) / (24 * 60 * 60 * 1000))
+    ? Math.ceil((new Date(exception.expiresAt).getTime() - now) / (24 * 60 * 60 * 1000))
     : null;
 
   return (

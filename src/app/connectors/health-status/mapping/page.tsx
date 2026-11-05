@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useHealthStatusStore, STATUS_CONFIG, formatTimestamp } from '@/modules/health-status';
+import { useHealthStatusStore, STATUS_CONFIG } from '@/modules/health-status';
 import type { SystemIdentityMapping } from '@/modules/health-status';
 
 export default function SystemMappingPage() {

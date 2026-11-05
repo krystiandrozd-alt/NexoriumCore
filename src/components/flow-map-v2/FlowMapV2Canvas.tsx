@@ -273,7 +273,6 @@ const FlowMapV2CanvasInner = forwardRef<FlowMapV2CanvasHandle, FlowMapV2CanvasPr
 
   // Add annotation handler
   const addAnnotation = useCallback((type: 'title' | 'note') => {
-    const viewport = getViewport();
     const canvasCenter = screenToFlowPosition({
       x: window.innerWidth / 2,
       y: window.innerHeight / 2,
@@ -294,7 +293,7 @@ const FlowMapV2CanvasInner = forwardRef<FlowMapV2CanvasHandle, FlowMapV2CanvasPr
     };
 
     setAnnotationNodes((prev) => [...prev, newNode]);
-  }, [getViewport, screenToFlowPosition]);
+  }, [screenToFlowPosition]);
 
   // Expose methods to parent via ref
   useImperativeHandle(ref, () => ({

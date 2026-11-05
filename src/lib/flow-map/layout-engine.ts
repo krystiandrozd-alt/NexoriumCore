@@ -52,11 +52,6 @@ interface LayoutNode {
   lane?: string;
 }
 
-interface LayoutEdge {
-  source: string;
-  target: string;
-}
-
 /**
  * Calculate hierarchical layout using layered approach
  */
@@ -115,7 +110,7 @@ export function calculateHierarchicalLayout(
   });
 
   // Sort nodes within each layer by connectivity (minimize crossings)
-  layerGroups.forEach((nodeIds, layer) => {
+  layerGroups.forEach((nodeIds) => {
     // Simple barycenter sorting
     const sorted = nodeIds.sort((a, b) => {
       const aConns = Array.from(adjacency.get(a) || []).concat(
@@ -267,7 +262,7 @@ export function calculateLaneAwareLayout(
   const resultNodes: Node[] = [];
 
   let laneOffset = 0;
-  laneKeys.forEach((laneKey, laneIndex) => {
+  laneKeys.forEach((laneKey) => {
     const laneNodes = nodesByLane.get(laneKey) || [];
     const laneWidth = config.laneWidth;
 

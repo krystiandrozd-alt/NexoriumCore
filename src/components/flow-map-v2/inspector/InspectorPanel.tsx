@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ManualNodeType, ManualEdgeType, DomainLane } from '@/types/flow-map-manual';
-import { nodeTypeStyles, edgeTypeStyles, domainLanes } from '@/types/flow-map-manual';
+import { nodeTypeStyles } from '@/types/flow-map-manual';
 
 // ============================================
 // TYPES

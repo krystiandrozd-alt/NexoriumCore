@@ -7,7 +7,6 @@ import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Search,
-  X,
   Server,
   Database,
   Globe,

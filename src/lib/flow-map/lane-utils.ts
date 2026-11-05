@@ -1,7 +1,7 @@
 // Nexorium Core - Lane Utilities
 // Lane management, collapse state, and node counting
 
-import type { FlowMapStageKey, FlowMapDomain } from '@/types/flow-map-v2';
+import type { FlowMapStageKey } from '@/types/flow-map-v2';
 import type { DomainLane } from '@/types/flow-map-manual';
 
 // ============================================
@@ -119,7 +119,7 @@ function getLaneWidth(
   totalWidth: number,
   laneKeys: string[],
   states: Record<string, LaneState>,
-  laneIndex: number
+  _laneIndex: number
 ): number {
   // Count visible non-collapsed lanes
   const visibleExpandedLanes = laneKeys.filter((key) => {

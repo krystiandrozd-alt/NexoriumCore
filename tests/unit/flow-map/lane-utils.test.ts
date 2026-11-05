@@ -1,6 +1,6 @@
 // Nexorium Core - Lane Utils Unit Tests
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   calculateLaneSummary,
   calculateLaneDimensions,
@@ -9,7 +9,6 @@ import {
   LANE_HEADER_HEIGHT,
   LANE_COLLAPSED_WIDTH,
   LANE_MIN_WIDTH,
-  type StageLaneStates,
   type LaneState,
 } from '@/lib/flow-map/lane-utils';
 
@@ -131,14 +130,6 @@ describe('lane-utils', () => {
         ...defaultStates,
         DEV: { collapsed: true, visible: true, locked: false },
       };
-
-      const devDims = calculateLaneDimensions(
-        0,
-        statesWithCollapsed,
-        laneKeys,
-        900,
-        600
-      );
 
       const sitDims = calculateLaneDimensions(
         1,

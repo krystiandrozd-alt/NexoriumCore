@@ -19,11 +19,9 @@ import {
   Size,
   Insets,
   LayoutOrientation,
-  GraphItemTypes,
   type INode,
   type IEdge,
   Rect,
-  Point,
   ExteriorNodeLabelModel,
   FreeEdgeLabelModel,
   OrthogonalEdgeEditingContext,
@@ -43,7 +41,6 @@ import {
   type LayoutMode,
   PROTOCOL_STYLES,
   PATTERN_STYLES,
-  DIRECTION_LABELS,
   LAYOUT_MODE_CONFIG,
   DEFAULT_FILTERS,
   generateIntegrationId,
@@ -60,10 +57,8 @@ import {
   STATUS_CONFIG,
   SIGNAL_SOURCE_CONFIG,
   getRelativeTime,
-  type StatusDecision,
-  type Signal,
 } from '@/modules/health-status';
-import type { FlowMapDomain, FlowMapStageKey } from '@/types/flow-map-v2';
+import type { FlowMapDomain } from '@/types/flow-map-v2';
 
 // Load yFiles license
 import licenseData from '../../../yFiles-for-HTML-Complete-3.0.0.4-Evaluation/lib/license.json';
@@ -77,7 +72,6 @@ const CANVAS_WIDTH = 1600;
 const CANVAS_HEIGHT = 900;
 const LANE_HEADER_WIDTH = 100;
 const EXTERNAL_COLUMN_WIDTH = 180;
-const STORAGE_KEY = 'nexorium-flowmap-v2-';
 
 // Domain lanes configuration
 const DOMAIN_LANES: { domain: FlowMapDomain; label: string; color: string }[] = [
@@ -181,7 +175,7 @@ export default function FlowMapV2Client() {
   const [selectedEdge, setSelectedEdge] = useState<EdgeTag | null>(null);
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('swimlane');
   const [filters, setFilters] = useState<IntegrationFilters>(DEFAULT_FILTERS);
-  const [showMinimap, setShowMinimap] = useState(true);
+  const [showMinimap] = useState(true);
   const [showFilters, setShowFilters] = useState(true);
   const [propertiesPanelOpen, setPropertiesPanelOpen] = useState(true);
 
@@ -196,7 +190,7 @@ export default function FlowMapV2Client() {
   const [highlightedEdgeIds, setHighlightedEdgeIds] = useState<Set<string>>(new Set());
 
   // Health & Status store integration
-  const { decisions, signals: healthSignals, getSignalsForSystem } = useHealthStatusStore();
+  const { decisions, getSignalsForSystem } = useHealthStatusStore();
 
   // Refs for state access in callbacks
   const nodesRef = useRef(nodes);
@@ -245,12 +239,6 @@ export default function FlowMapV2Client() {
         lengthScale: 1.2,
         widthScale: 1.2,
       });
-    }
-
-    // Dash pattern based on protocol
-    let dashStyle: number[] | undefined;
-    if (style.dashArray) {
-      dashStyle = style.dashArray;
     }
 
     const thickness = dimmed ? 1 : 2;
@@ -586,7 +574,6 @@ export default function FlowMapV2Client() {
     if (!gcRef.current) return;
 
     try {
-      const gc = gcRef.current;
       // Export using canvas rendering
       // Note: yFiles export module needed for full SVG export
       alert(`Export to ${format.toUpperCase()} - Feature requires yFiles export module. Coming soon!`);

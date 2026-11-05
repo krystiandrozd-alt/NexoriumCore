@@ -3,12 +3,11 @@
 // Nexorium Core - Interactive Stage Swimlanes
 // Collapsible vertical columns for each stage with interactive headers
 
-import { memo, useMemo, useCallback } from 'react';
+import { memo, useMemo } from 'react';
 import { Panel } from '@xyflow/react';
 import {
   ChevronLeft,
   ChevronRight,
-  Eye,
   EyeOff,
   Lock,
   Unlock,
@@ -255,7 +254,7 @@ function InteractiveStageSwimlanesBackground({
       {/* Interactive Lane Headers (HTML overlay for pointer events) */}
       <Panel position="top-left" className="!m-0 !p-0 pointer-events-none" style={{ width: totalWidth, zIndex: 10 }}>
         <div className="flex pointer-events-auto" style={{ height: LANE_HEADER_HEIGHT }}>
-          {laneLayout.map(({ stage, x, width: laneWidth, collapsed }) => {
+          {laneLayout.map(({ stage, width: laneWidth, collapsed }) => {
             const color = stage.color || stageColors[stage.key] || '#64748b';
             const state = laneStates[stage.key];
             const summary = laneSummaries?.[stage.key];

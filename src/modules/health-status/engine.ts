@@ -7,7 +7,6 @@ import type {
   SystemStatus,
   StatusRule,
 } from './types';
-import { generateDecisionId } from './types';
 
 // ============================================
 // DEFAULT STATUS RULES

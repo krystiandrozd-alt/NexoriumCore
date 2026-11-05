@@ -15,7 +15,6 @@ import { PillarHeader } from '@/components/navigation';
 import {
   useProjectEnvironment,
   type CreateProjectData,
-  type CreateEnvironmentData,
 } from '@/contexts/ProjectEnvironmentContext';
 import {
   Network,
@@ -31,7 +30,6 @@ import {
   Building2,
   ExternalLink,
 } from 'lucide-react';
-import { formatRelativeTime } from '@/lib/utils';
 
 const typeColors: Record<string, string> = {
   DEV: 'bg-emerald-100 text-emerald-700 border-emerald-200',
@@ -65,7 +63,6 @@ export default function EnvironmentsOverviewPage() {
   const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set());
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
   const [showCreateEnvironmentModal, setShowCreateEnvironmentModal] = useState(false);
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 

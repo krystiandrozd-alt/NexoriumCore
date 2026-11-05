@@ -20,7 +20,6 @@ import {
   resolveEdgeStyle,
   truncateLabel,
   formatProtocolLabel,
-  getMarkerConfig,
 } from '@/lib/flow-map/edge-utils';
 import EdgeContextMenu from './EdgeContextMenu';
 

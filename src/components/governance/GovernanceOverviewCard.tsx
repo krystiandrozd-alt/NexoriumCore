@@ -32,7 +32,7 @@ export function GovernanceOverviewCard({
   href,
   className = '',
 }: GovernanceOverviewCardProps) {
-  const CardContent = () => (
+  const cardContent = (
     <>
       <div className="flex items-center justify-between">
         <div>
@@ -64,14 +64,14 @@ export function GovernanceOverviewCard({
         href={href}
         className={`block card-enterprise p-4 hover:border-indigo-300 transition-colors ${className}`}
       >
-        <CardContent />
+        {cardContent}
       </Link>
     );
   }
 
   return (
     <div className={`card-enterprise p-4 ${className}`}>
-      <CardContent />
+      {cardContent}
     </div>
   );
 }

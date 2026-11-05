@@ -66,7 +66,6 @@ const nodeTypeLabels: Record<ManualNodeType, string> = {
 function NodeContextMenu({
   x,
   y,
-  nodeId,
   nodeName,
   nodeType,
   currentLane,

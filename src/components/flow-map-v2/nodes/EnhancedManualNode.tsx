@@ -4,7 +4,7 @@
 // Expandable node with inline editing and quick actions
 
 import { memo, useState, useCallback, useRef, useEffect } from 'react';
-import { Handle, Position, useReactFlow } from '@xyflow/react';
+import { Handle, Position } from '@xyflow/react';
 import type { NodeProps } from '@xyflow/react';
 import {
   Server,
@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ManualNodeType, ManualNodeScope, DomainLane } from '@/types/flow-map-manual';
-import { nodeTypeStyles, domainLanes } from '@/types/flow-map-manual';
+import { nodeTypeStyles } from '@/types/flow-map-manual';
 import type { FlowMapDomain } from '@/types/flow-map-v2';
 
 // ============================================
@@ -95,9 +95,8 @@ const nodeTypeLabels: Record<ManualNodeType, string> = {
 // COMPONENT
 // ============================================
 
-function EnhancedManualNode({ id, data, selected }: NodeProps) {
+function EnhancedManualNode({ data, selected }: NodeProps) {
   const nodeData = data as unknown as EnhancedManualNodeData;
-  const { setCenter, getZoom } = useReactFlow();
 
   const [isExpanded, setIsExpanded] = useState(nodeData.isExpanded ?? false);
   const [isEditing, setIsEditing] = useState(false);

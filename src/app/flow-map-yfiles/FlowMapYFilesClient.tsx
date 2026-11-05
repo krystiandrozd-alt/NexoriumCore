@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import {
   GraphComponent,
   GraphEditorInputMode,
-  GraphViewerInputMode,
   GraphOverviewComponent,
   HierarchicalLayout,
   LayoutExecutor,
@@ -25,9 +24,6 @@ import {
   ExteriorNodeLabelModel,
   Rect,
   Point,
-  Stroke,
-  Fill,
-  Color,
 } from '@yfiles/yfiles';
 
 import {
@@ -112,7 +108,7 @@ function loadL1Data(envId: string): L1Data | null {
   try {
     const s = localStorage.getItem(STORAGE_KEY_L1 + envId);
     return s ? JSON.parse(s) : null;
-  } catch (e) { return null; }
+  } catch { return null; }
 }
 
 // L0 Storage - per project
@@ -126,7 +122,7 @@ function loadL0Data(projectId: string): L0Data | null {
   try {
     const s = localStorage.getItem(`${STORAGE_KEY_L0}-${projectId}`);
     return s ? JSON.parse(s) : null;
-  } catch (e) { return null; }
+  } catch { return null; }
 }
 
 // Default L0 data for each project
@@ -272,7 +268,7 @@ function getLaneBounds(domain: FlowMapDomain): LaneBounds {
 }
 
 // Position nodes in their lanes based on domain
-function getDefaultPosition(node: L1Node, nodeIndex: number, nodesInDomain: number): { x: number; y: number } {
+function getDefaultPosition(node: L1Node, nodeIndex: number, _nodesInDomain: number): { x: number; y: number } {
   const bounds = getLaneBounds(node.domain);
   const padding = 20;
   const nodeWidth = 160;
@@ -320,7 +316,6 @@ export default function FlowMapYFilesClient() {
   const [selectedDomain, setSelectedDomain] = useState<FlowMapDomain>('BSS');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
-  const [viewportBounds, setViewportBounds] = useState({ x: 0, y: 0, width: CANVAS_WIDTH, height: CANVAS_HEIGHT });
   const l1DataRef = useRef<L1Data | null>(null);
 
   // L0 state - initialize with first project if available
@@ -340,7 +335,7 @@ export default function FlowMapYFilesClient() {
   });
   const [selectedL0Env, setSelectedL0Env] = useState<L0Environment | null>(null);
   const [showMinimap, setShowMinimap] = useState(true);
-  const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation | null>(null);
+  const [, setSelectedAnnotation] = useState<Annotation | null>(null);
   const [showLegend, setShowLegend] = useState(true);
 
   // Edge context menu state
@@ -1041,25 +1036,6 @@ export default function FlowMapYFilesClient() {
     gc.selection.add(node);
     setSelectedAnnotation(annotation);
   }, [createNoteStyle, createTextStyle]);
-
-  // Remove annotation from canvas
-  const removeAnnotation = useCallback((annId: string) => {
-    const gc = gcRef.current;
-    if (!gc) return;
-
-    const node = annotationMapRef.current.get(annId);
-    if (node) {
-      gc.graph.remove(node);
-      annotationMapRef.current.delete(annId);
-    }
-
-    setL0Data(prev => ({
-      ...prev,
-      annotations: (prev.annotations || []).filter(a => a.id !== annId),
-    }));
-
-    setSelectedAnnotation(null);
-  }, []);
 
   // Track if component is mounted and ready
   const [isReady, setIsReady] = useState(false);

@@ -47,7 +47,6 @@ describe('layout-engine', () => {
         direction: 'LR',
       });
 
-      const positions = result.nodes.map((n) => n.position.x);
       // A should be leftmost, C should be rightmost
       const nodeA = result.nodes.find((n) => n.id === 'A');
       const nodeB = result.nodes.find((n) => n.id === 'B');

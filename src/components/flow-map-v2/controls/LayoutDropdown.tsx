@@ -63,8 +63,6 @@ function LayoutDropdown({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const currentModeConfig = layoutModes.find((m) => m.mode === currentMode);
-  const currentDirConfig = layoutDirections.find((d) => d.direction === currentDirection);
 
   const handleApply = (mode: LayoutMode, direction: LayoutDirection, selectionOnly: boolean) => {
     if (selectionOnly && hasSelection) {

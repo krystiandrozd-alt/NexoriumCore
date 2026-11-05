@@ -8,8 +8,6 @@ import {
   truncateLabel,
   formatProtocolLabel,
   calculateCurvature,
-  type EnhancedEdgeType,
-  type EdgeTypeHint,
 } from '@/lib/flow-map/edge-utils';
 
 describe('edge-utils', () => {

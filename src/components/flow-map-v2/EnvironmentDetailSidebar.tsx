@@ -4,7 +4,7 @@
 // Sidebar with tabs: Overview, Systems, Integrations, Build
 
 import { memo, useState } from 'react';
-import { X, Info, Server, Link2, Wrench, ChevronLeft } from 'lucide-react';
+import { Info, Server, Link2, Wrench, ChevronLeft } from 'lucide-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { cn } from '@/lib/utils';
 import { useManualDesign } from '@/contexts/ManualDesignContext';
@@ -149,7 +149,6 @@ function BuildTab() {
 // ============================================
 
 function EnvironmentDetailSidebar({
-  environmentId,
   environment,
   isOpen,
   onToggle,
