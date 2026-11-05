@@ -92,6 +92,16 @@ npm run dev
 
 7. Open [http://localhost:3003](http://localhost:3003) in your browser
 
+### Claude Code: Neon MCP server (optional)
+
+`.mcp.json` registers Neon's hosted MCP server (`https://mcp.neon.tech/mcp`) for Claude Code. It authenticates with a Neon API key read from the `NEON_API_KEY` environment variable; the key is never committed.
+
+- **Local:** `export NEON_API_KEY=<your key>` in the shell that starts Claude Code, then approve the `neon` server when prompted.
+- **Claude Code on the web:** add `NEON_API_KEY` as an environment variable in the cloud environment settings and start a new session.
+- **Scope it down:** append `?projectId=<neon-project-id>` to limit it to one Neon project, and `?readonly=true` to block writes.
+
+Neon supports the MCP server for development and testing only. Do not point it at production databases.
+
 ## Project Structure
 
 ```
