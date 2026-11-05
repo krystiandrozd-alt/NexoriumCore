@@ -62,6 +62,14 @@ export default defineConfig({
     // Pool configuration (Vitest 4 format)
     pool: 'forks',
     isolate: true,
+
+    // @neon/auth is ESM and imports extension-less Next subpaths (next/headers);
+    // let Vite transform it instead of handing it to Node as an external module.
+    server: {
+      deps: {
+        inline: ['@neon/auth'],
+      },
+    },
   },
   resolve: {
     alias: {

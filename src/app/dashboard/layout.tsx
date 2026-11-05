@@ -23,6 +23,7 @@ import {
   PanelLeft,
 } from 'lucide-react';
 import { EnvironmentSwitcher } from '@/components/navigation/EnvironmentSwitcher';
+import { SignOutButton } from '@/components/auth/SignOutButton';
 import { EnvironmentProvider } from '@/contexts/EnvironmentContext';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
 import { ProjectEnvironmentProvider } from '@/contexts/ProjectEnvironmentContext';
@@ -203,6 +204,11 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
+
+          {/* Session */}
+          <div className={cn('border-t border-white/[0.06]', isCollapsed ? 'p-2' : 'px-4 py-3')}>
+            <SignOutButton collapsed={isCollapsed} />
+          </div>
 
           {/* Collapse toggle button - desktop only */}
           <div className="absolute bottom-4 left-0 right-0 hidden lg:flex justify-center px-2">

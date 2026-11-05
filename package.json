@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@antv/g6": "^5.0.51",
+    "@neon/auth": "^0.8.2",
     "@prisma/client": "^5.22.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-progress": "^1.1.8",
@@ -36,8 +37,6 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
-    "@supabase/ssr": "^0.8.0",
-    "@supabase/supabase-js": "^2.91.1",
     "@tanstack/react-table": "^8.21.3",
     "@xyflow/react": "^12.10.0",
     "@yfiles/yfiles": "file:yFiles-for-HTML-Complete-3.0.0.4-Evaluation/lib-dev/yfiles-30.0.4+eval-dev.tgz",

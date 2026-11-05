@@ -1,40 +1,63 @@
 'use client';
 
 // Nexorium Core - Login Page
-// Premium styled login with Supabase Auth
+// Premium styled login backed by Neon Auth (email/password and GitHub).
+// Access is invite-only: there is no sign-up form; accounts are created by an administrator.
 
-import { useState, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { createClient } from '@/lib/supabase/client';
 import { Loader2, LogIn, AlertCircle, Map } from 'lucide-react';
 import Link from 'next/link';
+import { authClient } from '@/lib/auth/client';
+
+const DEFAULT_AFTER_LOGIN_PATH = '/dashboard/environments';
+
+/** Only same-origin paths are accepted as a post-login destination. */
+function safeRedirectPath(value: string | null): string {
+  if (!value || !value.startsWith('/') || value.startsWith('//')) {
+    return DEFAULT_AFTER_LOGIN_PATH;
+  }
+  return value;
+}
+
+function GitHubMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor" className={className}>
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+    </svg>
+  );
+}
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirect') || '/dashboard/environments';
+  const redirectTo = safeRedirectPath(searchParams.get('redirect'));
+  const { data: session } = authClient.useSession();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<'password' | 'github' | null>(null);
+
+  // Already signed in: go straight to the destination
+  useEffect(() => {
+    if (session?.user) {
+      router.replace(redirectTo);
+    }
+  }, [session, redirectTo, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setLoading(true);
+    setLoading('password');
 
     try {
-      const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { error: signInError } = await authClient.signIn.email({ email, password });
 
       if (signInError) {
-        setError(signInError.message);
-        setLoading(false);
+        setError(signInError.message || 'Invalid email or password.');
+        setLoading(null);
         return;
       }
 
@@ -43,7 +66,28 @@ function LoginForm() {
       router.refresh();
     } catch (_err) {
       setError('An unexpected error occurred. Please try again.');
-      setLoading(false);
+      setLoading(null);
+    }
+  };
+
+  const handleGitHub = async () => {
+    setError(null);
+    setLoading('github');
+
+    try {
+      const { error: socialError } = await authClient.signIn.social({
+        provider: 'github',
+        callbackURL: `${window.location.origin}${redirectTo}`,
+      });
+
+      if (socialError) {
+        setError(socialError.message || 'GitHub sign-in failed. Please try again.');
+        setLoading(null);
+      }
+      // On success the browser is redirected to GitHub.
+    } catch (_err) {
+      setError('An unexpected error occurred. Please try again.');
+      setLoading(null);
     }
   };
 
@@ -52,6 +96,7 @@ function LoginForm() {
       {/* Error message */}
       {error && (
         <motion.div
+          role="alert"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 flex items-start gap-3"
@@ -97,10 +142,10 @@ function LoginForm() {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading !== null}
           className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-[#5B5FEF] to-[#7C3AED] text-white font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#5B5FEF]/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
         >
-          {loading ? (
+          {loading === 'password' ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
               Signing in...
@@ -113,6 +158,32 @@ function LoginForm() {
           )}
         </button>
       </form>
+
+      {/* Divider */}
+      <div className="my-6 flex items-center gap-4">
+        <div className="h-px flex-1 bg-white/[0.08]" />
+        <span className="text-xs uppercase tracking-wider text-[#4A5568]">or</span>
+        <div className="h-px flex-1 bg-white/[0.08]" />
+      </div>
+
+      {/* GitHub sign-in */}
+      <button
+        type="button"
+        onClick={handleGitHub}
+        disabled={loading !== null}
+        className="w-full py-3 px-4 rounded-lg bg-white/[0.03] border border-white/[0.08] text-white font-medium hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-[#5B5FEF]/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+      >
+        {loading === 'github' ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <GitHubMark className="w-5 h-5" />
+        )}
+        Continue with GitHub
+      </button>
+
+      <p className="mt-6 text-center text-xs text-[#4A5568]">
+        Access is invite-only. Contact your administrator for an account.
+      </p>
     </>
   );
 }
@@ -178,7 +249,7 @@ export default function LoginPage() {
           <div className="text-center mb-8">
             <h1 className="text-2xl font-semibold text-white mb-2">Welcome back</h1>
             <p className="text-[#8B95A5] text-sm">
-              Sign in to access your environment intelligence
+              Sign in to the control plane for non-production architecture
             </p>
           </div>
 
