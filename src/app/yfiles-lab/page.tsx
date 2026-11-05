@@ -1,13 +1,8 @@
-'use client';
+// Demo branch: the yFiles lab needs the commercial yFiles package, which is not installed.
+// Restore this file from main to bring the lab back.
 
-import dynamic from 'next/dynamic';
-
-const YFilesLabClient = dynamic(() => import('./YFilesLabClient'), { ssr: false });
+import { YFilesUnavailable } from '@/components/demo/YFilesUnavailable';
 
 export default function YFilesLabPage() {
-  return (
-    <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      <YFilesLabClient />
-    </div>
-  );
+  return <YFilesUnavailable />;
 }

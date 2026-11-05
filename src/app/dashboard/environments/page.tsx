@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation';
 
 // Nexorium Core - Environments Pillar Index
-// Redirects to Flow Map (default view)
+// Demo branch: redirects to the Environments overview, because the default
+// Flow Map view needs the yFiles package (see src/app/dashboard/environments/flow-map).
 
 export default function EnvironmentsPage() {
-  redirect('/dashboard/environments/flow-map');
+  redirect('/dashboard/environments/overview');
 }

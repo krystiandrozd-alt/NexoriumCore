@@ -1,0 +1,15 @@
+# Local PostgreSQL for the Nexorium Core demo (see DEMO.md).
+# Start: docker compose up -d    Stop: docker compose down    Reset data: docker compose down -v
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: nexorium
+      POSTGRES_PASSWORD: nexorium
+      POSTGRES_DB: nexorium
+    ports:
+      - "5432:5432"
+    volumes:
+      - nexorium-db:/var/lib/postgresql/data
+volumes:
+  nexorium-db:

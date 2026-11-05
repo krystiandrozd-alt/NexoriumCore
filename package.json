@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed/index.ts"
+    "seed": "tsx prisma/seed/index.ts"
   },
   "scripts": {
     "dev": "next dev -p 3003",
@@ -14,7 +14,7 @@
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "npx ts-node --compiler-options '{\"module\":\"CommonJS\"}' prisma/seed/index.ts",
+    "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -25,7 +25,9 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:all": "npm run lint && npm run typecheck && npm run test && npm run test:e2e",
-    "ci": "npm run lint && npm run typecheck && npm run test -- --reporter=junit --outputFile=test-results.xml"
+    "ci": "npm run lint && npm run typecheck && npm run test -- --reporter=junit --outputFile=test-results.xml",
+    "demo:setup": "node scripts/demo-setup.mjs",
+    "demo:db": "prisma db push && prisma db seed"
   },
   "dependencies": {
     "@antv/g6": "^5.0.51",
@@ -40,7 +42,6 @@
     "@supabase/supabase-js": "^2.91.1",
     "@tanstack/react-table": "^8.21.3",
     "@xyflow/react": "^12.10.0",
-    "@yfiles/yfiles": "file:yFiles-for-HTML-Complete-3.0.0.4-Evaluation/lib-dev/yfiles-30.0.4+eval-dev.tgz",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cytoscape": "^3.33.1",
@@ -83,6 +84,7 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^4.0.18"
   }
