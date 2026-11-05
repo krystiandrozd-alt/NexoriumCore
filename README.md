@@ -151,10 +151,12 @@ cp .env.example .env
 
 ```bash
 npx prisma db push
-npm run db:seed
+npx prisma db seed
 ```
 
 Use `prisma db push`. The migrations in `prisma/migrations` create only 9 of the 60 tables, so `prisma migrate deploy` produces an incomplete database.
+
+Use `npx prisma db seed`, which loads `.env`. `npm run db:seed` runs ts-node directly, which does not read `.env`, so it fails with "Environment variable not found: DATABASE_URL" unless the variables are already set in your shell.
 
 The seed loads a sample telco landscape: seven environments (DEV, SIT, UAT, NFT, PREPROD, a second SIT and a second DEV) with CRM, CPQ, product catalog, order management, billing, orchestration, inventory, provisioning and assurance systems, plus governance, organisation and cost data.
 
@@ -164,7 +166,7 @@ The seed loads a sample telco landscape: seven environments (DEV, SIT, UAT, NFT,
 npm run dev
 ```
 
-Open http://localhost:3003 and sign in with a user created in the Supabase project.
+Open http://localhost:3003. Pages do not ask for sign-in yet: `middleware.ts` sits at the repository root, but in a project with a `src/app` directory Next.js only loads `src/middleware.ts`, so the sign-in check never runs.
 
 > **Warning:** in development mode the API skips authentication and treats every caller as an administrator. Run `npm run dev` only on your own machine.
 
@@ -181,7 +183,7 @@ For production mode, run `npm run build` and then `npm start`. Every signed-in u
 | `npm test` | Unit and integration tests (Vitest) |
 | `npm run test:coverage` | Tests with a coverage report |
 | `npm run test:e2e` | End-to-end tests (Playwright) |
-| `npm run db:push`, `npm run db:seed`, `npm run db:studio` | Push the schema, load sample data, open Prisma Studio |
+| `npm run db:push`, `npx prisma db seed`, `npm run db:studio` | Push the schema, load sample data, open Prisma Studio |
 
 ## Project structure
 
@@ -249,6 +251,7 @@ State of `main` at commit `40ab818`.
 - The yFiles package must be supplied locally. With the yFiles pages removed, the rest of the application builds.
 - `npm run lint` fails: ESLint 9 rejects the legacy options that `next lint` passes to it.
 - The migrations create 9 of the 60 tables. Use `prisma db push`.
+- `npm run db:seed` fails unless the database variables are set in the shell. Use `npx prisma db seed`.
 - `.env.example` and the CI workflow do not define `DIRECT_URL`.
 - 21 of 282 tests fail: 18 environment API tests (authentication was added to the routes after the tests were written), 2 layout tests and 1 fixture test.
 - Playwright waits for port 3000, but the dev server runs on port 3003.
@@ -256,6 +259,7 @@ State of `main` at commit `40ab818`.
 
 **Security**
 
+- Pages do not require sign-in: `middleware.ts` is at the repository root, where Next.js ignores it in a project with `src/app`. It belongs in `src/middleware.ts`.
 - Development mode disables API authentication.
 - 18 of the 108 API route files have no authentication check.
 - Every signed-in user receives the Editor role; there is no role assignment.
