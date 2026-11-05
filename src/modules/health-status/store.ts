@@ -12,7 +12,7 @@ import type {
   SignalSource,
 } from './types';
 import { generateSignalId } from './types';
-import { computeStatus, computeAllStatuses, DEFAULT_STATUS_RULES } from './engine';
+import { computeAllStatuses, DEFAULT_STATUS_RULES } from './engine';
 
 // ============================================
 // STORE STATE

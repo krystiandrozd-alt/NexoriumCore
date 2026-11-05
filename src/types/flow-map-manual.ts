@@ -1,7 +1,7 @@
 // Nexorium Core - Manual Design Mode Types
 // Types for Visio-style drag & drop objects in Flow Map
 
-import type { FlowMapDomain, FlowMapStageKey } from './flow-map-v2';
+import type { FlowMapDomain } from './flow-map-v2';
 
 // ============================================
 // CORE ENUMS

@@ -3,13 +3,12 @@
 // Nexorium Core - Manual Edge Component
 // Enhanced React Flow edge with better selection and editing support
 
-import { memo, useMemo, useState, useCallback } from 'react';
+import { memo, useMemo, useState } from 'react';
 import {
   BaseEdge,
   EdgeLabelRenderer,
   getBezierPath,
   getSmoothStepPath,
-  useReactFlow,
 } from '@xyflow/react';
 import type { EdgeProps } from '@xyflow/react';
 import { cn } from '@/lib/utils';

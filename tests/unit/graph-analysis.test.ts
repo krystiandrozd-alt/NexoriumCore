@@ -16,7 +16,6 @@ import {
   EXPECTED_GRAPH_ANALYSIS,
   NODES_BY_LAYER,
   INSTANCE_IDS,
-  CONNECTION_IDS,
 } from '@tests/fixtures';
 
 // ============================================

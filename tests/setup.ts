@@ -161,6 +161,7 @@ export const TEST_DB_URL = 'file:./tests/test.db';
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Vi {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- must match vitest's declaration to merge
     interface JestAssertion<T = unknown> {
       toBeInTheDocument(): void;
       toHaveTextContent(text: string | RegExp): void;

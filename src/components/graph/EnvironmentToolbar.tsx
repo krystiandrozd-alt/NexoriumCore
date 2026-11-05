@@ -50,6 +50,33 @@ interface EnvironmentToolbarProps {
   edgeCount?: number;
 }
 
+function SaveStatusIndicator({ saveStatus }: { saveStatus: SaveStatus }) {
+  switch (saveStatus) {
+    case 'saving':
+      return (
+        <div className="flex items-center gap-1.5 text-slate-500 text-sm">
+          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          <span>Saving...</span>
+        </div>
+      );
+    case 'saved':
+      return (
+        <div className="flex items-center gap-1.5 text-emerald-600 text-sm">
+          <Check className="h-3.5 w-3.5" />
+          <span>Saved</span>
+        </div>
+      );
+    case 'error':
+      return (
+        <div className="flex items-center gap-1.5 text-red-500 text-sm">
+          <span>Save failed</span>
+        </div>
+      );
+    default:
+      return null;
+  }
+}
+
 function EnvironmentToolbar({
   viewMode,
   onViewModeChange,
@@ -66,33 +93,6 @@ function EnvironmentToolbar({
   nodeCount = 0,
   edgeCount = 0,
 }: EnvironmentToolbarProps) {
-  const SaveStatusIndicator = () => {
-    switch (saveStatus) {
-      case 'saving':
-        return (
-          <div className="flex items-center gap-1.5 text-slate-500 text-sm">
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            <span>Saving...</span>
-          </div>
-        );
-      case 'saved':
-        return (
-          <div className="flex items-center gap-1.5 text-emerald-600 text-sm">
-            <Check className="h-3.5 w-3.5" />
-            <span>Saved</span>
-          </div>
-        );
-      case 'error':
-        return (
-          <div className="flex items-center gap-1.5 text-red-500 text-sm">
-            <span>Save failed</span>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <TooltipProvider delayDuration={200}>
       <div className="flex items-center justify-between px-4 py-2 bg-white border-b border-slate-200 gap-4">
@@ -227,7 +227,7 @@ function EnvironmentToolbar({
 
         {/* Right side - Save status and secondary actions */}
         <div className="flex items-center gap-3">
-          <SaveStatusIndicator />
+          <SaveStatusIndicator saveStatus={saveStatus} />
 
           <div className="flex items-center gap-1 border-l border-slate-200 pl-3">
             {onRefresh && (

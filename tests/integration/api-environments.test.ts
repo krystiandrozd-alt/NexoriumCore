@@ -1,14 +1,12 @@
 // Nexorium Core - API Integration Tests
 // Tests for environment API routes with mocked Prisma
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import {
   SIT_ENVIRONMENT,
   UAT_ENVIRONMENT,
-  ALL_ENVIRONMENTS,
   ALL_INSTANCES,
-  ALL_CONNECTIONS,
   ENV_IDS,
   INSTANCE_IDS,
 } from '@tests/fixtures';

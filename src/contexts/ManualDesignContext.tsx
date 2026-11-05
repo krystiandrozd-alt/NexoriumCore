@@ -14,7 +14,6 @@ import type {
   UpdateManualNodeInput,
   CreateManualEdgeInput,
   UpdateManualEdgeInput,
-  MAX_HISTORY_SIZE,
 } from '@/types/flow-map-manual';
 import { initialManualDesignState } from '@/types/flow-map-manual';
 
@@ -137,7 +136,7 @@ function manualDesignReducer(
       const newRedoStack = [...state.history.redoStack, lastAction];
 
       // Apply the reverse of the action
-      let newState = { ...state };
+      const newState = { ...state };
       switch (lastAction.type) {
         case 'create_node':
           newState.nodes = newState.nodes.filter((n) => n.id !== lastAction.data.id);
@@ -180,7 +179,7 @@ function manualDesignReducer(
       const newUndoStack = [...state.history.undoStack, lastAction];
 
       // Re-apply the action
-      let newState = { ...state };
+      const newState = { ...state };
       switch (lastAction.type) {
         case 'create_node':
           newState.nodes = [...newState.nodes, lastAction.data as ManualFlowMapNode];

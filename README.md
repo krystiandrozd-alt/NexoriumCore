@@ -43,7 +43,7 @@ Nexorium Core addresses two fundamental challenges in enterprise test environmen
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, React, TailwindCSS, React Flow
+- **Frontend**: Next.js 16 (App Router), TypeScript, React, TailwindCSS, React Flow
 - **Backend**: Next.js API routes, Node.js
 - **Database**: PostgreSQL with Prisma ORM
 
@@ -51,7 +51,7 @@ Nexorium Core addresses two fundamental challenges in enterprise test environmen
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20.9+
 - PostgreSQL 14+
 - npm or yarn
 

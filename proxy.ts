@@ -1,4 +1,4 @@
-// Nexorium Core - Next.js Middleware
+// Nexorium Core - Next.js Proxy (formerly middleware.ts)
 // Protects routes and handles session refresh
 
 import { type NextRequest, NextResponse } from 'next/server';
@@ -15,21 +15,13 @@ const protectedRoutes = [
   '/configuration',
 ];
 
-// Routes that are always public
-const publicRoutes = ['/', '/login'];
-
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { supabaseResponse, user } = await updateSession(request);
   const pathname = request.nextUrl.pathname;
 
   // Check if this is a protected route
   const isProtectedRoute = protectedRoutes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
-  );
-
-  // Check if this is a public route
-  const isPublicRoute = publicRoutes.some(
-    (route) => pathname === route
   );
 
   // If accessing a protected route without a session, redirect to login

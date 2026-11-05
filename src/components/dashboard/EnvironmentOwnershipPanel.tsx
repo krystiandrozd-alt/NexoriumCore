@@ -31,6 +31,7 @@ export default function EnvironmentOwnershipPanel({
 }: EnvironmentOwnershipPanelProps) {
   const [ownership, setOwnership] = useState<EnvironmentOwnership | null>(null);
   const [loading, setLoading] = useState(true);
+  const [now] = useState(() => Date.now());
 
   useEffect(() => {
     const fetchOwnership = async () => {
@@ -91,7 +92,7 @@ export default function EnvironmentOwnershipPanel({
   }
 
   const isExpiring = ownership.expiryDate &&
-    new Date(ownership.expiryDate) < new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    new Date(ownership.expiryDate) < new Date(now + 30 * 24 * 60 * 60 * 1000);
 
   return (
     <Card className={className}>

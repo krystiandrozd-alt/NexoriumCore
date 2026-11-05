@@ -10,7 +10,7 @@ import PremiumToolbar from '@/components/graph/PremiumToolbar';
 import type { InspectorNodeData, InspectorEdgeData } from '@/components/graph/InspectorPanel';
 import type { SaveStatus, OverlayType } from '@/components/graph/PremiumToolbar';
 import { GRAPH_NODES, GRAPH_EDGES } from '@tests/fixtures';
-import { LARGE_GRAPH_NODES, LARGE_GRAPH_EDGES, LARGE_GRAPH_IDS } from '@tests/fixtures/large-graph-data';
+import { LARGE_GRAPH_NODES, LARGE_GRAPH_EDGES } from '@tests/fixtures/large-graph-data';
 
 // ============================================
 // MOCK SETUP
