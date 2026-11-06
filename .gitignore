@@ -42,3 +42,6 @@ yFiles-for-HTML-Complete-*/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ISV/OEM Advisor (Claude Code plugin): per-machine documentation-tool choices
+/.advisor/

@@ -92,6 +92,19 @@ npm run dev
 
 7. Open [http://localhost:3003](http://localhost:3003) in your browser
 
+### Claude Code: ISV/OEM Advisor plugin (optional)
+
+`.claude/settings.json` registers the `partner-ecosystem-agentic-kit` plugin marketplace and enables its **ISV/OEM Advisor** plugin (`oem-isv-advisor`): 27 skills for Salesforce ISV/OEM partners covering packaging and 2GP, Dev Hub, scratch orgs and environment selection, implementation patterns, Security Review, and release. The marketplace source is the [`krystiandrozd-alt` fork](https://github.com/krystiandrozd-alt/partner-ecosystem-agentic-kit) of [`forcedotcom/partner-ecosystem-agentic-kit`](https://github.com/forcedotcom/partner-ecosystem-agentic-kit), so upstream changes arrive only after the fork is synced. To follow upstream directly, change `repo` to `forcedotcom/partner-ecosystem-agentic-kit`.
+
+- **Local (terminal, desktop app, IDE):** start Claude Code in the repository root and accept the workspace trust dialog. Claude Code then registers the marketplace and loads the plugin. No separate install step is needed because the marketplace lists the plugin by a relative path. Run it with `/oem-isv-advisor:oem-isv-advisor`.
+- **Claude Code on the web:** has no effect. Cloud sessions do not install plugins that a repository's `.claude/settings.json` enables. There, the advisor needs your organization's server-managed settings (the same two keys) or its skills enabled on claude.ai.
+- **Bundled MCP server:** the plugin ships a `salesforce-docs` MCP server (`https://salesforce-docs-76258744c9d7.herokuapp.com/api/mcp`). Claude Code connects plugin MCP servers automatically when the plugin is enabled. Turn it off in `/mcp` if that host is not approved.
+- **Context cost:** about 3,000 tokens are added to every session in this repository, and each skill invocation adds roughly 0.6k–2.6k more (`claude plugin details oem-isv-advisor`, plugin 0.2.0).
+- **Updates:** auto-update is off, which is Claude Code's default for third-party marketplaces. Sync the fork, then in `/plugin` open **Marketplaces**, select **partner-ecosystem-agentic-kit**, and choose **Update marketplace**.
+- **Opt out on your machine:** set `"oem-isv-advisor@partner-ecosystem-agentic-kit": false` under `enabledPlugins` in `.claude/settings.local.json`.
+
+The advisor's preflight saves your documentation-tool choices to `.advisor/capabilities.json` in the project root. The file holds a machine-specific absolute path, so it is gitignored.
+
 ## Project Structure
 
 ```
