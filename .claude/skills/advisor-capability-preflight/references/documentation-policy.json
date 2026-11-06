@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "policy_version": "2026-11-06",
+  "salesforce_docs_mcp": {
+    "requirement": "optional-highly-recommended",
+    "decline_behavior": "continue with approved public documentation or packaged knowledge; do not block the advisor or repeatedly prompt",
+    "tool_name_patterns": [
+      "salesforce.*docs.*search",
+      "salesforce.*docs.*fetch",
+      "salesforce.*documentation.*search",
+      "salesforce.*documentation.*fetch"
+    ],
+    "install_candidates": [
+      {
+        "id": "salesforce-docs",
+        "publisher": "Salesforce",
+        "source": "Salesforce Agentforce Labs",
+        "source_url": "https://labs.agentforce.com/docs/salesforce-docs-mcp",
+        "source_status": "maintainer-listed",
+        "source_reviewed_at": "2026-07-31",
+        "transport": "streamable_http",
+        "url": "https://salesforce-docs-76258744c9d7.herokuapp.com/api/mcp",
+        "protocol_version": "2025-06-18",
+        "server_info": {
+          "name": "mcp-semantic-search",
+          "version": "1.0.0"
+        },
+        "harnesses": [
+          "claude-code",
+          "codex",
+          "cursor",
+          "vscode",
+          "windsurf"
+        ],
+        "authentication": "No authentication is required by the published default and a read-only initialize/tools-list verification; clients that require headers can supply a bearer token.",
+        "expected_tools": [
+          "salesforce_docs_search",
+          "salesforce_docs_fetch"
+        ]
+      }
+    ],
+    "missing_install_source_behavior": "recommend_salesforce_managed_catalog_or_workspace_admin",
+    "provenance_review": {
+      "exact_urls": [
+        "https://labs.agentforce.com/docs/salesforce-docs-mcp"
+      ],
+      "access": "read_only",
+      "purpose": "Re-read the maintainer listing before offering installation or changing the endpoint, transport, authentication statement, or expected tools. Reading it confirms the listing only, not endpoint health."
+    }
+  },
+  "approved_documentation": {
+    "scheme": "https",
+    "exact_hosts": [
+      "admin.salesforce.com",
+      "architect.salesforce.com",
+      "developer.salesforce.com",
+      "engineering.salesforce.com",
+      "help.salesforce.com",
+      "resources.docs.salesforce.com",
+      "trailhead.salesforce.com"
+    ],
+    "url_prefixes": [
+      "https://github.com/forcedotcom/",
+      "https://github.com/salesforcecli/",
+      "https://github.com/SalesforceAIResearch/"
+    ],
+    "access": "read_only",
+    "per_run_advisor_approval_required_after_project_approval": false,
+    "host_security_override": false
+  },
+  "excluded": [
+    "Salesforce org endpoints",
+    "authentication endpoints",
+    "partner portals",
+    "internal Salesforce systems",
+    "unlisted Salesforce subdomains"
+  ]
+}

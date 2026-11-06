@@ -1,0 +1,4 @@
+interface:
+  display_name: "Platform Constraints"
+  short_description: "Verify platform limits and guardrails"
+  default_prompt: "Use $platform-constraints to verify the limits and unsupported patterns that affect this design."

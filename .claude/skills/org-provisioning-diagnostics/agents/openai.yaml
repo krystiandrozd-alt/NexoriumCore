@@ -1,0 +1,4 @@
+interface:
+  display_name: "Org Provisioning Diagnostics"
+  short_description: "Guide org provisioning diagnostics decisions"
+  default_prompt: "Use $org-provisioning-diagnostics to guide this OEM/ISV partner decision."

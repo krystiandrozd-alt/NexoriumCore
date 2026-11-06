@@ -1,0 +1,4 @@
+interface:
+  display_name: "Operations and Release"
+  short_description: "Design reliable releases and operations"
+  default_prompt: "Use $operations-release to assess this product's testing, release, rollback, and operating model."

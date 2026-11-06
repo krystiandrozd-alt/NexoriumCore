@@ -1,0 +1,4 @@
+interface:
+  display_name: "Data 360 Implementation Advisor"
+  short_description: "Guide data 360 implementation advisor decisions"
+  default_prompt: "Use $data-360-implementation-advisor to guide this OEM/ISV partner decision."

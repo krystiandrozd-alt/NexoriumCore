@@ -1,0 +1,4 @@
+interface:
+  display_name: "Headless MCP Advisor"
+  short_description: "Route partner Headless, MCP, Apex action, and HXL decisions"
+  default_prompt: "Use $headless-mcp-advisor to guide this Salesforce partner Headless and MCP decision."

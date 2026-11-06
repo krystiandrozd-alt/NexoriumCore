@@ -1,0 +1,4 @@
+interface:
+  display_name: "Package Version Validation"
+  short_description: "Guide package version validation decisions"
+  default_prompt: "Use $package-version-validation to guide this OEM/ISV partner decision."

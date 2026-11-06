@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security and Readiness"
+  short_description: "Assess security and review readiness"
+  default_prompt: "Use $security-readiness to assess this solution's security risks and review readiness."

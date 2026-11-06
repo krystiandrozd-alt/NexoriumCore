@@ -1,0 +1,158 @@
+{
+  "schema_version": "1.0.0",
+  "id": "implementation-best-practices",
+  "title": "Implementation Best Practices Advisor",
+  "role": "capability-router",
+  "capability": "implementation-best-practices",
+  "maintainer": {
+    "status": "unassigned",
+    "identity": null
+  },
+  "decision": {
+    "owns": [
+      "Scalable implementation patterns after product and environment decisions are known."
+    ],
+    "excludes": [
+      "Other capabilities' domain decisions and unapproved execution."
+    ]
+  },
+  "authority": {
+    "supported_modes": [
+      "ask",
+      "assess",
+      "act"
+    ],
+    "act_behavior": "approval-gated-orchestration",
+    "approval_policy": "explicit-scoped-approval-before-material-change",
+    "operations": [
+      {
+        "id": "advise",
+        "mode": "ask",
+        "target": "supplied-context",
+        "execution": "advise",
+        "requires_approval": false
+      },
+      {
+        "id": "inspect-approved-evidence",
+        "mode": "assess",
+        "target": "approved-evidence",
+        "execution": "inspect",
+        "requires_approval": true
+      },
+      {
+        "id": "orchestrate-approved-action",
+        "mode": "act",
+        "target": "approved-target",
+        "execution": "delegate",
+        "requires_approval": true
+      }
+    ]
+  },
+  "relationships": [
+    {
+      "target": "implementation-pattern-router",
+      "kind": "routes_to",
+      "when": "Cross-product implementation routing and synthesis."
+    },
+    {
+      "target": "agentforce-implementation-advisor",
+      "kind": "routes_to",
+      "when": "Agentforce agent, topic, action, orchestration, state, testing, and UX decisions."
+    },
+    {
+      "target": "data-360-implementation-advisor",
+      "kind": "routes_to",
+      "when": "Data 360 architecture and implementation patterns for partner solutions."
+    },
+    {
+      "target": "slack-implementation-advisor",
+      "kind": "routes_to",
+      "when": "Slack application, authentication, packaging, and Salesforce integration decisions."
+    },
+    {
+      "target": "tableau-next-implementation-advisor",
+      "kind": "routes_to",
+      "when": "Tableau Next implementation and integration decisions for partner solutions."
+    },
+    {
+      "target": "packaging-distribution",
+      "kind": "consults",
+      "when": "Package identity, composition, distribution, or upgrade ownership materially changes this decision."
+    },
+    {
+      "target": "platform-constraints",
+      "kind": "consults",
+      "when": "Limits, metadata support, scale, or platform supportability materially changes this decision."
+    },
+    {
+      "target": "security-readiness",
+      "kind": "consults",
+      "when": "Identity, data exposure, trust boundaries, or Security Review readiness materially changes this decision."
+    },
+    {
+      "target": "operations-release",
+      "kind": "consults",
+      "when": "Testing, release, rollback, monitoring, or support obligations materially changes this decision."
+    },
+    {
+      "target": "headless-mcp-advisor",
+      "kind": "routes_to",
+      "when": "Headless Toolkit or MCP client/server choices are the bounded decision."
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "advisor-capability-preflight",
+      "kind": "internal_skill",
+      "modes": [
+        "ask"
+      ],
+      "requirement": "conditional",
+      "when": "This Ask decision needs the named advisor's expertise or documentation policy.",
+      "missing_behavior": "Continue bounded Ask guidance from supplied facts and available references; label missing expertise and do not claim it was consulted."
+    },
+    {
+      "id": "advisor-capability-preflight",
+      "kind": "internal_skill",
+      "modes": [
+        "assess",
+        "act"
+      ],
+      "requirement": "required",
+      "when": "Complete advisor context is required to claim this inspected or execution path was validated.",
+      "missing_behavior": "Report incomplete advisor context; prepare a complete library before claiming this path was validated."
+    },
+    {
+      "id": "salesforce-docs-mcp",
+      "kind": "documentation_provider",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "requirement": "optional",
+      "when": "A current or disputed Salesforce claim requires corroboration.",
+      "missing_behavior": "Use approved official documentation fallback; preserve unverified claims as unknown. Never probe org tools for documentation."
+    }
+  ],
+  "evidence": {
+    "policy_skill": "oem-isv-advisor",
+    "practitioner_knowledge": null,
+    "source_refresh": null
+  },
+  "output": {
+    "contract": "advisor-readout-v1",
+    "extensions": []
+  },
+  "maturity": {
+    "declared_state": "candidate-router",
+    "decision_areas": [
+      {
+        "id": "declared-decision-scope",
+        "state": "needs-validation",
+        "reference": null
+      }
+    ],
+    "validation_is_external": true
+  }
+}

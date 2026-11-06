@@ -1,0 +1,4 @@
+interface:
+  display_name: "OEM/ISV Advisor"
+  short_description: "Route partner decisions to trusted advisor skills"
+  default_prompt: "Use $oem-isv-advisor to guide this Salesforce OEM or ISV partner decision."

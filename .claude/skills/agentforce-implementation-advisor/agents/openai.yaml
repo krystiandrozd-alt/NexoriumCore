@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agentforce Implementation Advisor"
+  short_description: "Guide agentforce implementation advisor decisions"
+  default_prompt: "Use $agentforce-implementation-advisor to guide this OEM/ISV partner decision."

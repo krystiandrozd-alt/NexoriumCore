@@ -1,0 +1,4 @@
+interface:
+  display_name: "Packaging and Distribution"
+  short_description: "Route packaging and distribution decisions"
+  default_prompt: "Use $packaging-distribution to route and synthesize this OEM/ISV packaging decision."

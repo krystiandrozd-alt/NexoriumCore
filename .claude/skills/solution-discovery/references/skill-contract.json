@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0.0",
+  "id": "solution-discovery",
+  "title": "Solution Discovery and Product Design Advisor",
+  "role": "capability-router",
+  "capability": "solution-discovery",
+  "maintainer": {
+    "status": "unassigned",
+    "identity": null
+  },
+  "decision": {
+    "owns": [
+      "Product fit, target user, product boundary, Salesforce fit, and viable solution direction."
+    ],
+    "excludes": [
+      "Other capabilities' domain decisions and unapproved execution."
+    ]
+  },
+  "authority": {
+    "supported_modes": [
+      "ask",
+      "assess",
+      "act"
+    ],
+    "act_behavior": "approval-gated-orchestration",
+    "approval_policy": "explicit-scoped-approval-before-material-change",
+    "operations": [
+      {
+        "id": "advise",
+        "mode": "ask",
+        "target": "supplied-context",
+        "execution": "advise",
+        "requires_approval": false
+      },
+      {
+        "id": "inspect-approved-evidence",
+        "mode": "assess",
+        "target": "approved-evidence",
+        "execution": "inspect",
+        "requires_approval": true
+      },
+      {
+        "id": "orchestrate-approved-action",
+        "mode": "act",
+        "target": "approved-target",
+        "execution": "delegate",
+        "requires_approval": true
+      }
+    ]
+  },
+  "relationships": [
+    {
+      "target": "platform-constraints",
+      "kind": "consults",
+      "when": "Limits, metadata support, scale, or platform supportability materially changes this decision."
+    },
+    {
+      "target": "security-readiness",
+      "kind": "consults",
+      "when": "Identity, data exposure, trust boundaries, or Security Review readiness materially changes this decision."
+    },
+    {
+      "target": "packaging-distribution",
+      "kind": "routes_to",
+      "when": "The next bounded decision is packaging or distribution."
+    },
+    {
+      "target": "development-environment",
+      "kind": "routes_to",
+      "when": "The next decision is org selection or development lifecycle."
+    },
+    {
+      "target": "implementation-best-practices",
+      "kind": "routes_to",
+      "when": "The next decision is implementation design."
+    },
+    {
+      "target": "operations-release",
+      "kind": "consults",
+      "when": "Operating or lifecycle assumptions affect product viability."
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "advisor-capability-preflight",
+      "kind": "internal_skill",
+      "modes": [
+        "ask"
+      ],
+      "requirement": "conditional",
+      "when": "This Ask decision needs the named advisor's expertise or documentation policy.",
+      "missing_behavior": "Continue bounded Ask guidance from supplied facts and available references; label missing expertise and do not claim it was consulted."
+    },
+    {
+      "id": "advisor-capability-preflight",
+      "kind": "internal_skill",
+      "modes": [
+        "assess",
+        "act"
+      ],
+      "requirement": "required",
+      "when": "Complete advisor context is required to claim this inspected or execution path was validated.",
+      "missing_behavior": "Report incomplete advisor context; prepare a complete library before claiming this path was validated."
+    },
+    {
+      "id": "salesforce-docs-mcp",
+      "kind": "documentation_provider",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "requirement": "optional",
+      "when": "A current or disputed Salesforce claim requires corroboration.",
+      "missing_behavior": "Use approved official documentation fallback; preserve unverified claims as unknown. Never probe org tools for documentation."
+    }
+  ],
+  "evidence": {
+    "policy_skill": "oem-isv-advisor",
+    "practitioner_knowledge": null,
+    "source_refresh": null
+  },
+  "output": {
+    "contract": "advisor-readout-v1",
+    "extensions": [
+      "Product-fit decision and meaningful alternatives"
+    ]
+  },
+  "maturity": {
+    "declared_state": "candidate-router",
+    "decision_areas": [
+      {
+        "id": "declared-decision-scope",
+        "state": "needs-validation",
+        "reference": null
+      }
+    ],
+    "validation_is_external": true
+  }
+}

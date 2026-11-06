@@ -1,0 +1,467 @@
+{
+  "schema_version": 1,
+  "contract_schema_version": "1.0.0",
+  "catalog_status": "complete-architecture-skeleton",
+  "generated_from": "per-skill contracts; do not edit this index manually",
+  "baseline": {
+    "skill_count": 27,
+    "capability_count": 7,
+    "content_state": "Declared ownership and maturity; validation is separately bound to tested commits and scenarios."
+  },
+  "foundation_skills": [
+    {
+      "id": "advisor-capability-preflight",
+      "version": "1.1.0",
+      "role": "capability-preflight",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "maturity": "candidate-ready-for-testing",
+      "owns": "Establish documentation capability, consent, configuration, and fallback without probing an org.",
+      "delegates_execution_to": []
+    },
+    {
+      "id": "oem-isv-advisor",
+      "version": "1.0.0",
+      "role": "entry-router",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "maturity": "candidate-ready-for-testing",
+      "owns": "Preserve the partner goal and select the owning advisor capability.",
+      "delegates_execution_to": []
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "solution-discovery",
+      "version": "1.0.0",
+      "role": "capability-router",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "maturity": "candidate-router",
+      "owns": "Product fit, target user, product boundary, Salesforce fit, and viable solution direction.",
+      "delegates_execution_to": [],
+      "number": 1,
+      "title": "Solution Discovery and Product Design Advisor",
+      "supporting_capabilities": [
+        "platform-constraints",
+        "security-readiness",
+        "operations-release"
+      ],
+      "focused_skills": []
+    },
+    {
+      "id": "packaging-distribution",
+      "version": "1.0.0",
+      "role": "capability-router",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "maturity": "candidate-router",
+      "owns": "Packaging, package lifecycle, upgrades, listings, and distribution strategy.",
+      "delegates_execution_to": [],
+      "number": 2,
+      "title": "Packaging and Distribution Advisor",
+      "supporting_capabilities": [
+        "platform-constraints",
+        "security-readiness",
+        "operations-release"
+      ],
+      "focused_skills": [
+        {
+          "id": "managed-2gp-foundation",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "PBO ownership, package identity, namespace, project blueprint, and creation gates.",
+          "delegates_execution_to": [
+            "forcedotcom/sf-skills",
+            "salesforce-cli"
+          ]
+        },
+        {
+          "id": "package-ancestry-dependencies",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Version numbering, ancestry, dependencies, patches, and upgrade paths.",
+          "delegates_execution_to": [
+            "salesforce-cli"
+          ]
+        },
+        {
+          "id": "package-migration-transfer",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Managed 1GP-to-2GP migration and wrong-Dev-Hub transfer decisions.",
+          "delegates_execution_to": [
+            "salesforce-cli",
+            "salesforce-support"
+          ]
+        },
+        {
+          "id": "package-release-promotion",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Promotion readiness, irreversible release gate, and release evidence.",
+          "delegates_execution_to": [
+            "forcedotcom/sf-skills",
+            "salesforce-cli"
+          ]
+        },
+        {
+          "id": "package-version-validation",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Build shape, validation mode, candidate testing, and version-create diagnostics.",
+          "delegates_execution_to": [
+            "forcedotcom/sf-skills",
+            "salesforce-cli"
+          ]
+        },
+        {
+          "id": "packageability-assessment",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Read-only repository packageability, metadata support, dependencies, and remediation evidence.",
+          "delegates_execution_to": [
+            "forcedotcom/sf-skills",
+            "salesforce-cli"
+          ]
+        },
+        {
+          "id": "packaging-strategy",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Whether, what, and how to package; package boundaries and distribution model.",
+          "delegates_execution_to": [
+            "forcedotcom/sf-skills"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "development-environment",
+      "version": "1.0.0",
+      "role": "capability-router",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "maturity": "candidate-router",
+      "owns": "Which org and environment should perform each development, test, demo, trial, and packaging job.",
+      "delegates_execution_to": [],
+      "number": 3,
+      "title": "Development Environment Advisor",
+      "supporting_capabilities": [
+        "packaging-distribution",
+        "platform-constraints",
+        "operations-release"
+      ],
+      "focused_skills": [
+        {
+          "id": "environment-portfolio",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Environment selection by lifecycle job across scratch, PDE, demo, trial, and customer testing.",
+          "delegates_execution_to": [
+            "salesforce-org-mcp"
+          ]
+        },
+        {
+          "id": "namespace-access-governance",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Namespace topology, linking, Environment Hub inventory, and least-privilege access.",
+          "delegates_execution_to": [
+            "forcedotcom/sf-skills",
+            "salesforce-cli",
+            "salesforce-org-mcp"
+          ]
+        },
+        {
+          "id": "org-provisioning-diagnostics",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Provisioning capacity, health, expiration, errors, and cleanup diagnostics.",
+          "delegates_execution_to": [
+            "forcedotcom/sf-skills",
+            "salesforce-cli",
+            "salesforce-org-mcp"
+          ]
+        },
+        {
+          "id": "pbo-dev-hub-foundation",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "PBO identity, activation, Dev Hub baseline, entitlement fingerprint, and ownership recovery.",
+          "delegates_execution_to": [
+            "forcedotcom/sf-skills",
+            "salesforce-cli",
+            "salesforce-org-mcp"
+          ]
+        },
+        {
+          "id": "scratch-org-shape",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Scratch definition as code, edition, features, settings, entitlement, and build shape.",
+          "delegates_execution_to": [
+            "forcedotcom/sf-skills",
+            "salesforce-cli"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "implementation-best-practices",
+      "version": "1.0.0",
+      "role": "capability-router",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "maturity": "candidate-router",
+      "owns": "Scalable implementation patterns after product and environment decisions are known.",
+      "delegates_execution_to": [],
+      "number": 4,
+      "title": "Implementation Best Practices Advisor",
+      "supporting_capabilities": [
+        "packaging-distribution",
+        "platform-constraints",
+        "security-readiness",
+        "operations-release"
+      ],
+      "focused_skills": [
+        {
+          "id": "agentforce-implementation-advisor",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-needs-specialist-depth",
+          "owns": "Agentforce agent, topic, action, orchestration, state, testing, and UX decisions.",
+          "delegates_execution_to": [
+            "Salesforce Agentforce skills",
+            "Agentforce ADLC when approved"
+          ]
+        },
+        {
+          "id": "data-360-implementation-advisor",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-needs-specialist-depth",
+          "owns": "Data 360 architecture and implementation patterns for partner solutions.",
+          "delegates_execution_to": [
+            "dynamically discovered Salesforce Data 360 skills"
+          ]
+        },
+        {
+          "id": "headless-mcp-advisor",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Headless Toolkit and MCP direction, hosted and external server selection, client surfaces, packaged tool assets, and HXL rendering decisions.",
+          "delegates_execution_to": [
+            "forcedotcom/sf-skills"
+          ]
+        },
+        {
+          "id": "implementation-pattern-router",
+          "version": "1.0.0",
+          "role": "focused-router",
+          "modes": [
+            "ask",
+            "assess"
+          ],
+          "maturity": "candidate-ready-for-testing",
+          "owns": "Cross-product implementation routing and synthesis.",
+          "delegates_execution_to": [
+            "dynamically discovered Salesforce skill libraries"
+          ]
+        },
+        {
+          "id": "slack-implementation-advisor",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-needs-specialist-depth",
+          "owns": "Slack application, authentication, packaging, and Salesforce integration decisions.",
+          "delegates_execution_to": [
+            "dynamically discovered Salesforce and Slack skills"
+          ]
+        },
+        {
+          "id": "tableau-next-implementation-advisor",
+          "version": "1.0.0",
+          "role": "focused-advisor",
+          "modes": [
+            "ask",
+            "assess",
+            "act"
+          ],
+          "maturity": "candidate-needs-specialist-depth",
+          "owns": "Tableau Next implementation and integration decisions for partner solutions.",
+          "delegates_execution_to": [
+            "dynamically discovered Tableau skills"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "platform-constraints",
+      "version": "1.0.0",
+      "role": "capability-router",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "maturity": "candidate-router",
+      "owns": "Platform limits, metadata support, guardrails, capability gaps, and workarounds.",
+      "delegates_execution_to": [],
+      "number": 5,
+      "title": "Platform Constraints Advisor",
+      "supporting_capabilities": [
+        "packaging-distribution",
+        "security-readiness"
+      ],
+      "focused_skills": []
+    },
+    {
+      "id": "security-readiness",
+      "version": "1.0.0",
+      "role": "capability-router",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "maturity": "candidate-router",
+      "owns": "Secure architecture, review preparation, analysis evidence, and remediation readiness.",
+      "delegates_execution_to": [],
+      "number": 6,
+      "title": "Security and Readiness Advisor",
+      "supporting_capabilities": [
+        "platform-constraints",
+        "packaging-distribution"
+      ],
+      "focused_skills": []
+    },
+    {
+      "id": "operations-release",
+      "version": "1.0.0",
+      "role": "capability-router",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "maturity": "candidate-router",
+      "owns": "Testing, CI/CD, release, rollback, monitoring, support, and lifecycle operations.",
+      "delegates_execution_to": [],
+      "number": 7,
+      "title": "Operations and Release Advisor",
+      "supporting_capabilities": [
+        "packaging-distribution",
+        "security-readiness"
+      ],
+      "focused_skills": []
+    }
+  ]
+}
