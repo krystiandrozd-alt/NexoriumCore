@@ -1,0 +1,4 @@
+interface:
+  display_name: "Advisor Capability Preflight"
+  short_description: "Configure trusted Salesforce documentation access"
+  default_prompt: "Use $advisor-capability-preflight to check and configure Salesforce documentation access before starting the advisor."

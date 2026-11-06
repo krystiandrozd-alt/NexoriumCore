@@ -1,0 +1,4 @@
+interface:
+  display_name: "Packageability Assessment"
+  short_description: "Guide packageability assessment decisions"
+  default_prompt: "Use $packageability-assessment to guide this OEM/ISV partner decision."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Packaging Strategy"
+  short_description: "Guide packaging strategy decisions"
+  default_prompt: "Use $packaging-strategy to guide this OEM/ISV partner decision."

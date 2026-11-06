@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0.0",
+  "id": "operations-release",
+  "title": "Operations and Release Advisor",
+  "role": "capability-router",
+  "capability": "operations-release",
+  "maintainer": {
+    "status": "unassigned",
+    "identity": null
+  },
+  "decision": {
+    "owns": [
+      "Testing, CI/CD, release, rollback, monitoring, support, and lifecycle operations."
+    ],
+    "excludes": [
+      "Other capabilities' domain decisions and unapproved execution."
+    ]
+  },
+  "authority": {
+    "supported_modes": [
+      "ask",
+      "assess",
+      "act"
+    ],
+    "act_behavior": "approval-gated-orchestration",
+    "approval_policy": "explicit-scoped-approval-before-material-change",
+    "operations": [
+      {
+        "id": "advise",
+        "mode": "ask",
+        "target": "supplied-context",
+        "execution": "advise",
+        "requires_approval": false
+      },
+      {
+        "id": "inspect-approved-evidence",
+        "mode": "assess",
+        "target": "approved-evidence",
+        "execution": "inspect",
+        "requires_approval": true
+      },
+      {
+        "id": "orchestrate-approved-action",
+        "mode": "act",
+        "target": "approved-target",
+        "execution": "delegate",
+        "requires_approval": true
+      }
+    ]
+  },
+  "relationships": [
+    {
+      "target": "packaging-distribution",
+      "kind": "consults",
+      "when": "Package identity, composition, distribution, or upgrade ownership materially changes this decision."
+    },
+    {
+      "target": "security-readiness",
+      "kind": "consults",
+      "when": "Identity, data exposure, trust boundaries, or Security Review readiness materially changes this decision."
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "advisor-capability-preflight",
+      "kind": "internal_skill",
+      "modes": [
+        "ask"
+      ],
+      "requirement": "conditional",
+      "when": "This Ask decision needs the named advisor's expertise or documentation policy.",
+      "missing_behavior": "Continue bounded Ask guidance from supplied facts and available references; label missing expertise and do not claim it was consulted."
+    },
+    {
+      "id": "advisor-capability-preflight",
+      "kind": "internal_skill",
+      "modes": [
+        "assess",
+        "act"
+      ],
+      "requirement": "required",
+      "when": "Complete advisor context is required to claim this inspected or execution path was validated.",
+      "missing_behavior": "Report incomplete advisor context; prepare a complete library before claiming this path was validated."
+    },
+    {
+      "id": "salesforce-docs-mcp",
+      "kind": "documentation_provider",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "requirement": "optional",
+      "when": "A current or disputed Salesforce claim requires corroboration.",
+      "missing_behavior": "Use approved official documentation fallback; preserve unverified claims as unknown. Never probe org tools for documentation."
+    }
+  ],
+  "evidence": {
+    "policy_skill": "oem-isv-advisor",
+    "practitioner_knowledge": null,
+    "source_refresh": null
+  },
+  "output": {
+    "contract": "advisor-readout-v1",
+    "extensions": [
+      "Release evidence, operational risks, and next approval-gated action"
+    ]
+  },
+  "maturity": {
+    "declared_state": "candidate-router",
+    "decision_areas": [
+      {
+        "id": "declared-decision-scope",
+        "state": "needs-validation",
+        "reference": null
+      }
+    ],
+    "validation_is_external": true
+  }
+}

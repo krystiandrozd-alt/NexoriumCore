@@ -1,0 +1,4 @@
+interface:
+  display_name: "PBO Dev Hub Foundation"
+  short_description: "Guide pbo dev hub foundation decisions"
+  default_prompt: "Use $pbo-dev-hub-foundation to guide this OEM/ISV partner decision."

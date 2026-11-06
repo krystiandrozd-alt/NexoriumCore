@@ -1,0 +1,154 @@
+{
+  "schema_version": "1.0.0",
+  "id": "environment-portfolio",
+  "title": "Environment Portfolio",
+  "role": "focused-advisor",
+  "capability": "development-environment",
+  "maintainer": {
+    "status": "unassigned",
+    "identity": null
+  },
+  "decision": {
+    "owns": [
+      "Environment selection by lifecycle job across scratch, PDE, demo, trial, and customer testing."
+    ],
+    "excludes": [
+      "provisioning execution",
+      "trial experience implementation"
+    ]
+  },
+  "authority": {
+    "supported_modes": [
+      "ask",
+      "assess"
+    ],
+    "act_behavior": "delegate",
+    "approval_policy": "explicit-scoped-approval-before-material-change",
+    "operations": [
+      {
+        "id": "advise",
+        "mode": "ask",
+        "target": "supplied-context",
+        "execution": "advise",
+        "requires_approval": false
+      },
+      {
+        "id": "inspect-approved-evidence",
+        "mode": "assess",
+        "target": "approved-evidence",
+        "execution": "inspect",
+        "requires_approval": true
+      }
+    ]
+  },
+  "relationships": [
+    {
+      "target": "platform-constraints",
+      "kind": "consults",
+      "when": "Limits, metadata support, scale, or platform supportability materially changes this decision."
+    },
+    {
+      "target": "security-readiness",
+      "kind": "consults",
+      "when": "Identity, data exposure, trust boundaries, or Security Review readiness materially changes this decision."
+    },
+    {
+      "target": "operations-release",
+      "kind": "consults",
+      "when": "Testing, release, rollback, monitoring, or support obligations materially changes this decision."
+    },
+    {
+      "target": "development-environment",
+      "kind": "returns_to",
+      "when": "A capability owner is active; return bounded findings for its final synthesis."
+    },
+    {
+      "target": "scratch-org-shape",
+      "kind": "routes_to",
+      "when": "The selected job is disposable and needs a scratch definition."
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "advisor-capability-preflight",
+      "kind": "internal_skill",
+      "modes": [
+        "ask"
+      ],
+      "requirement": "conditional",
+      "when": "This Ask decision needs the named advisor's expertise or documentation policy.",
+      "missing_behavior": "Continue bounded Ask guidance from supplied facts and available references; label missing expertise and do not claim it was consulted."
+    },
+    {
+      "id": "advisor-capability-preflight",
+      "kind": "internal_skill",
+      "modes": [
+        "assess"
+      ],
+      "requirement": "required",
+      "when": "Complete advisor context is required to claim this inspected or execution path was validated.",
+      "missing_behavior": "Report incomplete advisor context; prepare a complete library before claiming this path was validated."
+    },
+    {
+      "id": "development-environment",
+      "kind": "internal_skill",
+      "modes": [
+        "ask"
+      ],
+      "requirement": "conditional",
+      "when": "This Ask decision needs the named advisor's expertise or documentation policy.",
+      "missing_behavior": "Continue bounded Ask guidance from supplied facts and available references; label missing expertise and do not claim it was consulted."
+    },
+    {
+      "id": "development-environment",
+      "kind": "internal_skill",
+      "modes": [
+        "assess"
+      ],
+      "requirement": "required",
+      "when": "Complete advisor context is required to claim this inspected or execution path was validated.",
+      "missing_behavior": "Report incomplete advisor context; prepare a complete library before claiming this path was validated."
+    },
+    {
+      "id": "salesforce-org-mcp",
+      "kind": "tool",
+      "modes": [
+        "assess"
+      ],
+      "requirement": "conditional",
+      "when": "The selected approved operation needs Salesforce Platform MCP; discover its current instructions and availability.",
+      "missing_behavior": "Keep unavailable work not-run; request the missing capability or give a bounded manual handoff. Never claim execution occurred."
+    },
+    {
+      "id": "salesforce-docs-mcp",
+      "kind": "documentation_provider",
+      "modes": [
+        "ask",
+        "assess"
+      ],
+      "requirement": "optional",
+      "when": "A current or disputed Salesforce claim requires corroboration.",
+      "missing_behavior": "Use approved official documentation fallback; preserve unverified claims as unknown. Never probe org tools for documentation."
+    }
+  ],
+  "evidence": {
+    "policy_skill": "oem-isv-advisor",
+    "practitioner_knowledge": "references/practitioner-knowledge.md",
+    "source_refresh": "references/source-refresh.md"
+  },
+  "output": {
+    "contract": "advisor-readout-v1",
+    "extensions": []
+  },
+  "maturity": {
+    "declared_state": "candidate-ready-for-testing",
+    "decision_areas": [
+      {
+        "id": "declared-decision-scope",
+        "state": "needs-validation",
+        "reference": null
+      }
+    ],
+    "validation_is_external": true
+  }
+}

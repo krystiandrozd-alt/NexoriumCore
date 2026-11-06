@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slack Implementation Advisor"
+  short_description: "Guide slack implementation advisor decisions"
+  default_prompt: "Use $slack-implementation-advisor to guide this OEM/ISV partner decision."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Development Environment"
+  short_description: "Choose and govern Salesforce environments"
+  default_prompt: "Use $development-environment to choose the right orgs for development, demos, testing, and packaging."

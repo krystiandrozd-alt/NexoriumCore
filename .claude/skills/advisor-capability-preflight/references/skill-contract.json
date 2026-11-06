@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0.0",
+  "id": "advisor-capability-preflight",
+  "title": "Advisor capability preflight",
+  "role": "capability-preflight",
+  "capability": null,
+  "maintainer": {
+    "status": "unassigned",
+    "identity": null
+  },
+  "decision": {
+    "owns": [
+      "Establish documentation capability, consent, configuration, and fallback without probing an org."
+    ],
+    "excludes": [
+      "Replacing a domain owner's recommendation or granting implicit action authority."
+    ]
+  },
+  "authority": {
+    "supported_modes": [
+      "ask",
+      "assess",
+      "act"
+    ],
+    "act_behavior": "configuration-only",
+    "approval_policy": "explicit-scoped-approval-before-material-change",
+    "operations": [
+      {
+        "id": "advise",
+        "mode": "ask",
+        "target": "supplied-context",
+        "execution": "advise",
+        "requires_approval": false
+      },
+      {
+        "id": "inspect-approved-evidence",
+        "mode": "assess",
+        "target": "approved-evidence",
+        "execution": "inspect",
+        "requires_approval": true
+      },
+      {
+        "id": "configure-documentation-access",
+        "mode": "act",
+        "target": "session-configuration",
+        "execution": "configure",
+        "requires_approval": true
+      }
+    ]
+  },
+  "relationships": [],
+  "dependencies": [
+    {
+      "id": "oem-isv-advisor",
+      "kind": "internal_skill",
+      "modes": [
+        "ask"
+      ],
+      "requirement": "conditional",
+      "when": "This Ask decision needs the named advisor's expertise or documentation policy.",
+      "missing_behavior": "Continue bounded Ask guidance from supplied facts and available references; label missing expertise and do not claim it was consulted."
+    },
+    {
+      "id": "oem-isv-advisor",
+      "kind": "internal_skill",
+      "modes": [
+        "assess",
+        "act"
+      ],
+      "requirement": "required",
+      "when": "Complete advisor context is required to claim this inspected or execution path was validated.",
+      "missing_behavior": "Report incomplete advisor context; prepare a complete library before claiming this path was validated."
+    },
+    {
+      "id": "salesforce-docs-mcp",
+      "kind": "documentation_provider",
+      "modes": [
+        "ask",
+        "assess",
+        "act"
+      ],
+      "requirement": "optional",
+      "when": "A current or disputed Salesforce claim requires corroboration.",
+      "missing_behavior": "Use approved official documentation fallback; preserve unverified claims as unknown. Never probe org tools for documentation."
+    }
+  ],
+  "evidence": {
+    "policy_skill": "oem-isv-advisor",
+    "practitioner_knowledge": null,
+    "source_refresh": null
+  },
+  "output": {
+    "contract": "advisor-readout-v1",
+    "extensions": [
+      "Documentation capability, consent, and fallback receipt"
+    ]
+  },
+  "maturity": {
+    "declared_state": "candidate-ready-for-testing",
+    "decision_areas": [
+      {
+        "id": "declared-decision-scope",
+        "state": "needs-validation",
+        "reference": null
+      }
+    ],
+    "validation_is_external": true
+  }
+}

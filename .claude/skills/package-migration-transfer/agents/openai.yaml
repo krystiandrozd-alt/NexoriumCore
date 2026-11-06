@@ -1,0 +1,4 @@
+interface:
+  display_name: "Package Migration Transfer"
+  short_description: "Guide package migration transfer decisions"
+  default_prompt: "Use $package-migration-transfer to guide this OEM/ISV partner decision."

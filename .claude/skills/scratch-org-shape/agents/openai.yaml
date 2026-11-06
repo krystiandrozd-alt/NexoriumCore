@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scratch Org Shape"
+  short_description: "Guide scratch org shape decisions"
+  default_prompt: "Use $scratch-org-shape to design or assess project-scratch-def.json for daily development and package-version builds."

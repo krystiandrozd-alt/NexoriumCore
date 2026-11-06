@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forcedotcom.github.io/partner-ecosystem-agentic-kit/skill-contract/1.0.0",
+  "title": "Portable advisor skill contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "role", "capability", "maintainer", "decision", "authority", "relationships", "dependencies", "evidence", "output", "maturity"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 64},
+    "title": {"type": "string", "minLength": 1},
+    "role": {"enum": ["entry-router", "capability-preflight", "capability-router", "focused-router", "focused-advisor"]},
+    "capability": {"enum": [null, "solution-discovery", "packaging-distribution", "development-environment", "implementation-best-practices", "platform-constraints", "security-readiness", "operations-release"]},
+    "maintainer": {"type": "object", "additionalProperties": false, "required": ["status", "identity"], "properties": {"status": {"enum": ["assigned", "unassigned"]}, "identity": {"type": ["string", "null"]}}},
+    "decision": {"type": "object", "additionalProperties": false, "required": ["owns", "excludes"], "properties": {"owns": {"$ref": "#/$defs/nonemptyStrings"}, "excludes": {"$ref": "#/$defs/strings"}}},
+    "authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["supported_modes", "act_behavior", "approval_policy", "operations"],
+      "properties": {
+        "supported_modes": {"$ref": "#/$defs/modes"},
+        "act_behavior": {"enum": ["approval-gated-orchestration", "delegate", "configuration-only", "not-supported"]},
+        "approval_policy": {"const": "explicit-scoped-approval-before-material-change"},
+        "operations": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["id", "mode", "target", "execution", "requires_approval"],
+          "properties": {"id": {"type": "string", "minLength": 1}, "mode": {"enum": ["ask", "assess", "act"]}, "target": {"enum": ["supplied-context", "approved-evidence", "approved-target", "session-configuration"]}, "execution": {"enum": ["advise", "inspect", "delegate", "configure"]}, "requires_approval": {"type": "boolean"}}
+        }}
+      }
+    },
+    "relationships": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["target", "kind", "when"], "properties": {"target": {"type": "string", "minLength": 1}, "kind": {"enum": ["routes_to", "consults", "returns_to"]}, "when": {"type": "string", "minLength": 1}}}},
+    "dependencies": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "kind", "modes", "requirement", "when", "missing_behavior"], "properties": {"id": {"type": "string", "minLength": 1}, "kind": {"enum": ["internal_skill", "external_skill", "execution_library", "tool", "documentation_provider", "service_workflow"]}, "modes": {"$ref": "#/$defs/modes"}, "requirement": {"enum": ["required", "conditional", "optional"]}, "when": {"type": "string", "minLength": 1}, "missing_behavior": {"type": "string", "minLength": 1}}}},
+    "evidence": {"type": "object", "additionalProperties": false, "required": ["policy_skill", "practitioner_knowledge", "source_refresh"], "properties": {"policy_skill": {"const": "oem-isv-advisor"}, "practitioner_knowledge": {"type": ["string", "null"]}, "source_refresh": {"type": ["string", "null"]}}},
+    "output": {"type": "object", "additionalProperties": false, "required": ["contract", "extensions"], "properties": {"contract": {"const": "advisor-readout-v1"}, "extensions": {"$ref": "#/$defs/strings"}}},
+    "maturity": {"type": "object", "additionalProperties": false, "required": ["declared_state", "decision_areas", "validation_is_external"], "properties": {"declared_state": {"type": "string", "minLength": 1}, "validation_is_external": {"const": true}, "decision_areas": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "state", "reference"], "properties": {"id": {"type": "string", "minLength": 1}, "state": {"enum": ["needs-validation", "reviewed-practitioner-knowledge"]}, "reference": {"type": ["string", "null"]}}}}}}
+  },
+  "$defs": {
+    "strings": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "nonemptyStrings": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "modes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["ask", "assess", "act"]}}
+  }
+}

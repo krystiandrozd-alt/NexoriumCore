@@ -92,16 +92,16 @@ npm run dev
 
 7. Open [http://localhost:3003](http://localhost:3003) in your browser
 
-### Claude Code: ISV/OEM Advisor plugin (optional)
+### Claude Code: ISV/OEM Advisor skills (optional)
 
-`.claude/settings.json` registers the `partner-ecosystem-agentic-kit` plugin marketplace and enables its **ISV/OEM Advisor** plugin (`oem-isv-advisor`): 27 skills for Salesforce ISV/OEM partners covering packaging and 2GP, Dev Hub, scratch orgs and environment selection, implementation patterns, Security Review, and release. The marketplace source is the [`krystiandrozd-alt` fork](https://github.com/krystiandrozd-alt/partner-ecosystem-agentic-kit) of [`forcedotcom/partner-ecosystem-agentic-kit`](https://github.com/forcedotcom/partner-ecosystem-agentic-kit), so upstream changes arrive only after the fork is synced. To follow upstream directly, change `repo` to `forcedotcom/partner-ecosystem-agentic-kit`.
+`.claude/skills/` holds the 27 skills of the Salesforce **ISV/OEM Advisor**: release `v0.2.0` of [`forcedotcom/partner-ecosystem-agentic-kit`](https://github.com/forcedotcom/partner-ecosystem-agentic-kit), installed from the [`krystiandrozd-alt` fork](https://github.com/krystiandrozd-alt/partner-ecosystem-agentic-kit) with the kit's `claude-code` bundle. They cover packaging and 2GP, Dev Hub, scratch orgs and environment selection, implementation patterns, Security Review, and release. The files are unmodified copies. The Apache-2.0 license and the source lock (commit, release tag, per-file SHA-256) are in `.claude/vendor/partner-ecosystem-agentic-kit/`.
 
-- **Local (terminal, desktop app, IDE):** start Claude Code in the repository root and accept the workspace trust dialog. Claude Code then registers the marketplace and loads the plugin. No separate install step is needed because the marketplace lists the plugin by a relative path. Run it with `/oem-isv-advisor:oem-isv-advisor`.
-- **Claude Code on the web:** has no effect. Cloud sessions do not install plugins that a repository's `.claude/settings.json` enables. There, the advisor needs your organization's server-managed settings (the same two keys) or its skills enabled on claude.ai.
-- **Bundled MCP server:** the plugin ships a `salesforce-docs` MCP server (`https://salesforce-docs-76258744c9d7.herokuapp.com/api/mcp`). Claude Code connects plugin MCP servers automatically when the plugin is enabled. Turn it off in `/mcp` if that host is not approved.
-- **Context cost:** about 3,000 tokens are added to every session in this repository, and each skill invocation adds roughly 0.6k–2.6k more (`claude plugin details oem-isv-advisor`, plugin 0.2.0).
-- **Updates:** auto-update is off, which is Claude Code's default for third-party marketplaces. Sync the fork, then in `/plugin` open **Marketplaces**, select **partner-ecosystem-agentic-kit**, and choose **Update marketplace**.
-- **Opt out on your machine:** set `"oem-isv-advisor@partner-ecosystem-agentic-kit": false` under `enabledPlugins` in `.claude/settings.local.json`.
+- **Where they load:** local Claude Code sessions and Claude Code on the web both load a repository's `.claude/skills/`. A cloud session sees them only on a branch that contains them.
+- **Run:** `/oem-isv-advisor` is the entry skill and routes to the other 26.
+- **Documentation MCP:** not bundled. The advisor's preflight looks for Salesforce Docs MCP and asks before installing or connecting it. Without it, the advisor offers official Salesforce documentation or packaged knowledge only.
+- **Context cost:** about 3,000 tokens are added to every session in this repository, and each skill invocation adds roughly 0.6k–2.6k more (measured on the identical plugin payload with `claude plugin details`, 0.2.0).
+- **Do not also enable the `oem-isv-advisor` plugin in this repository:** the same 27 skills would load twice.
+- **Updates:** manual. In a checkout of the kit at the new release tag, run `python3 scripts/prepare_harness.py bundle --target claude-code --output <new>.zip`, replace the 27 folders under `.claude/skills/` with the archive's `.claude/skills/`, replace `bundle-manifest.json`, and check the result with the kit's `scripts/check_installed_layout.py <path-to-this-repo>/.claude/skills`. Do not edit the copies in place: local changes are lost on update, and Apache-2.0 requires marking modified files.
 
 The advisor's preflight saves your documentation-tool choices to `.advisor/capabilities.json` in the project root. The file holds a machine-specific absolute path, so it is gitignored.
 

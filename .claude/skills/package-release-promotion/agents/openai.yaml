@@ -1,0 +1,4 @@
+interface:
+  display_name: "Package Release Promotion"
+  short_description: "Guide package release promotion decisions"
+  default_prompt: "Use $package-release-promotion to guide this OEM/ISV partner decision."

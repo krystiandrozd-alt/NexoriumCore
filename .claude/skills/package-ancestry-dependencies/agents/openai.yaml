@@ -1,0 +1,4 @@
+interface:
+  display_name: "Package Ancestry Dependencies"
+  short_description: "Guide package ancestry dependencies decisions"
+  default_prompt: "Use $package-ancestry-dependencies to guide this OEM/ISV partner decision."

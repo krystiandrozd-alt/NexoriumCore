@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implementation Best Practices"
+  short_description: "Route scalable implementation patterns"
+  default_prompt: "Use $implementation-best-practices to select and validate the implementation pattern for this partner solution."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implementation Pattern Router"
+  short_description: "Guide implementation pattern router decisions"
+  default_prompt: "Use $implementation-pattern-router to guide this OEM/ISV partner decision."

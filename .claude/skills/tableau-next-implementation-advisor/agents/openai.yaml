@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tableau Next Implementation Advisor"
+  short_description: "Guide tableau next implementation advisor decisions"
+  default_prompt: "Use $tableau-next-implementation-advisor to guide this OEM/ISV partner decision."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Managed 2GP Foundation"
+  short_description: "Guide managed 2gp foundation decisions"
+  default_prompt: "Use $managed-2gp-foundation to guide this OEM/ISV partner decision."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Namespace Access Governance"
+  short_description: "Guide namespace access governance decisions"
+  default_prompt: "Use $namespace-access-governance to guide this OEM/ISV partner decision."
