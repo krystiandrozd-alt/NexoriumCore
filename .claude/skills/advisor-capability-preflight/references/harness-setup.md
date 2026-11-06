@@ -31,6 +31,27 @@ Read only the section for the active harness.
   `.claude/settings.local.json` only after project-level approval.
 - Do not use `--dangerously-skip-permissions`.
 
+## Claude Code cloud sessions
+
+Cloud sessions (Claude Code on the web and other remote containers) differ from
+a local install:
+
+- `claude mcp add` and settings on the customer's computer do not carry over.
+  Two routes work: the customer adds `salesforce-docs` as a connector in their
+  claude.ai connector settings and starts a new session (connectors are read
+  when a session starts), or the server is committed to the `.mcp.json` of the
+  repository the session opens. Committing changes that repository; get
+  approval for that repository specifically.
+- The container is temporary. `.advisor/capabilities.json` disappears with it
+  unless committed. Keep choices in session context unless the customer names a
+  repository and approves committing the record there.
+- The environment's network policy governs outbound hosts. If it blocks a listed
+  endpoint, the server stays unavailable; do not route around the policy.
+- Use the host's fetch tool for web fallback when it is exposed. Tool exposure
+  can change during a session. If no host fetch tool is exposed, ask before
+  using another read-only fetch against approved sources, and never use one for
+  a host outside the approved scope.
+
 ## Cursor and other harnesses
 
 - Use the harness's native MCP and domain-permission flow.
@@ -52,5 +73,8 @@ The maintainer-listed metadata references
 `https://labs.agentforce.com/docs/salesforce-docs-mcp` (source review date in the
 policy). This is not a claim of current endpoint health. Recheck that source
 before changing the endpoint, transport, authentication statement, or expected
-tools. Salesforce Hosted MCP org/data servers are not documentation MCP
-substitutes.
+tools. The policy's `provenance_review.exact_urls` permits a read-only re-read
+of that page for this purpose only; it confirms the listing, not the endpoint.
+Report a listed candidate's `verification` value as given (`not_performed` for
+maintainer-listed metadata). Salesforce Hosted MCP org/data servers are not
+documentation MCP substitutes.

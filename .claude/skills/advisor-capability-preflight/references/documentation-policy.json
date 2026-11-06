@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "policy_version": "2026-07-31",
+  "policy_version": "2026-11-06",
   "salesforce_docs_mcp": {
     "requirement": "optional-highly-recommended",
     "decline_behavior": "continue with approved public documentation or packaged knowledge; do not block the advisor or repeatedly prompt",
@@ -39,7 +39,14 @@
         ]
       }
     ],
-    "missing_install_source_behavior": "recommend_salesforce_managed_catalog_or_workspace_admin"
+    "missing_install_source_behavior": "recommend_salesforce_managed_catalog_or_workspace_admin",
+    "provenance_review": {
+      "exact_urls": [
+        "https://labs.agentforce.com/docs/salesforce-docs-mcp"
+      ],
+      "access": "read_only",
+      "purpose": "Re-read the maintainer listing before offering installation or changing the endpoint, transport, authentication statement, or expected tools. Reading it confirms the listing only, not endpoint health."
+    }
   },
   "approved_documentation": {
     "scheme": "https",

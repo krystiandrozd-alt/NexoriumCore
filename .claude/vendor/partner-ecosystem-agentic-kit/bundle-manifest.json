@@ -13,11 +13,11 @@
     "notes": "Project folders, user skills, plugin skills, and synced skills may coexist. Inspect actual loaded paths and restart or use a fresh session after changing the installation.",
     "source": "https://code.claude.com/docs/en/skills"
   },
-  "library_head_sha": "f2e1328663a647ea068baaae1889958b34637662",
-  "library_release": "v0.2.0",
-  "source_state": "exact-tagged-content",
+  "library_head_sha": "d56cd4fef252ca6cabbcfe618ad397191b2839d6",
+  "library_release": null,
+  "source_state": "local-content-not-a-release",
   "skill_versions": {
-    "advisor-capability-preflight": "1.0.0",
+    "advisor-capability-preflight": "1.1.0",
     "agentforce-implementation-advisor": "1.0.0",
     "data-360-implementation-advisor": "1.0.0",
     "development-environment": "1.0.0",
@@ -46,13 +46,13 @@
     "tableau-next-implementation-advisor": "1.0.0"
   },
   "file_sha256": {
-    "skills/advisor-capability-preflight/SKILL.md": "d008478216659c49d9749264006de1455da8e1e1379c0b35399c7f5990c84cb8",
+    "skills/advisor-capability-preflight/SKILL.md": "dbeaf9149529e9e91c9f0cb287bb614aa8525426b097a8469764d9bc339186e2",
     "skills/advisor-capability-preflight/agents/openai.yaml": "d0c2431b06b0400b8a56c7d9c2417ac6f5327333c7f42af9274d36041a9c90a4",
-    "skills/advisor-capability-preflight/references/documentation-policy.json": "87aadd8cefa608b57b47f6e4654cfa5aae54c5b10e985eaf7b1dd1a334b5d1d4",
-    "skills/advisor-capability-preflight/references/harness-setup.md": "080f2b8ab12d5f7b2db16a5119672b415df56c7c54a86a6f1982b03625c20e09",
+    "skills/advisor-capability-preflight/references/documentation-policy.json": "ec3894f214ec71c5ca3f3c6e62079d9378e108ba2ab8e6e05d427b923839852f",
+    "skills/advisor-capability-preflight/references/harness-setup.md": "9723ebc372a3dd76d9d69c9961bbb64df617351ce0f4974c3e0151d344e7645a",
     "skills/advisor-capability-preflight/references/skill-contract.json": "b8ce80cd411903c01b7a85ab7e20fe8893674552c4fa8ef9933c594333ac4b26",
-    "skills/advisor-capability-preflight/scripts/check_preflight.py": "5c60980ea6785d9f83f17586ad0e1a6a7de0f27fd2f6fcd66883f1992fc77b8a",
-    "skills/advisor-capability-preflight/scripts/record_preference.py": "83952972bc65844f395fc5af0cd45c2933ad31031047881979bd59b509fe50ae",
+    "skills/advisor-capability-preflight/scripts/check_preflight.py": "b3038d76cfb76958a7d7c0bb11c0d7f7843dfefad12d3bfab7e987be829aa3fb",
+    "skills/advisor-capability-preflight/scripts/record_preference.py": "0e08d2587db1b8d45e2ae1bc3c9622abb3fb727e4196fbf00749b214f69ea891",
     "skills/agentforce-implementation-advisor/SKILL.md": "8641c2f7a1cbc2f9abc209801ae92ed5ed1af9dd472253aa396dcd71e6adcf01",
     "skills/agentforce-implementation-advisor/agents/openai.yaml": "f9c48068a1898969ddda4e35d1005a62f85eab4829e7293d20477eaa8efcbf18",
     "skills/agentforce-implementation-advisor/references/agent-script-packaging-pattern.md": "20c45297dab446c2b999495c5e32ea4aa2f6b3d2f0619da0c30eeb91daea13ae",
@@ -101,7 +101,7 @@
     "skills/namespace-access-governance/references/source-refresh.md": "8e0a398f622ec6340c7f842bee0285747ee10b099551fa85456733d8d0f6aa4a",
     "skills/oem-isv-advisor/SKILL.md": "80cfc2cdf2e2542f4db6122f8fcc1f9cc843c99c2176237c71969eb92302a99e",
     "skills/oem-isv-advisor/agents/openai.yaml": "e4563188f842061337d5e95190649d9b09f97c2c528fda19ca06a3bac043de3d",
-    "skills/oem-isv-advisor/references/capability-catalog.json": "b061e465936a67563db5eb4145a06d5763e9231eaf67f9fcf4ac5b5b8003805d",
+    "skills/oem-isv-advisor/references/capability-catalog.json": "61f2fed3ff764a4ff164eeecee512a50de04c7e039f54284f1b0fb248328fc18",
     "skills/oem-isv-advisor/references/harness-runtime.md": "d4e31c3cc692315ba22c7b1de35f1c3117d10824ccbca2746143fd11de7db493",
     "skills/oem-isv-advisor/references/practitioner-knowledge-policy.md": "29573deae5cd026d61b9766557b04567b3dc966cb6b70eec12cacac8899ad15b",
     "skills/oem-isv-advisor/references/routing.md": "c48a6d82d5a8d4b174345ffd86d3659e1b534fdeba5fec5997d27437c75b1c9d",
@@ -191,17 +191,17 @@
     "skills/tableau-next-implementation-advisor/references/skill-contract.json": "b79adef076a13b745e6280fadf5624b65fe59f7abd6aa17471d0fa3c36a54348",
     "skills/tableau-next-implementation-advisor/references/source-refresh.md": "f281c5043ae178540abd7b875aada27bd8f7504edc90a84c4169b6e2f3d11cb9"
   },
-  "payload_sha256": "d6fd199b2e84edd78a9d9d7de351035e00652a7ca68a30343ccb3910ac58f289",
+  "payload_sha256": "c20f6d16956f97fe3ae400a16e7fd62f7ef693caecd28df52d6f4f427bc33e83",
   "profile_sha256": "1c6c7a3fbf500ed7a93dda574a45cbaf3bc1398d5e24cd76ee0a61b9bc14744b",
   "behavioral_status": "not_tested",
   "distribution_file_sha256": {
-    ".claude/skills/advisor-capability-preflight/SKILL.md": "d008478216659c49d9749264006de1455da8e1e1379c0b35399c7f5990c84cb8",
+    ".claude/skills/advisor-capability-preflight/SKILL.md": "dbeaf9149529e9e91c9f0cb287bb614aa8525426b097a8469764d9bc339186e2",
     ".claude/skills/advisor-capability-preflight/agents/openai.yaml": "d0c2431b06b0400b8a56c7d9c2417ac6f5327333c7f42af9274d36041a9c90a4",
-    ".claude/skills/advisor-capability-preflight/references/documentation-policy.json": "87aadd8cefa608b57b47f6e4654cfa5aae54c5b10e985eaf7b1dd1a334b5d1d4",
-    ".claude/skills/advisor-capability-preflight/references/harness-setup.md": "080f2b8ab12d5f7b2db16a5119672b415df56c7c54a86a6f1982b03625c20e09",
+    ".claude/skills/advisor-capability-preflight/references/documentation-policy.json": "ec3894f214ec71c5ca3f3c6e62079d9378e108ba2ab8e6e05d427b923839852f",
+    ".claude/skills/advisor-capability-preflight/references/harness-setup.md": "9723ebc372a3dd76d9d69c9961bbb64df617351ce0f4974c3e0151d344e7645a",
     ".claude/skills/advisor-capability-preflight/references/skill-contract.json": "b8ce80cd411903c01b7a85ab7e20fe8893674552c4fa8ef9933c594333ac4b26",
-    ".claude/skills/advisor-capability-preflight/scripts/check_preflight.py": "5c60980ea6785d9f83f17586ad0e1a6a7de0f27fd2f6fcd66883f1992fc77b8a",
-    ".claude/skills/advisor-capability-preflight/scripts/record_preference.py": "83952972bc65844f395fc5af0cd45c2933ad31031047881979bd59b509fe50ae",
+    ".claude/skills/advisor-capability-preflight/scripts/check_preflight.py": "b3038d76cfb76958a7d7c0bb11c0d7f7843dfefad12d3bfab7e987be829aa3fb",
+    ".claude/skills/advisor-capability-preflight/scripts/record_preference.py": "0e08d2587db1b8d45e2ae1bc3c9622abb3fb727e4196fbf00749b214f69ea891",
     ".claude/skills/agentforce-implementation-advisor/SKILL.md": "8641c2f7a1cbc2f9abc209801ae92ed5ed1af9dd472253aa396dcd71e6adcf01",
     ".claude/skills/agentforce-implementation-advisor/agents/openai.yaml": "f9c48068a1898969ddda4e35d1005a62f85eab4829e7293d20477eaa8efcbf18",
     ".claude/skills/agentforce-implementation-advisor/references/agent-script-packaging-pattern.md": "20c45297dab446c2b999495c5e32ea4aa2f6b3d2f0619da0c30eeb91daea13ae",
@@ -250,7 +250,7 @@
     ".claude/skills/namespace-access-governance/references/source-refresh.md": "8e0a398f622ec6340c7f842bee0285747ee10b099551fa85456733d8d0f6aa4a",
     ".claude/skills/oem-isv-advisor/SKILL.md": "80cfc2cdf2e2542f4db6122f8fcc1f9cc843c99c2176237c71969eb92302a99e",
     ".claude/skills/oem-isv-advisor/agents/openai.yaml": "e4563188f842061337d5e95190649d9b09f97c2c528fda19ca06a3bac043de3d",
-    ".claude/skills/oem-isv-advisor/references/capability-catalog.json": "b061e465936a67563db5eb4145a06d5763e9231eaf67f9fcf4ac5b5b8003805d",
+    ".claude/skills/oem-isv-advisor/references/capability-catalog.json": "61f2fed3ff764a4ff164eeecee512a50de04c7e039f54284f1b0fb248328fc18",
     ".claude/skills/oem-isv-advisor/references/harness-runtime.md": "d4e31c3cc692315ba22c7b1de35f1c3117d10824ccbca2746143fd11de7db493",
     ".claude/skills/oem-isv-advisor/references/practitioner-knowledge-policy.md": "29573deae5cd026d61b9766557b04567b3dc966cb6b70eec12cacac8899ad15b",
     ".claude/skills/oem-isv-advisor/references/routing.md": "c48a6d82d5a8d4b174345ffd86d3659e1b534fdeba5fec5997d27437c75b1c9d",
@@ -340,5 +340,5 @@
     ".claude/skills/tableau-next-implementation-advisor/references/skill-contract.json": "b79adef076a13b745e6280fadf5624b65fe59f7abd6aa17471d0fa3c36a54348",
     ".claude/skills/tableau-next-implementation-advisor/references/source-refresh.md": "f281c5043ae178540abd7b875aada27bd8f7504edc90a84c4169b6e2f3d11cb9"
   },
-  "distribution_sha256": "3322c19542a676a61684436540d615542e63befed1cf533bc5d6c55026716ceb"
+  "distribution_sha256": "8d296b09755aa2fb54d3cd925c91b8ba4cd0134c6d8a680df75e6b67ce408166"
 }
