@@ -36,13 +36,13 @@ Nexorium Core is "the architectural control layer for non-production environment
 
 ## Where intent and code diverge
 
-The [contradictions register](contradictions.md) has 19 open entries, 6 of them high severity. The high ones cluster around the core promises:
+The [contradictions register](contradictions.md) has 20 open entries, 6 of them high severity. The high ones cluster around the core promises:
 
 1. Readiness reports "ready" for every environment (C-001). See [Readiness](concepts/readiness.md).
 2. Ingestion takes no snapshot and does not protect manual edits (C-002, C-003).
-3. Snapshots capture only the Node/Edge graph, so drift cannot see versions, endpoints or interfaces (C-004). See [Snapshot and drift](concepts/snapshot-and-drift.md).
+3. Snapshots capture only the Node/Edge graph, so drift cannot see deployed versions, endpoints or connections in the five-layer model (C-004). See [Snapshot and drift](concepts/snapshot-and-drift.md).
 4. PROD_RO is read-only only at the environment record (C-005).
-5. The Impact pages call API routes that do not exist (C-006).
+5. The Impact pages are not connected to the impact service (C-006).
 
 CI cannot install dependencies, so none of this has been caught by automated checks (C-014).
 

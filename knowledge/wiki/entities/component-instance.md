@@ -37,7 +37,7 @@ From [`BaseConnectorV2.upsert()`](../../../src/lib/connectors/v2/base-connector.
 - An instance whose component is not in the payload is skipped with a warning.
 - Matching uses `sourceRecordId` within the environment when the source supplies an external ID; otherwise environment + component + `displayName`.
 - A missing `displayName` defaults to `<componentName>-<first 8 characters of the environment id>`.
-- On update, `hostId`, `displayName`, `notes` and `ingestedAt` are overwritten without a manual-edit check (C-003). See [Manual override protection](../concepts/manual-override-protection.md).
+- On update, `hostId`, `displayName`, `notes` and `ingestedAt` are overwritten without a manual-edit check (C-003). When an instance is matched by external ID and the source gives no `displayName`, the generated name replaces the stored one. See [Manual override protection](../concepts/manual-override-protection.md).
 
 ## Open questions
 

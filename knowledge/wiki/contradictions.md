@@ -83,7 +83,7 @@ First pass: 2026-11-07. Sources: [root CLAUDE.md](sources/claude-md.md), [README
 | C-003 | high | open | Ingestion can overwrite manual edits; conflicts are never recorded |
 | C-004 | high | open | Snapshots capture only the Node/Edge graph |
 | C-005 | high | open | PROD_RO write protection covers only the environment record |
-| C-006 | high | open | Impact pages call API routes that do not exist |
+| C-006 | high | open | Impact pages are not connected to the impact service |
 | C-007 | medium | open | Migrations create 9 of the 60 tables |
 | C-008 | medium | open | Flow-link transitions are not validated |
 | C-009 | medium | open | RACI mappings can only reference environments |
@@ -97,6 +97,7 @@ First pass: 2026-11-07. Sources: [root CLAUDE.md](sources/claude-md.md), [README
 | C-017 | low | open | README describes an earlier product |
 | C-018 | low | open | Snapshot history can be deleted |
 | C-019 | low | open | Provenance is incomplete for endpoints, versions and connections |
+| C-020 | medium | open | Many ID columns have no foreign key |
 
 ## C-001: Readiness passes every rule the database can hold
 - **Status:** open
@@ -127,8 +128,8 @@ First pass: 2026-11-07. Sources: [root CLAUDE.md](sources/claude-md.md), [README
   - Root `CLAUDE.md` invariant 8: "Manual overrides must never be silently overwritten by ingestion." Principle 5: "Manual enrichment must be audit-trailed."
   - `docs/source-ingestion-strategy.md`, "Conflict Handling": when a connector attempts to update a manually-edited field, the conflict is detected, an `IngestionConflict` record is created, the UI surfaces it, and the user chooses keep existing, accept incoming or manual merge.
   - `prisma/schema.prisma` defines `IngestionConflict` (`wasManuallyEdited`, `resolution`: `KEEP_EXISTING`, `ACCEPT_INCOMING`, `MANUAL_MERGE`). No file under `src/` references `ingestionConflict`.
-  - `BaseConnectorV2.upsert()` updates matched rows field by field, `notes` included for network contexts, component instances and connections, without checking for earlier manual edits.
-- **Assessment:** **Inference:** a manual value is overwritten whenever the source supplies a value for that field. Prisma leaves out fields that are `undefined`, so fields the source omits survive.
+  - `BaseConnectorV2.upsert()` updates matched rows field by field without checking for earlier manual edits. It writes `notes` for every entity type it updates: network contexts, hosts, component instances, endpoints and connections.
+- **Assessment:** **Inference:** a manual value is overwritten whenever the source supplies a value for that field. Prisma leaves out fields that are `undefined`, so most fields the source omits survive. There are exceptions. `NetworkContext.hasLoadBalancer` and `hasPrivateEndpoint` are reset to `false`. An instance matched by external ID gets a generated `displayName` when the source omits one.
 - **Decision needed:** conflict detection in `upsert()`, or a fixed list of fields ingestion may write.
 - **Pages:** [Manual override protection](concepts/manual-override-protection.md), [Connector framework](concepts/connector-framework.md)
 
@@ -138,8 +139,9 @@ First pass: 2026-11-07. Sources: [root CLAUDE.md](sources/claude-md.md), [README
 - **Claims:**
   - Root `CLAUDE.md` `<versioning_rules>`: "Diff must detect: Version changes, Endpoint changes, Interface changes, Component additions/removals". Invariant 7: "All version changes must be traceable."
   - [`createSnapshot()`](../../src/lib/services/snapshot.ts) serialises `nodes` (with database metadata and test data sets), `edges`, `databases` and `testDataSets`. It reads no `ComponentInstance`, `Endpoint`, `DeployedVersion` or `Connection` rows.
+  - `compareSnapshots()` in the same file reports added, removed and modified nodes and edges. It compares node `type`, `owner` and `criticality`, and edge `port`, `pathOrTopic` and `confidenceScore`. It compares no version field, although node `metadata` (where the seed stores `version`) and `DatabaseMetadata.version` are in the payload.
   - [`detectChanges()`](../../src/lib/services/impact/index.ts) compares `snapshotData.components` (id, name, version), a key `createSnapshot()` never writes. The seed creates no snapshots.
-- **Assessment:** **Inference:** snapshot diffs cannot see changes to versions, endpoints or interfaces, and `detectChanges()` returns empty results for every snapshot the application creates.
+- **Assessment:** **Inference:** snapshot diffs cannot see changes in the five-layer model (`DeployedVersion`, `Endpoint`, `Connection`), and they compare no version field at all. `detectChanges()` returns empty results for every snapshot the application creates.
 - **Decision needed:** define the snapshot payload on the canonical model (decide C-012 first), then align `createSnapshot()`, the snapshot diff and `detectChanges()`.
 - **Pages:** [Snapshot and drift](concepts/snapshot-and-drift.md), [Environment snapshot](entities/environment-snapshot.md), [Deployed version](entities/deployed-version.md)
 
@@ -154,15 +156,15 @@ First pass: 2026-11-07. Sources: [root CLAUDE.md](sources/claude-md.md), [README
 - **Decision needed:** one server-side read-only guard on every mutation route, with a test per route.
 - **Pages:** [PROD_RO read-only](concepts/prod-ro-read-only.md), [Environment](entities/environment.md)
 
-## C-006: Impact pages call API routes that do not exist
+## C-006: Impact pages are not connected to the impact service
 - **Status:** open
 - **Severity:** high
 - **Claims:**
   - Root `CLAUDE.md` Impact pillar: entry/exit detection, dependency path analysis, blast radius, change detection, stability index. "Impact must be computed only from stored topology + snapshot state."
-  - [`/dashboard/impact/blast-radius`](../../src/app/dashboard/impact/blast-radius/page.tsx) fetches `/api/impact/blast-radius`; [`/dashboard/impact/dependency-paths`](../../src/app/dashboard/impact/dependency-paths/page.tsx) fetches `/api/impact/entry-exit/<environmentId>`. There is no `src/app/api/impact/` directory.
+  - [`/dashboard/impact/dependency-paths`](../../src/app/dashboard/impact/dependency-paths/page.tsx) fetches `/api/impact/entry-exit/<environmentId>` when it loads. [`/dashboard/impact/blast-radius`](../../src/app/dashboard/impact/blast-radius/page.tsx) has its fetch to `/api/impact/blast-radius` inside `_calculateBlastRadius()`, which nothing calls; its Calculate button has no click handler. There is no `src/app/api/impact/` directory.
   - [`src/lib/services/impact/index.ts`](../../src/lib/services/impact/index.ts) exports `getEntryExitPoints`, `calculateBlastRadius`, `calculateStabilityScore`, `getDependencyPaths` and `detectChanges`. Nothing outside that file calls them.
-- **Assessment:** **Inference:** both pages get 404 responses, and the impact service is unreachable from the UI.
-- **Decision needed:** add thin, typed route handlers over the service, or hide the pages until they exist.
+- **Assessment:** **Inference:** the dependency-paths page gets a 404 on load, and the blast-radius page sends no request at all. The impact service is unreachable from the UI.
+- **Decision needed:** add thin, typed route handlers over the service and wire both pages to them, or hide the pages until then.
 - **Pages:** [Six pillars](concepts/pillars.md), [Snapshot and drift](concepts/snapshot-and-drift.md)
 
 ## C-007: Migrations create 9 of the 60 tables
@@ -306,3 +308,21 @@ First pass: 2026-11-07. Sources: [root CLAUDE.md](sources/claude-md.md), [README
   - `BaseConnectorV2.upsert()` sets all three when it creates network contexts, hosts and component instances. `Endpoint`, `DeployedVersion` and `Connection` rows get `sourceSystem` and `ingestedAt` only. Updates refresh `ingestedAt` only.
 - **Decision needed:** the minimum provenance per entity, enforced at write time.
 - **Pages:** [Connector framework](concepts/connector-framework.md)
+
+## C-020: Many ID columns have no foreign key
+- **Status:** open
+- **Severity:** medium
+- **Claims:**
+  - Root `CLAUDE.md` `<data_integrity_rules>`: "No dangling references allowed."
+  - `prisma/schema.prisma`: these ID columns have no relation, and therefore no foreign key:
+    - `Blueprint.targetStageId` and `AlignmentComparison.targetEnvironmentId`;
+    - `PolicyViolation.environmentId`, `nodeId`, `edgeId`, `testDataSetId`;
+    - `ComplianceResult.environmentId`, `snapshotId`;
+    - `ApprovalItem.environmentId`, `componentId`, `releaseId`;
+    - `ExceptionItem.environmentId`, `componentId`;
+    - `CouplingLink.sourceEnvironmentId`, `targetEnvironmentId`;
+    - `Connector.credentialId`, `IngestionConflict.connectorRunId`, `EnrichmentEdit.supersededById`, `EnvironmentActivityLog.previousLogId`.
+  - The polymorphic `entityType`/`entityId` pairs in `AuditEvent`, `IngestionConflict`, `Evidence` and `OrphanedAsset` have no foreign key either.
+- **Assessment:** **Inference:** unless application code prevents it, the database accepts IDs that point nowhere, and deleting a referenced row leaves them dangling. That code was not checked. Polymorphic audit references are a common, deliberate pattern; the missing relations on the governance models (`ApprovalItem`, `ExceptionItem`, `ComplianceResult`, `CouplingLink`, `PolicyViolation`) look like omissions.
+- **Decision needed:** add relations wherever the target type is fixed. For polymorphic references, decide on application-level checks and on what happens when the target is deleted.
+- **Pages:** [Five-layer model](concepts/five-layer-model.md)

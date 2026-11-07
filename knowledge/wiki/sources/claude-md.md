@@ -29,7 +29,7 @@ updated: 2026-11-07
 
 ## Where the implementation disagrees
 
-Entries that conflict with a rule stated in this file: C-001, C-002, C-003, C-004, C-005, C-007, C-008, C-010, C-012, C-013, C-015, C-016 and C-019. See the [contradictions register](../contradictions.md).
+Entries that conflict with a rule stated in this file: C-001, C-002, C-003, C-004, C-005, C-007, C-008, C-010, C-012, C-013, C-015, C-016, C-019 and C-020. See the [contradictions register](../contradictions.md).
 
 ## Notes
 

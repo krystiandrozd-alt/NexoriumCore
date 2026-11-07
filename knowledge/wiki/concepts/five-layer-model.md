@@ -37,7 +37,7 @@ All ingested layers carry nullable provenance fields (`sourceSystem`, `sourceRec
 | "An Endpoint belongs to exactly one Deployment." | Met: `Endpoint.componentInstanceId` is required. |
 | "An Interface must reference valid source and target Deployments." | Met: both foreign keys are required. |
 | "Project_version is mandatory for every Deployment." | Partly: the field is required, but an instance may have no version row. |
-| "No dangling references allowed." | Mostly: foreign keys plus ingestion skips. Exceptions: `RACIMapping` (C-009), `Blueprint.targetStageId` (plain string), and the polymorphic `entityType`/`entityId` pairs in `AuditEvent`, `IngestionConflict`, `Evidence` and `OrphanedAsset`, which have no foreign key. |
+| "No dangling references allowed." | Partly. The five-layer models use foreign keys, and ingestion skips unresolved references. Many other ID columns have no foreign key: `RACIMapping.entityId` (C-009), `Blueprint.targetStageId`, `AlignmentComparison.targetEnvironmentId`, the IDs on `PolicyViolation`, `ComplianceResult`, `ApprovalItem`, `ExceptionItem` and `CouplingLink`, and the polymorphic `entityType`/`entityId` pairs. Full list in C-020. |
 
 ## Status
 

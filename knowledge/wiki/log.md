@@ -18,3 +18,14 @@ Append-only and chronological; newest entries at the bottom. Entry header format
 
 - Deterministic lint clean after the bootstrap.
 - Semantic gaps recorded for later ingests: governance, insight, organisation, cost and security services; flow map UI behaviour; test coverage of the core flows in root `CLAUDE.md`. See the implementation scan's "Not yet read" list.
+
+## [2026-11-07] lint | Independent fact-check of the register: 8 corrections, C-020 opened
+
+- A separate Claude agent re-verified every non-inference claim in the register, plus about 45 claims on four other pages, against the code. Quotes, counts and absence claims all held. 16 of the 19 entries had no problems.
+- Corrected:
+  - C-003: `notes` is also overwritten on hosts and endpoints; three fields change even when the source omits them.
+  - C-004: the snapshot diff does compare Node/Edge fields; what it misses is five-layer data and any version field.
+  - C-006: only the dependency-paths page sends a request (and gets a 404); the blast-radius fetch is never called.
+  - Matching keys in [Connector framework](concepts/connector-framework.md).
+  - Version wording in [Readiness](concepts/readiness.md), [Deployed version](entities/deployed-version.md), [Release](entities/release.md), [Connection](entities/connection.md) and [Environment snapshot](entities/environment-snapshot.md).
+- Opened C-020 (medium): many ID columns have no foreign key, against "No dangling references allowed". The fact-check found the [Five-layer model](concepts/five-layer-model.md) exception list incomplete; the full list was verified in `prisma/schema.prisma`.

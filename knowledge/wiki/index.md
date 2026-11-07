@@ -5,7 +5,7 @@ Catalog of every page, with one line each. Claude updates it on every ingest. Re
 ## Start here
 
 - [Overview](overview.md) — what Nexorium Core is meant to be, what the code does, where they diverge
-- [Contradictions register](contradictions.md) — 19 entries (6 high, 8 medium, 5 low), all open
+- [Contradictions register](contradictions.md) — 20 entries (6 high, 9 medium, 5 low), all open
 - [Glossary](glossary.md) — CLAUDE.md terms ↔ five-layer docs ↔ README ↔ Prisma models
 - [Log](log.md) — chronological record of ingests, queries, lint passes
 

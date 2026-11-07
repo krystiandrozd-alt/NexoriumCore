@@ -22,5 +22,5 @@ Prisma models `Release` and `ReleaseItem` (tables `releases`, `release_items`). 
 
 ## Observations
 
-- A release targets catalog components (`Component`), not instances. **Inference:** "Snapshot vs Release" compares each `ReleaseItem.targetVersion` with the [Deployed version](deployed-version.md) of the matching instances in an environment. Snapshots do not contain versions yet (C-004).
+- A release targets catalog components (`Component`), not instances. **Inference:** "Snapshot vs Release" compares each `ReleaseItem.targetVersion` with the [Deployed version](deployed-version.md) of the matching instances in an environment. Snapshots contain no `DeployedVersion` data yet (C-004).
 - Not yet ingested: `src/lib/services/governance/release.ts` and the release pages.

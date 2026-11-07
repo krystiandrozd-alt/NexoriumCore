@@ -39,7 +39,7 @@ updated: 2026-11-07
 | Component | Candidate rule type | Status |
 |-----------|---------------------|--------|
 | Structural completeness | `COMPONENT_PRESENCE` | Not evaluated |
-| Version validity | `VERSION_CHECK` | Not evaluated; snapshots hold no versions (C-004) |
+| Version validity | `VERSION_CHECK` | Not evaluated; snapshots hold no `DeployedVersion` data, and the diff compares no version field (C-004) |
 | Snapshot integrity | (`SNAPSHOT_EXISTS` in code, not in the enum) | Unreachable |
 | No broken topology | `CONNECTION_REQUIRED` | Not evaluated |
 | Governance alignment | Blueprint alignment ([Blueprint](../entities/blueprint.md)) | Not read by the route |

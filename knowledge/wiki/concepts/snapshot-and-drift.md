@@ -31,7 +31,7 @@ updated: 2026-11-07
 | Step | Code | Gap |
 |------|------|-----|
 | Capture | `POST /api/snapshots` → `createSnapshot()`: Node/Edge graph, database metadata, test data sets, plus a hash | No five-layer data (C-004). Ingestion does not snapshot (C-002). |
-| Compare | `src/lib/services/snapshot.ts`: node and edge diff between two snapshots, for example `confidenceDropped` when an edge's confidence falls by more than 0.2 | Cannot see versions, endpoints or connections |
+| Compare | `compareSnapshots()` in `src/lib/services/snapshot.ts`: added, removed and modified nodes and edges. It compares node `type`, `owner`, `criticality` and edge `port`, `pathOrTopic`, `confidenceScore`; for example, `confidenceDropped` when an edge's confidence falls by more than 0.2 | Compares no version field; no five-layer data |
 | Change detection | `detectChanges()` in `src/lib/services/impact/index.ts` compares `snapshotData.components` | That key is never written (C-004); no route exposes the function (C-006) |
 | Alignment | `AlignmentComparison` stores the four comparison types with aligned, drifted, missing and extra counts | The comparison services were not read yet ([Blueprint](../entities/blueprint.md)) |
 | Retention | `EnvironmentSnapshot` cascades with its environment; `deleteSnapshot()` exists | C-018 |

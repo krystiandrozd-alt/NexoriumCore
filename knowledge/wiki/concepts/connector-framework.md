@@ -40,7 +40,7 @@ updated: 2026-11-07
   - `report()`, which returns the run summary (counts, warnings, errors).
   - `run()`, which creates a `ConnectorRun` (`RUNNING`), executes fetch → map → upsert (upsert is skipped on `dryRun`), and sets `SUCCESS`, `PARTIAL_SUCCESS` (errors present) or `FAILED` (exception), storing the summary JSON.
 - Implementations: `mock`, `config-repo`, `cloud-<provider>` (AWS, Azure and GCP fixtures), `terraform`, `csv`. They run through [`POST /api/connectors/run`](../../../src/app/api/connectors/run/route.ts).
-- Matching keeps re-runs from duplicating most entities: by external ID (`sourceRecordId`) when the source has one, otherwise by natural keys. Deployed versions are the exception: every run inserts them (C-013).
+- Matching keeps re-runs from duplicating most entities. Network contexts and component instances match on `sourceRecordId` when the source gives an external ID, and otherwise on natural keys. Hosts always match on hostname within the environment, components on name, and endpoints and connections on natural keys. Deployed versions are the exception: every run inserts them (C-013).
 
 ## Earlier connectors (Node/Edge model)
 

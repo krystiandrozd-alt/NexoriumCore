@@ -35,4 +35,4 @@ Prisma model `Connection` (table `connections`), layer L5 of the [five-layer mod
 ## Related
 
 - The [Node and Edge](node-and-edge.md) model has its own `Edge`, with a different protocol enum and a numeric `confidenceScore` (C-012).
-- Snapshots do not capture connections (C-004), so "Interface changes" cannot be diffed yet.
+- Snapshots do not capture `Connection` rows (C-004). Only edges in the Node/Edge graph are diffed.

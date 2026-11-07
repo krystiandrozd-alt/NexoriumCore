@@ -31,7 +31,7 @@ Prisma model `EnvironmentSnapshot` (table `environment_snapshots`).
 
 - Only [`POST /api/snapshots`](../../../src/app/api/snapshots/route.ts) creates them, through [`createSnapshot(environmentId)`](../../../src/lib/services/snapshot.ts). Ingestion runs do not (C-002).
 - Content: `nodes` (with database metadata and test data sets), `edges`, `databases`, `testDataSets`, hashed with `generateSnapshotHash()`. No five-layer data (C-004).
-- Comparison: `src/lib/services/snapshot.ts` diffs nodes and edges between two snapshots. For example, it flags an edge whose confidence score dropped by more than 0.2 (`confidenceDropped`).
+- Comparison: `compareSnapshots()` in `src/lib/services/snapshot.ts` diffs nodes (`type`, `owner`, `criticality`) and edges (`port`, `pathOrTopic`, `confidenceScore`) between two snapshots. For example, it flags an edge whose confidence score dropped by more than 0.2 (`confidenceDropped`). It compares no version field.
 
 ## Where snapshots are consumed
 

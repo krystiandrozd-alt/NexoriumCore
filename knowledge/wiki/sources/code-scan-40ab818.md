@@ -75,7 +75,7 @@ Not a full code review. Each architectural invariant and rule in root `CLAUDE.md
 |------|--------------------|-------|
 | Connectors | v2 `BaseConnectorV2` runs fetch → map → upsert and records a `ConnectorRun`. There is no snapshot step, no conflict detection, and version rows are appended on every run. The earlier connectors (`kubernetes`, `gitops`, `manual`) are still routed through `POST /api/connectors`. | [Connector framework](../concepts/connector-framework.md); C-002, C-003, C-011, C-013, C-019 |
 | Snapshots | `POST /api/snapshots` → `createSnapshot()` serialises the Node/Edge graph only. | [Snapshot and drift](../concepts/snapshot-and-drift.md); C-004, C-018 |
-| Impact | The service exists but no route exposes it; the pages call missing `/api/impact/*` routes. | [Six pillars](../concepts/pillars.md); C-006 |
+| Impact | The service exists but no route exposes it. The dependency-paths page calls a missing `/api/impact/entry-exit/…` route on load; the blast-radius page's fetch sits in a function nothing calls. | [Six pillars](../concepts/pillars.md); C-006 |
 | Flow | `validateFlowLink()` exists but nothing calls it; `POST /api/flow-links` blocks only self-links. | [Flow model](../concepts/flow-model.md); C-008 |
 | Readiness | Rule evaluation ignores every `GovernanceRuleType` value and defaults to pass. | [Readiness](../concepts/readiness.md); C-001 |
 | Organisation | The RACI API accepts every asset type, but the schema's foreign key accepts environments only. `/api/configuration/systems` reads `Component` with its owners (`Person`). | [RACI mapping](../entities/raci-mapping.md); C-009 |

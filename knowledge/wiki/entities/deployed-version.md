@@ -31,7 +31,7 @@ This matches root `CLAUDE.md` `<versioning_rules>`: every Deployment exposes `ve
 ## Behaviour
 
 - `BaseConnectorV2.upsert()` inserts a new row for every version in the payload, on every run: "Always create a new deployed version entry (versions are historical)". It sets `sourceSystem` and `ingestedAt` but not `sourceRecordId` (C-013, C-019).
-- Snapshots do not include versions (C-004), so "Version changes" cannot be diffed snapshot-to-snapshot yet. See [Snapshot and drift](../concepts/snapshot-and-drift.md).
+- Snapshots include no `DeployedVersion` data, and the snapshot diff compares no version field (C-004). "Version changes" therefore cannot be diffed snapshot-to-snapshot yet. See [Snapshot and drift](../concepts/snapshot-and-drift.md).
 
 ## Open questions
 
