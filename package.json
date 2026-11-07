@@ -11,6 +11,7 @@
     "start": "next start -p 3003",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "wiki:lint": "ts-node -T -P scripts/wiki/tsconfig.json scripts/wiki/lint-cli.ts",
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
