@@ -340,4 +340,15 @@ Database:
   /impact
   /organisation
   /web
+  /knowledge (wiki schema)
 </maintenance_guidelines>
+
+
+<knowledge_base>
+knowledge/ is the project wiki, maintained by Claude (LLM Wiki pattern): derived pages on product intent, domain model, implementation state and open contradictions.
+- Schema and workflows: knowledge/CLAUDE.md. Entry point: knowledge/wiki/index.md.
+- For questions about product intent, domain vocabulary or past decisions, read the index first, then the linked pages.
+- The wiki never overrides this file, the code or prisma/schema.prisma. When they disagree, the wiki page is stale: refresh it.
+- The repository is public: no client or personal data in knowledge/.
+- Skills: /wiki-ingest, /wiki-query, /wiki-lint. Deterministic checks: npm run wiki:lint.
+</knowledge_base>
