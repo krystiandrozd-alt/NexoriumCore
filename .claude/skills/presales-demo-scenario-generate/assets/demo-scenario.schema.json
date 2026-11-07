@@ -1,0 +1,513 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:presales-demo-scenario:schema:1.0",
+  "title": "Presales demo scenario",
+  "description": "One JSON file drives every output of the presales-demo-scenario-generate skill: the executive storyline, the presenter script, the technical runbook, the org-prep assets and the headless Playwright run. Strings may contain placeholders: {{vars.name}}, {{env.NAME}}, {{meta.path}} and {{runner.path}}. Keys that start with x- are allowed on every object and are passed to templates unchanged.",
+  "type": "object",
+  "required": ["schemaVersion", "meta", "situation", "storyline", "personas", "scenes"],
+  "additionalProperties": false,
+  "patternProperties": { "^x-": true },
+  "properties": {
+    "$schema": { "type": "string", "description": "Optional path to this schema, for validation in the editor." },
+    "schemaVersion": { "const": "1.0" },
+    "meta": { "$ref": "#/$defs/meta" },
+    "situation": { "$ref": "#/$defs/situation" },
+    "storyline": { "$ref": "#/$defs/storyline" },
+    "personas": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/persona" } },
+    "variables": {
+      "type": "object",
+      "description": "Reusable values, referenced as {{vars.name}}. Values may contain other placeholders, including {{env.NAME}}.",
+      "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+      "additionalProperties": { "type": ["string", "number", "boolean"] }
+    },
+    "records": {
+      "type": "array",
+      "description": "Demo records for sf data import tree, in dependency order: parents first.",
+      "items": { "$ref": "#/$defs/record" }
+    },
+    "scenes": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/scene" } },
+    "checklist": {
+      "type": "array",
+      "description": "Extra pre-demo checks, rendered in the technical runbook after the built-in ones.",
+      "items": { "$ref": "#/$defs/text" }
+    },
+    "orgPrep": { "$ref": "#/$defs/orgPrep" },
+    "runner": { "$ref": "#/$defs/runner" },
+    "output": { "$ref": "#/$defs/output" },
+    "quality": { "$ref": "#/$defs/quality" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "maxLength": 64 },
+    "text": { "type": "string", "minLength": 1 },
+    "textList": { "type": "array", "items": { "$ref": "#/$defs/text" } },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["id", "title", "product", "language", "durationMinutes"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "$ref": "#/$defs/text" },
+        "product": { "$ref": "#/$defs/text" },
+        "customer": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": { "^x-": true },
+          "properties": {
+            "name": { "$ref": "#/$defs/text" },
+            "segment": { "$ref": "#/$defs/text" },
+            "industry": { "$ref": "#/$defs/text" }
+          }
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+          "description": "Selects the built-in label set (en or pl). Other languages use the en labels unless output.labels overrides them."
+        },
+        "durationMinutes": { "type": "number", "exclusiveMinimum": 0, "maximum": 480 },
+        "audience": { "$ref": "#/$defs/textList" },
+        "owner": { "$ref": "#/$defs/text" },
+        "version": { "$ref": "#/$defs/text" },
+        "tags": { "$ref": "#/$defs/textList" },
+        "assumptions": {
+          "$ref": "#/$defs/textList",
+          "description": "Statements not yet confirmed by the customer. Rendered in the presenter script and the technical runbook, never in the executive storyline."
+        }
+      }
+    },
+    "situation": {
+      "type": "object",
+      "description": "Great Demo! Situation Slide: the customer's situation that the demo answers.",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["jobTitle", "criticalBusinessIssue", "problems", "specificCapabilities", "delta"],
+      "properties": {
+        "jobTitle": { "$ref": "#/$defs/text" },
+        "industry": { "$ref": "#/$defs/text" },
+        "criticalBusinessIssue": { "$ref": "#/$defs/text", "description": "A goal at risk, not a feature wish." },
+        "problems": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" } },
+        "specificCapabilities": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" } },
+        "delta": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": { "^x-": true },
+          "required": ["statement"],
+          "properties": {
+            "statement": { "$ref": "#/$defs/text" },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "patternProperties": { "^x-": true },
+                "required": ["name", "before", "after"],
+                "properties": {
+                  "name": { "$ref": "#/$defs/text" },
+                  "before": { "$ref": "#/$defs/text", "description": "Values that start with TBD or TODO count as unconfirmed." },
+                  "after": { "$ref": "#/$defs/text" },
+                  "source": { "$ref": "#/$defs/text", "description": "Where the figure comes from, e.g. the discovery call it was given in." }
+                }
+              }
+            }
+          }
+        },
+        "criticalDate": { "$ref": "#/$defs/text" }
+      }
+    },
+    "storyline": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["lastThingFirst", "keyTakeaways", "closing"],
+      "properties": {
+        "opening": { "$ref": "#/$defs/text", "description": "Opening talk track: links the demo to the customer's situation." },
+        "lastThingFirst": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": { "^x-": true },
+          "required": ["description"],
+          "properties": {
+            "description": { "$ref": "#/$defs/text", "description": "The end result you show before anything else." },
+            "sceneId": { "$ref": "#/$defs/id" }
+          }
+        },
+        "keyTakeaways": { "type": "array", "minItems": 1, "maxItems": 5, "items": { "$ref": "#/$defs/text" } },
+        "closing": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": { "^x-": true },
+          "required": ["summary"],
+          "properties": {
+            "summary": { "$ref": "#/$defs/text" },
+            "nextSteps": { "$ref": "#/$defs/textList" }
+          }
+        }
+      }
+    },
+    "persona": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["id", "name", "role"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/text" },
+        "role": { "$ref": "#/$defs/text" },
+        "goal": { "$ref": "#/$defs/text" },
+        "org": {
+          "type": "object",
+          "description": "The Salesforce user who plays this persona. Use a single {{env.NAME}} placeholder for the username.",
+          "additionalProperties": false,
+          "patternProperties": { "^x-": true },
+          "properties": {
+            "username": { "$ref": "#/$defs/text" },
+            "permissionSets": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" }
+            }
+          }
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["ref", "sobject", "fields"],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+          "description": "referenceId for sf data import tree. Later records point to it with \"@ref\"."
+        },
+        "sobject": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+        "fields": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+          "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+        }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["id", "title", "personaId", "durationMinutes", "objective", "tell", "valueStatement", "steps"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "$ref": "#/$defs/text" },
+        "personaId": { "$ref": "#/$defs/id" },
+        "durationMinutes": { "type": "number", "exclusiveMinimum": 0 },
+        "objective": { "$ref": "#/$defs/text" },
+        "tell": { "$ref": "#/$defs/text", "description": "Opening tell: the context for what the audience is about to see." },
+        "wowMoment": { "$ref": "#/$defs/text" },
+        "valueStatement": { "$ref": "#/$defs/text", "description": "Closing tell: the business value, not the feature." },
+        "discoveryQuestions": { "$ref": "#/$defs/textList" },
+        "objections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "patternProperties": { "^x-": true },
+            "required": ["objection", "response"],
+            "properties": {
+              "objection": { "$ref": "#/$defs/text" },
+              "response": { "$ref": "#/$defs/text" }
+            }
+          }
+        },
+        "steps": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/step" } }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["id", "title", "talkTrack"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "$ref": "#/$defs/text" },
+        "talkTrack": { "$ref": "#/$defs/text", "description": "What the presenter says, in full sentences." },
+        "action": { "$ref": "#/$defs/action" },
+        "expect": { "type": "array", "items": { "$ref": "#/$defs/expectation" } },
+        "fallback": { "$ref": "#/$defs/text", "description": "Plan B if the step fails during the live demo." },
+        "screenshot": { "type": "boolean", "default": false },
+        "dwellMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000,
+          "description": "Pause after the step in headless runs, so the recording is watchable."
+        },
+        "layers": {
+          "type": "array",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": { "enum": ["presenter", "technical"] },
+          "default": ["presenter", "technical"],
+          "description": "Documents that include this step. Navigation and setup steps usually belong to technical only."
+        },
+        "notes": { "$ref": "#/$defs/text" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "description": "Playwright locator with exactly one strategy: role (with optional name), label, text, placeholder, testId or css.",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "properties": {
+        "role": { "type": "string", "pattern": "^[a-z]+$" },
+        "name": { "type": "string" },
+        "label": { "$ref": "#/$defs/text" },
+        "text": { "$ref": "#/$defs/text" },
+        "placeholder": { "$ref": "#/$defs/text" },
+        "testId": { "$ref": "#/$defs/text" },
+        "css": { "$ref": "#/$defs/text" },
+        "exact": { "type": "boolean", "default": false },
+        "nth": { "type": "integer", "minimum": 0 },
+        "within": { "$ref": "#/$defs/target" },
+        "frame": { "$ref": "#/$defs/text", "description": "CSS selector of the iframe that contains the element." },
+        "verified": {
+          "type": "boolean",
+          "default": true,
+          "description": "Set false until a headless run has found the element in the target org."
+        }
+      },
+      "dependentRequired": { "name": ["role"] },
+      "oneOf": [
+        { "required": ["role"] },
+        { "required": ["label"] },
+        { "required": ["text"] },
+        { "required": ["placeholder"] },
+        { "required": ["testId"] },
+        { "required": ["css"] }
+      ]
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["navigate", "click", "hover", "fill", "select", "check", "uncheck", "press", "wait", "waitFor"] },
+        "url": { "$ref": "#/$defs/text" },
+        "waitUntil": { "enum": ["load", "domcontentloaded", "networkidle", "commit"] },
+        "target": { "$ref": "#/$defs/target" },
+        "value": { "type": "string" },
+        "by": { "enum": ["label", "value"], "default": "label", "description": "select: match the option by its visible label or by its value." },
+        "key": { "$ref": "#/$defs/text" },
+        "ms": { "type": "integer", "minimum": 0, "maximum": 600000 },
+        "state": { "enum": ["visible", "hidden", "attached", "detached"], "default": "visible" },
+        "timeoutMs": { "type": "integer", "minimum": 0 }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "navigate" } } }, "then": { "required": ["url"] } },
+        { "if": { "properties": { "type": { "enum": ["click", "hover", "check", "uncheck", "waitFor"] } } }, "then": { "required": ["target"] } },
+        { "if": { "properties": { "type": { "enum": ["fill", "select"] } } }, "then": { "required": ["target", "value"] } },
+        { "if": { "properties": { "type": { "const": "press" } } }, "then": { "required": ["key"] } },
+        { "if": { "properties": { "type": { "const": "wait" } } }, "then": { "required": ["ms"] } }
+      ]
+    },
+    "expectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["visible", "hidden", "text", "url", "title"] },
+        "target": { "$ref": "#/$defs/target" },
+        "contains": { "type": "string" },
+        "equals": { "type": "string" },
+        "timeoutMs": { "type": "integer", "minimum": 0 }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "enum": ["visible", "hidden"] } } }, "then": { "required": ["target"] } },
+        {
+          "if": { "properties": { "type": { "const": "text" } } },
+          "then": { "required": ["target"], "oneOf": [{ "required": ["contains"] }, { "required": ["equals"] }] }
+        },
+        {
+          "if": { "properties": { "type": { "enum": ["url", "title"] } } },
+          "then": { "oneOf": [{ "required": ["contains"] }, { "required": ["equals"] }] }
+        }
+      ]
+    },
+    "orgPrep": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["targetOrg", "allowedOrgs"],
+      "properties": {
+        "targetOrg": { "$ref": "#/$defs/text", "description": "sf CLI alias or username of the demo org." },
+        "allowedOrgs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/text" },
+          "description": "The generated script refuses any org not listed here. Never list a production org."
+        },
+        "importRecords": { "type": "boolean", "default": true },
+        "verify": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "patternProperties": { "^x-": true },
+            "required": ["label", "soql"],
+            "properties": {
+              "label": { "$ref": "#/$defs/text" },
+              "soql": { "$ref": "#/$defs/text" },
+              "expectMinRows": { "type": "integer", "minimum": 0, "default": 1 }
+            }
+          }
+        },
+        "manualSteps": { "$ref": "#/$defs/textList" }
+      }
+    },
+    "auth": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": { "type": { "const": "none" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "url"],
+          "properties": {
+            "type": { "const": "url" },
+            "url": { "$ref": "#/$defs/text", "description": "Pre-authenticated URL, e.g. {{env.SF_FRONTDOOR_URL}} taken from sf org open --url-only." }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "targetOrg"],
+          "properties": {
+            "type": { "const": "sfCli" },
+            "targetOrg": { "$ref": "#/$defs/text" },
+            "path": { "$ref": "#/$defs/text", "description": "Optional start page, passed to sf org open --path." }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "path"],
+          "properties": {
+            "type": { "const": "storageState" },
+            "path": { "$ref": "#/$defs/text", "description": "Playwright storage state file, relative to the current working directory." }
+          }
+        }
+      ]
+    },
+    "runner": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "required": ["baseUrl"],
+      "properties": {
+        "baseUrl": { "$ref": "#/$defs/text" },
+        "auth": { "$ref": "#/$defs/auth" },
+        "browser": { "enum": ["chromium", "firefox", "webkit"], "default": "chromium" },
+        "headless": { "type": "boolean", "default": true },
+        "executablePath": { "$ref": "#/$defs/text" },
+        "viewport": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "type": "integer", "minimum": 320 },
+            "height": { "type": "integer", "minimum": 240 }
+          }
+        },
+        "locale": { "$ref": "#/$defs/text" },
+        "timezoneId": { "$ref": "#/$defs/text" },
+        "ignoreHTTPSErrors": { "type": "boolean", "default": false },
+        "timeouts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "actionMs": { "type": "integer", "minimum": 0, "default": 15000 },
+            "navigationMs": { "type": "integer", "minimum": 0, "default": 60000 },
+            "expectMs": { "type": "integer", "minimum": 0, "default": 15000 }
+          }
+        },
+        "slowMoMs": { "type": "integer", "minimum": 0, "default": 0 },
+        "screenshots": {
+          "enum": ["off", "onFailure", "flagged", "everyStep"],
+          "default": "flagged",
+          "description": "flagged = steps with screenshot: true, plus failed steps."
+        },
+        "video": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "width": { "type": "integer", "minimum": 320, "default": 1280 },
+            "height": { "type": "integer", "minimum": 240, "default": 720 }
+          }
+        },
+        "stopOnFailure": { "type": "boolean", "default": true },
+        "scenes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" },
+          "description": "Run only these scenes. Default: all scenes."
+        }
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "fileName": { "type": "string", "pattern": "^[^/\\\\]+$" },
+        "template": {
+          "$ref": "#/$defs/text",
+          "description": "Handlebars template, relative to the scenario file. Default: the skill's assets/templates/<layer>.md.hbs."
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true },
+      "properties": {
+        "dir": {
+          "$ref": "#/$defs/text",
+          "description": "Output directory, relative to the current working directory. Default: out/<meta.id>."
+        },
+        "orgPrepDir": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$", "default": "org-prep" },
+        "runDir": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$", "default": "run" },
+        "layers": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "exec": { "$ref": "#/$defs/layer" },
+            "presenter": { "$ref": "#/$defs/layer" },
+            "technical": { "$ref": "#/$defs/layer" }
+          }
+        },
+        "labels": {
+          "type": "object",
+          "description": "Overrides for any heading or label used by the templates (see scripts/lib/labels.mjs for the keys).",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxStepsPerScene": { "type": "integer", "minimum": 1, "default": 7 },
+        "maxSceneMinutes": { "type": "number", "exclusiveMinimum": 0, "default": 10 },
+        "readyScore": { "type": "integer", "minimum": 0, "maximum": 100, "default": 85 },
+        "reviewScore": { "type": "integer", "minimum": 0, "maximum": 100, "default": 60 }
+      }
+    }
+  }
+}

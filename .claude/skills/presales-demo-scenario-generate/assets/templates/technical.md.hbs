@@ -1,0 +1,73 @@
+{{!-- Technical runbook: for the person driving the org. Every step with its locator, expected result and plan B. --}}
+# {{meta.title}}: {{labels.technicalRunbook}}
+
+## {{labels.environment}}
+
+| | |
+|---|---|
+{{#if runner}}
+| {{labels.baseUrl}} | `{{runner.baseUrl}}` |
+| {{labels.auth}} | {{cell authText}} |
+| {{labels.browser}} | {{runner.browser}}, {{#if runner.headless}}headless{{else}}headed{{/if}}, {{runner.viewport.width}}×{{runner.viewport.height}}, {{runner.locale}} |
+{{/if}}
+{{#if orgPrep}}
+| {{labels.targetOrg}} | `{{orgPrep.targetOrg}}` ({{labels.allowedOrgs}}: {{join orgPrep.allowedOrgs ", "}}) |
+{{/if}}
+| {{labels.duration}} | {{totals.minutes}} / {{meta.durationMinutes}} {{labels.minutes}} · {{totals.scenes}} × {{labels.scene}} · {{totals.steps}} × {{labels.step}} |
+{{#if requiredEnv.length}}
+
+### {{labels.requiredEnv}}
+
+{{#each requiredEnv}}
+- `{{this}}`
+{{/each}}
+{{/if}}
+{{#if meta.assumptions.length}}
+
+### {{labels.assumptions}}
+
+{{#each meta.assumptions}}
+- {{this}}
+{{/each}}
+{{/if}}
+
+## {{labels.demoData}}
+{{#if variables.length}}
+
+| {{labels.variable}} | {{labels.value}} |
+|---|---|
+{{#each variables}}
+| `{{name}}` | {{cell value}} |
+{{/each}}
+{{/if}}
+{{#if records.length}}
+
+| Ref | sObject | {{labels.fields}} |
+|---|---|---|
+{{#each records}}
+| `{{ref}}` | {{sobject}} | {{cell fieldsText}} |
+{{/each}}
+{{/if}}
+
+| {{labels.persona}} | {{labels.user}} | {{labels.permissionSets}} |
+|---|---|---|
+{{#each personas}}
+| {{cell name}} ({{cell role}}) | {{#if org.username}}`{{org.username}}`{{else}}—{{/if}} | {{#if org.permissionSets.length}}{{join org.permissionSets ", "}}{{else}}—{{/if}} |
+{{/each}}
+
+## {{labels.preDemoChecklist}}
+
+{{#each checklistItems}}
+{{inc @index}}. {{this}}
+{{/each}}
+
+{{#each scenes}}
+## {{number}}. {{title}}
+
+| # | {{@root.labels.step}} | {{@root.labels.action}} | {{@root.labels.target}} | {{@root.labels.expected}} | {{@root.labels.fallback}} |
+|---|---|---|---|---|---|
+{{#each technicalSteps}}
+| {{number}} | {{cell title}} | {{cell actionText}} | {{cell targetText}} | {{cell expectText}} | {{cell fallbackText}} |
+{{/each}}
+
+{{/each}}

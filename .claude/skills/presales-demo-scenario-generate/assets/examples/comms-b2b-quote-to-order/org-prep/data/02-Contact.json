@@ -1,0 +1,15 @@
+{
+  "records": [
+    {
+      "attributes": {
+        "type": "Contact",
+        "referenceId": "BalticFreightCio"
+      },
+      "FirstName": "Marta",
+      "LastName": "Wiśniewska",
+      "Title": "CIO",
+      "Email": "marta.wisniewska@example.com",
+      "AccountId": "@BalticFreight"
+    }
+  ]
+}

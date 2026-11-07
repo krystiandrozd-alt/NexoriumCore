@@ -1,0 +1,14 @@
+{
+  "records": [
+    {
+      "attributes": {
+        "type": "Account",
+        "referenceId": "BalticFreight"
+      },
+      "Name": "Baltic Freight Group",
+      "Industry": "Transportation",
+      "BillingCity": "Gdańsk",
+      "BillingCountry": "Poland"
+    }
+  ]
+}

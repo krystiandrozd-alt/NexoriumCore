@@ -1,0 +1,165 @@
+{
+  "$schema": "../../demo-scenario.schema.json",
+  "schemaVersion": "1.0",
+  "meta": {
+    "id": "local-quote-desk-selftest",
+    "title": "Quote Desk: oferta i zamówienie w dwie minuty",
+    "product": "Quote Desk (lokalna aplikacja testowa)",
+    "customer": { "name": "Baltic Freight Group", "segment": "B2B Enterprise", "industry": "Logistyka" },
+    "language": "pl",
+    "durationMinutes": 10,
+    "audience": ["Dyrektor sprzedaży B2B", "Kierownik realizacji zamówień"],
+    "owner": "Presales",
+    "version": "1.0.0",
+    "tags": ["selftest", "playwright"]
+  },
+  "situation": {
+    "jobTitle": "Dyrektor sprzedaży B2B",
+    "industry": "Telekomunikacja B2B",
+    "criticalBusinessIssue": "Oferty dla klientów z wieloma lokalizacjami powstają za wolno, więc transakcje przechodzą na kolejny kwartał.",
+    "problems": [
+      "Oferta jest liczona ręcznie w arkuszu.",
+      "Zamówienie jest przepisywane ręcznie z oferty."
+    ],
+    "specificCapabilities": [
+      "Wycena oferty dla wielu lokalizacji w jednym kroku",
+      "Konwersja oferty na zamówienie bez przepisywania danych"
+    ],
+    "delta": {
+      "statement": "Oferta i zamówienie w jednym procesie, bez przepisywania danych.",
+      "metrics": [
+        { "name": "Czas od oferty do zamówienia", "before": "2 dni (dane testowe)", "after": "2 minuty (dane testowe)", "source": "Fikcyjne dane self-testu" }
+      ]
+    }
+  },
+  "storyline": {
+    "opening": "Pokażę, jak handlowiec przygotowuje ofertę dla klienta z dwiema lokalizacjami i od razu przekazuje ją do realizacji.",
+    "lastThingFirst": { "description": "Na końcu zobaczymy zamówienie O-0001 wysłane do realizacji, policzone z oferty bez przepisywania.", "sceneId": "zamowienie" },
+    "keyTakeaways": [
+      "Wycena wielu lokalizacji w jednym kroku.",
+      "Zamówienie powstaje z oferty, bez przepisywania danych."
+    ],
+    "closing": {
+      "summary": "Oferta i zamówienie powstały w jednym procesie, bez arkusza i bez przepisywania.",
+      "nextSteps": ["Warsztat z regułami katalogu produktów dla ofert wielolokalizacyjnych."]
+    }
+  },
+  "personas": [
+    { "id": "handlowiec", "name": "Ewa Nowak", "role": "Account Manager B2B", "goal": "Szybko wysłać poprawną ofertę." }
+  ],
+  "variables": {
+    "accountName": "Baltic Freight Group",
+    "sites": "2"
+  },
+  "scenes": [
+    {
+      "id": "oferta",
+      "title": "Wycena oferty dla dwóch lokalizacji",
+      "personaId": "handlowiec",
+      "durationMinutes": 5,
+      "objective": "Pokazać wycenę oferty dla wielu lokalizacji w jednym kroku.",
+      "tell": "Ewa ma klienta z dwiema lokalizacjami. Zobaczcie, jak przygotuje ofertę bez arkusza.",
+      "wowMoment": "Cena dla wszystkich lokalizacji liczy się od razu po utworzeniu oferty.",
+      "valueStatement": "Oferta, która wcześniej zajmowała dwa dni, powstaje w kilka minut.",
+      "discoveryQuestions": ["Ile lokalizacji ma typowy klient B2B w Waszym portfelu?"],
+      "steps": [
+        {
+          "id": "otworz-aplikacje",
+          "title": "Otwórz Quote Desk",
+          "talkTrack": "Ewa otwiera aplikację, w której pracuje cały zespół sprzedaży.",
+          "action": { "type": "navigate", "url": "{{runner.baseUrl}}/" },
+          "expect": [{ "type": "visible", "target": { "role": "heading", "name": "Quote Desk" } }],
+          "layers": ["technical"],
+          "screenshot": true
+        },
+        {
+          "id": "wybierz-konto",
+          "title": "Wybierz konto klienta",
+          "talkTrack": "Ewa wybiera konto {{vars.accountName}}. Dane klienta są już w systemie, więc niczego nie wpisuje od nowa.",
+          "action": { "type": "select", "target": { "label": "Konto" }, "value": "{{vars.accountName}}" },
+          "fallback": "Powiedz, że konto pochodzi z CRM, i przejdź do wyceny."
+        },
+        {
+          "id": "liczba-lokalizacji",
+          "title": "Podaj liczbę lokalizacji",
+          "talkTrack": "Klient ma {{vars.sites}} lokalizacje, więc Ewa wpisuje tę liczbę raz, dla całej oferty.",
+          "action": { "type": "fill", "target": { "label": "Liczba lokalizacji" }, "value": "{{vars.sites}}" },
+          "fallback": "Pokaż wycenę dla jednej lokalizacji i opowiedz o mnożniku."
+        },
+        {
+          "id": "dodaj-internet",
+          "title": "Dodaj internet",
+          "talkTrack": "Dodaje Business Internet 1 Gb/s.",
+          "action": { "type": "check", "target": { "label": "Business Internet 1 Gb/s" } },
+          "fallback": "Pokaż gotową ofertę ze zrzutu ekranu."
+        },
+        {
+          "id": "dodaj-staly-ip",
+          "title": "Dodaj stały adres IP",
+          "talkTrack": "Dodaje też stały adres IP, którego klient potrzebuje do VPN.",
+          "action": { "type": "check", "target": { "label": "Stały adres IP" } },
+          "fallback": "Pomiń produkt i kontynuuj."
+        },
+        {
+          "id": "utworz-oferte",
+          "title": "Utwórz ofertę",
+          "talkTrack": "Jedno kliknięcie i oferta jest gotowa, z ceną dla obu lokalizacji.",
+          "action": { "type": "click", "target": { "role": "button", "name": "Utwórz ofertę" } },
+          "expect": [
+            { "type": "text", "target": { "text": "Oferta Q-0001" }, "contains": "{{vars.accountName}}" },
+            { "type": "text", "target": { "css": "#total" }, "contains": "980 PLN" }
+          ],
+          "fallback": "Pokaż zrzut ekranu gotowej oferty z ostatniego testu.",
+          "screenshot": true,
+          "dwellMs": 800
+        }
+      ]
+    },
+    {
+      "id": "zamowienie",
+      "title": "Konwersja oferty na zamówienie",
+      "personaId": "handlowiec",
+      "durationMinutes": 3,
+      "objective": "Pokazać przekazanie oferty do realizacji bez przepisywania danych.",
+      "tell": "Klient akceptuje ofertę. Zobaczcie, co dzieje się dalej.",
+      "wowMoment": "Pozycje zamówienia powstają z oferty automatycznie.",
+      "valueStatement": "Zamówienie jest gotowe do realizacji w kilka sekund i bez błędów przepisywania.",
+      "discoveryQuestions": ["Ile zamówień wraca dziś do poprawy?"],
+      "objections": [
+        { "objection": "Nasze zamówienia wymagają zatwierdzenia.", "response": "Krok zatwierdzenia dodajemy przed konwersją; pokażemy go na warsztacie." }
+      ],
+      "steps": [
+        {
+          "id": "konwertuj",
+          "title": "Konwertuj na zamówienie",
+          "talkTrack": "Ewa konwertuje ofertę na zamówienie. Wszystkie pozycje przechodzą z oferty.",
+          "action": { "type": "click", "target": { "role": "button", "name": "Konwertuj na zamówienie" } },
+          "expect": [{ "type": "text", "target": { "css": "#order-status" }, "contains": "Zamówienie O-0001" }],
+          "fallback": "Pokaż nagranie z ostatniego testu headless.",
+          "screenshot": true,
+          "dwellMs": 1200
+        },
+        {
+          "id": "sprawdz-tytul",
+          "title": "Sprawdź tytuł strony",
+          "talkTrack": "Na koniec wracamy do podsumowania.",
+          "expect": [{ "type": "title", "contains": "Quote Desk" }],
+          "layers": ["technical"]
+        }
+      ]
+    }
+  ],
+  "checklist": ["Uruchom: node scripts/demo.mjs selftest. Wszystkie kroki muszą przejść."],
+  "runner": {
+    "baseUrl": "{{env.SELFTEST_BASE_URL}}",
+    "auth": { "type": "none" },
+    "headless": true,
+    "viewport": { "width": 1280, "height": 800 },
+    "locale": "pl-PL",
+    "timeouts": { "actionMs": 5000, "navigationMs": 15000, "expectMs": 5000 },
+    "screenshots": "flagged",
+    "video": { "enabled": true, "width": 1280, "height": 800 },
+    "stopOnFailure": true
+  },
+  "output": { "dir": "out/local-quote-desk-selftest" }
+}
