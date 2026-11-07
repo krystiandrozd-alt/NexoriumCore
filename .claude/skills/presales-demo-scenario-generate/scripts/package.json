@@ -1,0 +1,29 @@
+{
+  "name": "presales-demo-scenario-generate-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CLI for the presales-demo-scenario-generate skill: validate, render, org-prep and headless run of demo scenario JSON files.",
+  "bin": {
+    "demo-scenario": "./demo.mjs"
+  },
+  "scripts": {
+    "validate:examples": "node demo.mjs validate ../assets/examples/comms-b2b-quote-to-order/scenario.json && node demo.mjs validate ../assets/examples/local-selftest/scenario.json",
+    "selftest": "node demo.mjs selftest"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "handlebars": "4.7.10"
+  },
+  "peerDependencies": {
+    "playwright": ">=1.45.0"
+  },
+  "peerDependenciesMeta": {
+    "playwright": {
+      "optional": true
+    }
+  }
+}

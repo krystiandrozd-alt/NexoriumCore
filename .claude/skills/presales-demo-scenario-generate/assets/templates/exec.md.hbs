@@ -1,0 +1,71 @@
+{{!-- Executive storyline: one page for decision makers. No click paths, no internal assumptions. --}}
+# {{meta.title}}
+
+{{#if meta.customer.name}}
+**{{labels.customer}}:** {{meta.customer.name}}{{#if meta.customer.segment}} · {{meta.customer.segment}}{{/if}}
+
+{{/if}}
+**{{labels.product}}:** {{meta.product}} · **{{labels.duration}}:** {{meta.durationMinutes}} {{labels.minutes}}{{#if meta.audience.length}} · **{{labels.audience}}:** {{join meta.audience ", "}}{{/if}}
+
+## {{labels.situation}}
+
+| | |
+|---|---|
+| {{labels.jobTitle}} | {{cell situation.jobTitle}} |
+{{#if situation.industry}}
+| {{labels.industry}} | {{cell situation.industry}} |
+{{/if}}
+| {{labels.criticalBusinessIssue}} | {{cell situation.criticalBusinessIssue}} |
+{{#if situation.criticalDate}}
+| {{labels.criticalDate}} | {{cell situation.criticalDate}} |
+{{/if}}
+
+### {{labels.problems}}
+
+{{#each situation.problems}}
+- {{this}}
+{{/each}}
+
+### {{labels.capabilities}}
+
+{{#each situation.specificCapabilities}}
+- {{this}}
+{{/each}}
+
+### {{labels.delta}}
+
+{{situation.delta.statement}}
+{{#if situation.delta.metrics.length}}
+
+| {{labels.metric}} | {{labels.before}} | {{labels.after}} |
+|---|---|---|
+{{#each situation.delta.metrics}}
+| {{cell name}} | {{cell before}} | {{cell after}} |
+{{/each}}
+{{/if}}
+
+## {{labels.whatYouWillSee}}
+
+{{storyline.lastThingFirst.description}}
+
+## {{labels.agenda}}
+
+| # | {{labels.scene}} | {{labels.persona}} | {{labels.time}} | {{labels.value}} |
+|---|---|---|---|---|
+{{#each scenes}}
+| {{number}} | {{cell title}} | {{cell persona.role}} | {{durationMinutes}} {{@root.labels.minutes}} | {{cell valueStatement}} |
+{{/each}}
+
+## {{labels.keyTakeaways}}
+
+{{#each storyline.keyTakeaways}}
+{{inc @index}}. {{this}}
+{{/each}}
+{{#if storyline.closing.nextSteps.length}}
+
+## {{labels.nextSteps}}
+
+{{#each storyline.closing.nextSteps}}
+- {{this}}
+{{/each}}
+{{/if}}

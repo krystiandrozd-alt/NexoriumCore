@@ -1,0 +1,14 @@
+{
+  "records": [
+    {
+      "attributes": {
+        "type": "Opportunity",
+        "referenceId": "BalticFreightDeal"
+      },
+      "Name": "Baltic Freight Group - SD-WAN 12 sites",
+      "StageName": "Proposal/Price Quote",
+      "CloseDate": "2027-03-31",
+      "AccountId": "@BalticFreight"
+    }
+  ]
+}

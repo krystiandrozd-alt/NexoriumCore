@@ -1,0 +1,3 @@
+# Installed script dependencies and generated outputs stay out of git.
+node_modules/
+out/

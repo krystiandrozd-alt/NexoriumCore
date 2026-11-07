@@ -1,0 +1,104 @@
+{
+  "$schema": "./demo-scenario.schema.json",
+  "schemaVersion": "1.0",
+  "meta": {
+    "id": "my-demo",
+    "title": "TODO: demo title in the customer's words",
+    "product": "TODO: product, e.g. Salesforce Communications Cloud",
+    "customer": { "name": "TODO: customer name", "segment": "TODO: segment" },
+    "language": "en",
+    "durationMinutes": 30,
+    "audience": ["TODO: roles attending"],
+    "version": "0.1.0",
+    "assumptions": ["TODO: anything not yet confirmed with the customer"]
+  },
+  "situation": {
+    "jobTitle": "TODO: the main stakeholder's role",
+    "industry": "TODO: industry",
+    "criticalBusinessIssue": "TODO: the goal at risk, e.g. a revenue or cost target",
+    "problems": ["TODO: why the goal is at risk today"],
+    "specificCapabilities": ["TODO: what the demo must prove"],
+    "delta": {
+      "statement": "TODO: the value of solving it",
+      "metrics": [
+        { "name": "TODO: metric", "before": "TBD: baseline from the customer", "after": "TBD: target agreed with the customer" }
+      ]
+    },
+    "criticalDate": "TBD: date by which they must decide"
+  },
+  "storyline": {
+    "opening": "TODO: one or two sentences that link the demo to their situation",
+    "lastThingFirst": { "description": "TODO: the end result you show first", "sceneId": "scene-1" },
+    "keyTakeaways": ["TODO: takeaway"],
+    "closing": { "summary": "TODO: what they saw, in value terms", "nextSteps": ["TODO: next step"] }
+  },
+  "personas": [
+    { "id": "persona-1", "name": "TODO: name", "role": "TODO: role", "goal": "TODO: what this person wants", "org": { "username": "{{env.SF_DEMO_USERNAME}}" } }
+  ],
+  "variables": {
+    "accountName": "TODO: demo account name"
+  },
+  "records": [
+    { "ref": "DemoAccount", "sobject": "Account", "fields": { "Name": "{{vars.accountName}}" } }
+  ],
+  "scenes": [
+    {
+      "id": "scene-1",
+      "title": "TODO: scene title",
+      "personaId": "persona-1",
+      "durationMinutes": 8,
+      "objective": "TODO: what this scene proves",
+      "tell": "TODO: context before the scene",
+      "wowMoment": "TODO: the one moment they will remember",
+      "valueStatement": "TODO: the value after the scene, in business terms",
+      "discoveryQuestions": ["TODO: question to ask during the scene"],
+      "objections": [{ "objection": "TODO: likely objection", "response": "TODO: answer" }],
+      "steps": [
+        {
+          "id": "scene-1-open",
+          "title": "TODO: step title",
+          "talkTrack": "TODO: what the presenter says, in full sentences",
+          "action": { "type": "navigate", "url": "{{runner.baseUrl}}/lightning/page/home" },
+          "expect": [{ "type": "visible", "target": { "role": "heading", "name": "TODO: heading on the page", "verified": false } }],
+          "fallback": "TODO: plan B",
+          "layers": ["technical"]
+        },
+        {
+          "id": "scene-1-show",
+          "title": "TODO: step title",
+          "talkTrack": "TODO: what the presenter says, in full sentences",
+          "action": { "type": "click", "target": { "role": "button", "name": "TODO: button label", "verified": false } },
+          "expect": [{ "type": "text", "target": { "role": "heading", "name": "TODO: heading after the click", "verified": false }, "contains": "TODO: expected text" }],
+          "fallback": "TODO: plan B",
+          "screenshot": true
+        }
+      ]
+    }
+  ],
+  "checklist": [],
+  "orgPrep": {
+    "targetOrg": "my-demo-org",
+    "allowedOrgs": ["my-demo-org"],
+    "importRecords": true,
+    "verify": [{ "label": "Demo account exists", "soql": "SELECT Id FROM Account WHERE Name = '{{vars.accountName}}'", "expectMinRows": 1 }],
+    "manualSteps": ["TODO: anything the script cannot do, e.g. catalog data"]
+  },
+  "runner": {
+    "baseUrl": "{{env.SF_DEMO_BASE_URL}}",
+    "auth": { "type": "sfCli", "targetOrg": "my-demo-org" },
+    "headless": true,
+    "screenshots": "flagged",
+    "video": { "enabled": true },
+    "stopOnFailure": false
+  },
+  "output": {
+    "dir": "out/my-demo",
+    "layers": {
+      "exec": { "enabled": true, "fileName": "01-exec-storyline.md" },
+      "presenter": { "enabled": true, "fileName": "02-presenter-script.md" },
+      "technical": { "enabled": true, "fileName": "03-technical-runbook.md" }
+    },
+    "labels": {}
+  },
+  "quality": { "maxStepsPerScene": 7, "maxSceneMinutes": 10, "readyScore": 85, "reviewScore": 60 }
+}

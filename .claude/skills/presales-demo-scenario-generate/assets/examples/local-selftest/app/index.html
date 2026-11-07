@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quote Desk (aplikacja testowa)</title>
+<style>
+  :root { color-scheme: light; --ink: #1d2433; --muted: #5b6475; --line: #d9dee7; --accent: #0b5cad; --ok: #1a7f37; --bad: #b42318; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: #f6f7f9; }
+  header { background: #fff; border-bottom: 1px solid var(--line); padding: 16px 24px; }
+  h1 { margin: 0; font-size: 20px; }
+  main { max-width: 720px; margin: 24px auto; padding: 0 16px; display: grid; gap: 16px; }
+  section { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px 20px; }
+  h2 { margin: 0 0 12px; font-size: 16px; }
+  .field { display: grid; gap: 4px; margin: 8px 0; max-width: 320px; }
+  .check { display: flex; gap: 8px; align-items: center; margin: 6px 0; }
+  select, input[type=number] { font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; }
+  button { font: inherit; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; }
+  [role=status] { min-height: 1.5em; margin: 8px 0 0; font-weight: 600; color: var(--ok); }
+  [role=status].error { color: var(--bad); }
+  #total { color: var(--muted); margin: 4px 0 12px; }
+</style>
+</head>
+<body>
+<header><h1>Quote Desk</h1></header>
+<main>
+  <section aria-labelledby="h-account">
+    <h2 id="h-account">Klient</h2>
+    <div class="field">
+      <label for="account">Konto</label>
+      <select id="account">
+        <option value="">wybierz konto</option>
+        <option>Baltic Freight Group</option>
+        <option>Vistula Retail</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="sites">Liczba lokalizacji</label>
+      <input id="sites" type="number" min="1" max="500" value="1">
+    </div>
+  </section>
+  <section aria-labelledby="h-products">
+    <h2 id="h-products">Produkty</h2>
+    <label class="check"><input type="checkbox" data-price="450"> Business Internet 1 Gb/s</label>
+    <label class="check"><input type="checkbox" data-price="40"> Stały adres IP</label>
+    <label class="check"><input type="checkbox" data-price="300"> SD-WAN zarządzany</label>
+  </section>
+  <section aria-labelledby="h-quote">
+    <h2 id="h-quote">Oferta</h2>
+    <button type="button" id="create">Utwórz ofertę</button>
+    <p role="status" id="quote-status"></p>
+    <p id="total"></p>
+    <button type="button" id="order" hidden>Konwertuj na zamówienie</button>
+    <p role="status" id="order-status"></p>
+  </section>
+</main>
+<script>
+  // Deterministic fixture: fixed prices, fixed quote and order numbers, simulated server latency.
+  const $ = (id) => document.getElementById(id);
+  const selected = () => [...document.querySelectorAll('input[type=checkbox]:checked')];
+  $('create').addEventListener('click', () => {
+    const account = $('account').value;
+    const sites = Number($('sites').value) || 0;
+    const items = selected();
+    const status = $('quote-status');
+    status.classList.remove('error');
+    if (!account || sites < 1 || items.length === 0) {
+      status.textContent = 'Uzupełnij konto, liczbę lokalizacji i co najmniej jeden produkt.';
+      status.classList.add('error');
+      return;
+    }
+    const monthly = items.reduce((sum, el) => sum + Number(el.dataset.price), 0) * sites;
+    setTimeout(() => {
+      status.textContent = `Oferta Q-0001 utworzona dla: ${account}`;
+      $('total').textContent = `Opłata miesięczna: ${monthly} PLN (produkty: ${items.length}, lokalizacje: ${sites})`;
+      $('order').hidden = false;
+    }, 400);
+  });
+  $('order').addEventListener('click', () => {
+    setTimeout(() => {
+      const lines = selected().length * (Number($('sites').value) || 0);
+      $('order-status').textContent = `Zamówienie O-0001 wysłane do realizacji (pozycje: ${lines})`;
+    }, 400);
+  });
+</script>
+</body>
+</html>

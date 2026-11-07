@@ -1,0 +1,253 @@
+{
+  "$schema": "../../demo-scenario.schema.json",
+  "schemaVersion": "1.0",
+  "meta": {
+    "id": "comms-b2b-quote-to-order",
+    "title": "Multi-site B2B quote-to-order in one flow",
+    "product": "Salesforce Communications Cloud",
+    "customer": { "name": "Baltic Freight Group (fictional)", "segment": "Enterprise B2B", "industry": "Logistics" },
+    "language": "en",
+    "durationMinutes": 30,
+    "audience": ["Director of B2B Sales", "Head of Order Management", "Enterprise Architect"],
+    "owner": "Presales",
+    "version": "0.1.0",
+    "tags": ["communications-cloud", "b2b", "quote-to-order"],
+    "assumptions": [
+      "Delta metrics are placeholders until the customer confirms baseline figures in discovery.",
+      "UI labels and locators are illustrative for a Communications Cloud demo org. They are marked verified: false; confirm them with the headless smoke test against your org.",
+      "Permission set Demo_B2B_Sales is a demo-specific example; replace it with the permission sets your org uses."
+    ]
+  },
+  "situation": {
+    "jobTitle": "Director of B2B Sales",
+    "industry": "Telecommunications (B2B)",
+    "criticalBusinessIssue": "Hit this year's B2B connectivity revenue target while multi-site deals keep slipping into the next quarter.",
+    "problems": [
+      "Multi-site quotes are assembled in spreadsheets and re-keyed into the order system.",
+      "Discount approvals run over email, without an audit trail.",
+      "Order errors surface only at provisioning, which delays activation and billing."
+    ],
+    "specificCapabilities": [
+      "Configure a multi-site offer from the product catalog, with catalog rules enforced",
+      "Price the quote in the opportunity, with discount approval in the same flow",
+      "Convert the accepted quote into an order without re-keying",
+      "Show order decomposition, so fulfilment sees exactly what was sold"
+    ],
+    "delta": {
+      "statement": "A shorter quote-to-order cycle and fewer reworked orders in the B2B segment.",
+      "metrics": [
+        { "name": "Quote-to-order lead time (multi-site)", "before": "TBD: baseline from the customer", "after": "TBD: target agreed with the customer" },
+        { "name": "Orders reworked after submission", "before": "TBD: baseline from the customer", "after": "TBD: target agreed with the customer" }
+      ]
+    },
+    "criticalDate": "TBD: budget decision date"
+  },
+  "storyline": {
+    "opening": "Your team told us that multi-site deals take too long to quote and that orders come back for rework. In the next 30 minutes we follow one deal for {{vars.accountName}} from configuration to a submitted order, in one system.",
+    "lastThingFirst": {
+      "description": "We start with the result: the {{vars.accountName}} deal for {{vars.siteCount}} sites, already converted to an order, with every order line traceable to the catalog offer it came from.",
+      "sceneId": "outcome"
+    },
+    "keyTakeaways": [
+      "One flow from catalog to order: no spreadsheets and no re-keying.",
+      "Catalog rules stop invalid configurations before the quote, not at provisioning.",
+      "Fulfilment sees exactly what sales sold, line by line."
+    ],
+    "closing": {
+      "summary": "We followed one multi-site deal from configuration to a submitted order, with the catalog enforcing the rules and every order line traceable.",
+      "nextSteps": [
+        "Agree baseline figures for quote-to-order lead time and order rework.",
+        "Workshop on catalog rules for your top three multi-site offers.",
+        "Technical deep dive on order decomposition and the fulfilment integration."
+      ]
+    }
+  },
+  "personas": [
+    {
+      "id": "account-manager",
+      "name": "Ewa Nowak",
+      "role": "B2B Account Manager",
+      "goal": "Send a correct multi-site quote on the same day.",
+      "org": { "username": "{{env.SF_DEMO_AM_USERNAME}}", "permissionSets": ["Demo_B2B_Sales"] }
+    },
+    {
+      "id": "order-manager",
+      "name": "Piotr Zieliński",
+      "role": "Order Manager",
+      "goal": "Receive orders that do not need rework.",
+      "org": { "username": "{{env.SF_DEMO_OM_USERNAME}}" }
+    }
+  ],
+  "variables": {
+    "accountName": "Baltic Freight Group",
+    "opportunityName": "Baltic Freight Group - SD-WAN 12 sites",
+    "siteCount": 12,
+    "uiConfigureButton": "Configure",
+    "uiCreateOrderButton": "Create Order",
+    "uiQuotesTab": "Quotes",
+    "uiOrdersTab": "Orders",
+    "uiQuantityField": "Quantity"
+  },
+  "records": [
+    {
+      "ref": "BalticFreight",
+      "sobject": "Account",
+      "fields": { "Name": "{{vars.accountName}}", "Industry": "Transportation", "BillingCity": "Gdańsk", "BillingCountry": "Poland" }
+    },
+    {
+      "ref": "BalticFreightCio",
+      "sobject": "Contact",
+      "fields": { "FirstName": "Marta", "LastName": "Wiśniewska", "Title": "CIO", "Email": "marta.wisniewska@example.com", "AccountId": "@BalticFreight" }
+    },
+    {
+      "ref": "BalticFreightDeal",
+      "sobject": "Opportunity",
+      "fields": { "Name": "{{vars.opportunityName}}", "StageName": "Proposal/Price Quote", "CloseDate": "2027-03-31", "AccountId": "@BalticFreight" }
+    }
+  ],
+  "scenes": [
+    {
+      "id": "outcome",
+      "title": "The result first: a submitted multi-site order",
+      "personaId": "account-manager",
+      "durationMinutes": 4,
+      "objective": "Show the end result before any configuration.",
+      "tell": "Before we build anything, here is where we will end: the {{vars.accountName}} deal, already an order.",
+      "wowMoment": "Every order line links back to the quote line and the catalog offer it came from.",
+      "valueStatement": "Sales and fulfilment look at the same deal, so nothing is re-keyed or lost between them.",
+      "discoveryQuestions": ["Where does a multi-site deal wait longest today: quoting, approval or order entry?"],
+      "steps": [
+        {
+          "id": "outcome-open-list",
+          "title": "Open recent opportunities",
+          "talkTrack": "We open the recent opportunities list.",
+          "action": { "type": "navigate", "url": "{{runner.baseUrl}}/lightning/o/Opportunity/list?filterName=Recent" },
+          "expect": [{ "type": "visible", "target": { "role": "link", "name": "{{vars.opportunityName}}", "verified": false } }],
+          "fallback": "Open the opportunity from global search.",
+          "layers": ["technical"]
+        },
+        {
+          "id": "outcome-open-deal",
+          "title": "Show the deal and its order",
+          "talkTrack": "This is the {{vars.accountName}} opportunity. It already has an accepted quote and a submitted order. Each order line came from the quote, and each quote line came from the catalog.",
+          "action": { "type": "click", "target": { "role": "link", "name": "{{vars.opportunityName}}", "verified": false } },
+          "expect": [{ "type": "visible", "target": { "role": "link", "name": "{{vars.uiOrdersTab}}", "verified": false } }],
+          "fallback": "Show the screenshot of the submitted order from the last headless run.",
+          "screenshot": true
+        }
+      ]
+    },
+    {
+      "id": "configure-quote",
+      "title": "Configure and price a multi-site quote",
+      "personaId": "account-manager",
+      "durationMinutes": 10,
+      "objective": "Prove that a multi-site offer is configured from the catalog, with its rules enforced.",
+      "tell": "Ewa now builds the same quote from scratch, the way she would on a normal Tuesday.",
+      "wowMoment": "The catalog blocks an invalid combination before the quote is priced.",
+      "valueStatement": "Quotes are right the first time, so approvals and orders do not bounce back.",
+      "discoveryQuestions": [
+        "Which offer rules does your team check by hand today?",
+        "Who approves discounts above list price, and how?"
+      ],
+      "objections": [
+        {
+          "objection": "Our catalog is too complex to model.",
+          "response": "We model the top multi-site offers first and add the rest in waves; the catalog workshop in the next steps sets the scope."
+        }
+      ],
+      "steps": [
+        {
+          "id": "configure-open-quotes",
+          "title": "Open the quote",
+          "talkTrack": "From the opportunity, Ewa opens the quote she started this morning.",
+          "action": { "type": "click", "target": { "role": "link", "name": "{{vars.uiQuotesTab}}", "verified": false } },
+          "expect": [{ "type": "visible", "target": { "role": "button", "name": "{{vars.uiConfigureButton}}", "verified": false } }],
+          "fallback": "Open the quote from the Recent Items list."
+        },
+        {
+          "id": "configure-start",
+          "title": "Start configuration",
+          "talkTrack": "She opens the configurator. Everything you see here comes from the product catalog, not from a spreadsheet.",
+          "action": { "type": "click", "target": { "role": "button", "name": "{{vars.uiConfigureButton}}", "verified": false } },
+          "fallback": "Show the configured quote from the first scene and talk through the rules.",
+          "screenshot": true
+        },
+        {
+          "id": "configure-sites",
+          "title": "Set the number of sites",
+          "talkTrack": "{{vars.accountName}} has {{vars.siteCount}} sites. Ewa sets that once, and the configuration applies to every site.",
+          "action": { "type": "fill", "target": { "label": "{{vars.uiQuantityField}}", "verified": false }, "value": "{{vars.siteCount}}" },
+          "fallback": "Explain the multi-site pricing on the order from the first scene."
+        },
+        {
+          "id": "configure-rule",
+          "title": "Show a catalog rule",
+          "talkTrack": "Watch what happens when she picks an add-on that is not allowed with this access type. The catalog stops it here, not at provisioning.",
+          "notes": "Pick the add-on that your catalog marks as incompatible, then add the click and its locator here.",
+          "fallback": "Show the rule in the catalog's rule list instead."
+        }
+      ]
+    },
+    {
+      "id": "convert-order",
+      "title": "Convert the accepted quote to an order",
+      "personaId": "order-manager",
+      "durationMinutes": 8,
+      "objective": "Show the hand-off from sales to fulfilment without re-keying.",
+      "tell": "The customer accepts the quote. Piotr, the order manager, takes it from here.",
+      "wowMoment": "The order is decomposed into fulfilment lines automatically.",
+      "valueStatement": "Fulfilment receives exactly what was sold, so activation and billing start without rework.",
+      "discoveryQuestions": ["How many orders come back for correction each month?"],
+      "steps": [
+        {
+          "id": "order-create",
+          "title": "Create the order",
+          "talkTrack": "One click turns the accepted quote into an order.",
+          "action": { "type": "click", "target": { "role": "button", "name": "{{vars.uiCreateOrderButton}}", "verified": false } },
+          "expect": [{ "type": "visible", "target": { "role": "link", "name": "{{vars.uiOrdersTab}}", "verified": false } }],
+          "fallback": "Open the order created for the first scene.",
+          "screenshot": true,
+          "dwellMs": 1500
+        },
+        {
+          "id": "order-decomposition",
+          "title": "Show order decomposition",
+          "talkTrack": "This is what fulfilment sees: each commercial line broken down into the technical lines that downstream systems need.",
+          "fallback": "Show the decomposition screenshot from the last headless run."
+        }
+      ]
+    }
+  ],
+  "checklist": [
+    "Log in once as each persona user and dismiss welcome pop-ups and guided tours.",
+    "Open the sales app used in the demo, so the navigation bar shows the right tabs."
+  ],
+  "orgPrep": {
+    "targetOrg": "comms-demo",
+    "allowedOrgs": ["comms-demo", "comms-demo-backup"],
+    "importRecords": true,
+    "verify": [
+      { "label": "Demo account exists", "soql": "SELECT Id FROM Account WHERE Name = '{{vars.accountName}}'", "expectMinRows": 1 },
+      { "label": "Demo opportunity exists", "soql": "SELECT Id FROM Opportunity WHERE Name = '{{vars.opportunityName}}'", "expectMinRows": 1 }
+    ],
+    "manualSteps": [
+      "Load the multi-site B2B offers into the product catalog (EPC). Use the omnistudio-epc-catalog-generate skill to author the catalog DataPacks.",
+      "Create the accepted quote and the submitted order for the first scene, for example during a rehearsal run.",
+      "Create permission set Demo_B2B_Sales with access to quotes and orders, or replace it in personas[].org.permissionSets."
+    ]
+  },
+  "runner": {
+    "baseUrl": "{{env.SF_DEMO_BASE_URL}}",
+    "auth": { "type": "sfCli", "targetOrg": "comms-demo" },
+    "browser": "chromium",
+    "headless": true,
+    "viewport": { "width": 1440, "height": 900 },
+    "locale": "en-US",
+    "timeouts": { "actionMs": 20000, "navigationMs": 90000, "expectMs": 20000 },
+    "screenshots": "flagged",
+    "video": { "enabled": true, "width": 1440, "height": 900 },
+    "stopOnFailure": false
+  },
+  "output": { "dir": "out/comms-b2b-quote-to-order" }
+}

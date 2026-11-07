@@ -1,0 +1,69 @@
+{{!-- Presenter script: what to say, in order. Technical-only steps are left out. --}}
+# {{meta.title}}: {{labels.presenterScript}}
+
+**{{labels.duration}}:** {{meta.durationMinutes}} {{labels.minutes}}{{#if meta.audience.length}} · **{{labels.audience}}:** {{join meta.audience ", "}}{{/if}}
+{{#if meta.assumptions.length}}
+
+> **{{labels.assumptions}}**
+>
+{{#each meta.assumptions}}
+> - {{this}}
+{{/each}}
+{{/if}}
+
+## {{labels.opening}}
+
+{{#if storyline.opening}}
+{{storyline.opening}}
+
+{{/if}}
+**{{labels.whatYouWillSee}}:** {{storyline.lastThingFirst.description}}
+
+{{#each scenes}}
+## {{number}}. {{title}} ({{startMinute}}–{{endMinute}} {{@root.labels.minutes}})
+
+- **{{@root.labels.persona}}:** {{persona.name}}, {{persona.role}}
+- **{{@root.labels.objective}}:** {{objective}}
+
+> **{{@root.labels.tell}}:** {{tell}}
+
+{{#each presenterSteps}}
+**{{number}}. {{title}}**
+
+{{talkTrack}}
+
+{{/each}}
+{{#if wowMoment}}
+**{{@root.labels.wowMoment}}:** {{wowMoment}}
+
+{{/if}}
+> **{{@root.labels.valueStatement}}:** {{valueStatement}}
+{{#if discoveryQuestions.length}}
+
+**{{@root.labels.discoveryQuestions}}**
+
+{{#each discoveryQuestions}}
+- {{this}}
+{{/each}}
+{{/if}}
+{{#if objections.length}}
+
+**{{@root.labels.objections}}**
+
+{{#each objections}}
+- *{{objection}}* {{response}}
+{{/each}}
+{{/if}}
+
+{{/each}}
+## {{labels.closing}}
+
+{{storyline.closing.summary}}
+{{#if storyline.closing.nextSteps.length}}
+
+**{{labels.nextSteps}}**
+
+{{#each storyline.closing.nextSteps}}
+- {{this}}
+{{/each}}
+{{/if}}
